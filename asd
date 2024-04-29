@@ -1,5 +1,8 @@
+local gui = Instance.new("ScreenGui")
+gui.Parent = game.Players.LocalPlayer.PlayerGui
+
 local textLabel = Instance.new("TextLabel")
-textLabel.Parent = game.Players.LocalPlayer.PlayerGui
+textLabel.Parent = gui
 textLabel.Size = UDim2.new(1, 0, 0, 50)
 textLabel.Position = UDim2.new(0, 0, 0.5, 0)
 textLabel.BackgroundTransparency = 1
@@ -25,6 +28,7 @@ for i = #text, 1, -1 do
     textLabel.Text = textLabel.Text:sub(1, i - 1)
     wait(delay)
 end
+
 
 wait(#text * delay) 
 textLabel:Destroy()
