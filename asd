@@ -1,5 +1,5 @@
 local textLabel = Instance.new("TextLabel")
-textLabel.Parent = game.Workspace
+textLabel.Parent = game.Players.LocalPlayer.PlayerGui
 textLabel.Size = UDim2.new(1, 0, 0, 50)
 textLabel.Position = UDim2.new(0, 0, 0.5, 0)
 textLabel.BackgroundTransparency = 1
