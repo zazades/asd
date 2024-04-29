@@ -1,3 +1,4 @@
+wait(3)
 local gui = Instance.new("ScreenGui")
 gui.Parent = game.Players.LocalPlayer.PlayerGui
 
