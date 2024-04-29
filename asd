@@ -106,7 +106,7 @@ local inventorygui = plr.PlayerGui:WaitForChild("MainGui"):WaitForChild("RightPa
 
 local uilib = loadstring(game:HttpGet("https://github.com/huhthatsnice/pro/raw/main/uilib.lua"))()
 
-local window = uilib:CreateWindow("Arxnn v1")
+local window = uilib:CreateWindow("Angel v1")
 window.ScreenGui.Name="killmenow"
 
 --functions
