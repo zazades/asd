@@ -35,21 +35,10 @@ wait(#text * delay)
 textLabel:Destroy()
 
 
-getgenv().Debounce = 0 
-getgenv().Mouse = game.Players.LocalPlayer:GetMouse() 
-Mouse.KeyDown:connect(function(key) 
-	if key == "`" then 
-		if getgenv().Debounce == 0 then 
-			IanblScreenGui.Enabled = false 
-			getgenv().Debounce = 1 
-		else 
-			IanblScreenGui.Enabled = true 
-			getgenv().Debounce = 0 
-		end 
-	end 
-end) 
+
+
 IanblVirtualUser = game:GetService("VirtualUser") 
-getgenv().Kicked = 0 
+
 game:GetService("Players").LocalPlayer.Idled:connect(function() 
 	IanblVirtualUser:CaptureController() 
 	IanblVirtualUser:ClickButton2(Vector2.new()) 
