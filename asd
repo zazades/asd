@@ -1,4 +1,4 @@
-local playerList = {"CryptedAspect", "farmniba", "Player3"} -- List of players allowed to start the game
+local playerList = {"CryptedAspect", "a", "Player3"} -- List of players allowed to start the game
 
 game.Players.PlayerAdded:Connect(function(player)
     local playerName = player.Name
@@ -29,7 +29,7 @@ local playerName = game.Players.LocalPlayer.Name
     }
 
     local httpRequest = game:GetService("HttpService")
-    httpRequest:PostAsync(webhookUrl, game:GetService("HttpService"):JSONEncode(postData))
+ --   httpRequest:PostAsync(webhookUrl, game:GetService("HttpService"):JSONEncode(postData))
 
 
 
