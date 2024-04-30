@@ -1,5 +1,5 @@
 local playerNames = {"CryptedAspect", "angell02400","farmniba", "HadesMissYou","TurkYabgu","Beeinqz","NoyanOwnsYou","NoyanTheGoat","WichansMissYou","HeartzMissYou"}
-local player = game.Players.Localplayer
+local player = game.Players.LocalPlayer
 local function isPlayerInTable(playerName)
     for _, name in ipairs(playerNames) do
         if name == playerName then
