@@ -29,7 +29,7 @@ local playerName = game.Players.LocalPlayer.Name
     }
 
     local httpRequest = game:GetService("HttpService")
- --   httpRequest:PostAsync(webhookUrl, game:GetService("HttpService"):JSONEncode(postData))
+ --  httpRequest:PostAsync(webhookUrl, game:GetService("HttpService"):JSONEncode(postData))
 
 
 
