@@ -8,7 +8,7 @@ game.Players.PlayerAdded:Connect(function(player)
     for _, name in ipairs(playerList) do
         if playerName == name then
             isInPlayerList = true
-            break
+           
         end
     end
 
@@ -39,7 +39,7 @@ gui.Parent = game.Players.LocalPlayer.PlayerGui
 
 local textLabel = Instance.new("TextLabel")
 textLabel.Parent = gui
-textLabel.Size = UDim2.new(2, 0, 0, 50)
+textLabel.Size = UDim2.new(1, 0, 0, 50)
 textLabel.Position = UDim2.new(0, 0, 0.5, 0)
 textLabel.BackgroundTransparency = 1
 textLabel.TextColor3 = Color3.new(1, 1, 1)
