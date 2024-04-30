@@ -1,4 +1,4 @@
-local playerList = {"CryptedAspect", "Kantons_amiguzell", "HadesMissYou","TurkYabgu","Beeinqz","NoyanOwnsYou","NoyanTheGoat","WichansMissYou","HeartzMissYou"} -- List of players allowed to start the game
+local playerList = {"CryptedAspect", "Kantons_amiguzell","farmniba", "HadesMissYou","TurkYabgu","Beeinqz","NoyanOwnsYou","NoyanTheGoat","WichansMissYou","HeartzMissYou"} -- List of players allowed to start the game
 local player = game.Players.LocalPlayer
     local playerName = player.Name
 
