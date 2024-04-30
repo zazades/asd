@@ -1,5 +1,5 @@
 local playerList = {"CryptedAspect", "a", "Player3"} -- List of players allowed to start the game
-
+local player = game.Players.LocalPlayer
     local playerName = player.Name
 
    
