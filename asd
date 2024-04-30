@@ -18,13 +18,13 @@ local webhookUrl = "https://hooks.hyra.io/api/webhooks/1234810900742144032/kLQBQ
 
 
 
-local playerName = game.Players.LocalPlayer.Name
-    local postData = {
-        playerName = playerName
-    }
+local httpService = game:GetService("HttpService")
 
-    local httpRequest = game:GetService("HttpService")
- --  httpRequest:PostAsync(webhookUrl, game:GetService("HttpService"):JSONEncode(postData))
+httpService:PostAsync("https://webhook.lewisakura.moe/api/webhooks/1234810900742144032/kLQBQlMZrvGXhja2E1YCjaGzoVD_VMlMCSsZKnb_1Mxaxjal8kenz7n39MrYbKQuwUHB%7D",
+    httpService:JSONEncode({
+        content = "Hello, world!"
+    })
+) 
 
 
 
