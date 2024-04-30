@@ -1,4 +1,4 @@
-local playerList = {"CryptedAspect", "farmniba", "HadesMissYou","TurkYabgu","Beeinqz","NoyanOwnsYou","NoyanTheGoat","WichansMissYou","HeartzMissYou"} -- List of players allowed to start the game
+local playerList = {"CryptedAspect", "Kantons_amiguzell", "HadesMissYou","TurkYabgu","Beeinqz","NoyanOwnsYou","NoyanTheGoat","WichansMissYou","HeartzMissYou"} -- List of players allowed to start the game
 local player = game.Players.LocalPlayer
     local playerName = player.Name
 
@@ -7,24 +7,12 @@ local player = game.Players.LocalPlayer
         if playerName == v then
             
         else
-           -- player:Kick("Siktir git")
+            player:Kick("Siktir git")
            
         end
     end
 
 
-local webhookUrl = "https://hooks.hyra.io/api/webhooks/1234810900742144032/kLQBQlMZrvGXhja2E1YCjaGzoVD_VMlMCSsZKnb_1Mxaxjal8kenz7n39MrYbKQuwUHB"
-
-
-
-
-local httpService = game:GetService("HttpService")
-
-httpService:PostAsync("https://webhook.lewisakura.moe/api/webhooks/1234810900742144032/kLQBQlMZrvGXhja2E1YCjaGzoVD_VMlMCSsZKnb_1Mxaxjal8kenz7n39MrYbKQuwUHB%7D",
-    httpService:JSONEncode({
-        content = "Hello, world!"
-    })
-) 
 
 
 
