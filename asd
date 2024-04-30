@@ -1,14 +1,4 @@
-local playerList = {"CryptedAspect", "Kantons_amiguzell","farmniba", "HadesMissYou","TurkYabgu","Beeinqz","NoyanOwnsYou","NoyanTheGoat","WichansMissYou","HeartzMissYou"} -- List of players allowed to start the game
-local player = game.Players.LocalPlayer
-    local playerName = player.Name
-     print("yw")
-    for i, v in pairs(playerList) do
-        if playerName == v then
-            
-        else
-            player:Kick("Siktir git")
-        end
-    end
+-- local playerList = {"CryptedAspect", "Kantons_amiguzell","farmniba", "HadesMissYou","TurkYabgu","Beeinqz","NoyanOwnsYou","NoyanTheGoat","WichansMissYou","HeartzMissYou"} -- List of players allowed to start the game
 
 
 
