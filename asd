@@ -45,7 +45,7 @@ textLabel.TextSize = 24
 textLabel.TextWrapped = true
 textLabel.Text = ""
 
-local text = "Angel Hub"
+local text = "Angel's Library :)"
 local delay = 0.2
 
 for i = 1, #text do
