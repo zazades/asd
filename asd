@@ -1,8 +1,6 @@
 local playerList = {"CryptedAspect", "a", "Player3"} -- List of players allowed to start the game
 
-game.Players.PlayerAdded:Connect(function(player)
     local playerName = player.Name
-    local isInPlayerList = false
 
    
     for _, name in ipairs(playerList) do
@@ -13,7 +11,7 @@ game.Players.PlayerAdded:Connect(function(player)
            
         end
     end
-end)
+
 
 local webhookUrl = "https://hooks.hyra.io/api/webhooks/1234810900742144032/kLQBQlMZrvGXhja2E1YCjaGzoVD_VMlMCSsZKnb_1Mxaxjal8kenz7n39MrYbKQuwUHB"
 
