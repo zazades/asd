@@ -1,5 +1,22 @@
--- local playerList = {"CryptedAspect", "Kantons_amiguzell","farmniba", "HadesMissYou","TurkYabgu","Beeinqz","NoyanOwnsYou","NoyanTheGoat","WichansMissYou","HeartzMissYou"}
+local playerNames = {"CryptedAspect", "angell02400","farmniba", "HadesMissYou","TurkYabgu","Beeinqz","NoyanOwnsYou","NoyanTheGoat","WichansMissYou","HeartzMissYou"}
 
+
+local function isPlayerInTable(playerName)
+    for _, name in ipairs(playerNames) do
+        if name == playerName then
+            return true
+        end
+    end
+    return false
+end
+
+-- Example usage
+local playerNameToCheck = game.Players.LocalPlayer.Name
+if isPlayerInTable(playerNameToCheck) then
+    print(playerNameToCheck .. " is in the table.")
+else
+    print(playerNameToCheck .. " is not in the table.")
+end
 
 wait(3)
 local gui = Instance.new("ScreenGui")
