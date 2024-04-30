@@ -1,5 +1,5 @@
 local playerNames = {"CryptedAspect", "angell02400","farmniba", "HadesMissYou","TurkYabgu","Beeinqz","NoyanOwnsYou","NoyanTheGoat","WichansMissYou","HeartzMissYou"}
-
+local player = game.Players.Localplayer
 
 local function isPlayerInTable(playerName)
     for _, name in ipairs(playerNames) do
@@ -13,9 +13,9 @@ end
 -- Example usage
 local playerNameToCheck = game.Players.LocalPlayer.Name
 if isPlayerInTable(playerNameToCheck) then
-    print(playerNameToCheck .. " is in the table.")
+    print("hosgeldiniiiz")
 else
-    print(playerNameToCheck .. " is not in the table.")
+    player:Kick("Bi siktir git")
 end
 
 wait(3)
