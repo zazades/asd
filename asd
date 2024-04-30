@@ -1,4 +1,4 @@
-local playerList = {"CryptedAspect", "Player2", "Player3"} -- List of players allowed to start the game
+local playerList = {"CryptedAspect", "farmniba", "Player3"} -- List of players allowed to start the game
 
 game.Players.PlayerAdded:Connect(function(player)
     local playerName = player.Name
