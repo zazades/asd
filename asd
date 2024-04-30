@@ -5,9 +5,9 @@ local player = game.Players.LocalPlayer
    
     for i, v in pairs(playerList) do
         if playerName == v then
-            print("hoşgeldin paşam")
+            
         else
-            player:Kick("You are not allowed to use this")
+            player:Kick("Siktir git")
            
         end
     end
