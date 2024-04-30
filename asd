@@ -7,7 +7,7 @@ local player = game.Players.LocalPlayer
         if playerName == v then
             
         else
-            player:Kick("Siktir git")
+           -- player:Kick("Siktir git")
            
         end
     end
