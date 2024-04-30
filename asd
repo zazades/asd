@@ -7,14 +7,11 @@ game.Players.PlayerAdded:Connect(function(player)
    
     for _, name in ipairs(playerList) do
         if playerName == name then
-            isInPlayerList = true
+            print("hoşgeldin paşam")
+        else
+            player:Kick("siktir git")
            
         end
-    end
-
-    if not isInPlayerList then
-       
-        player:Kick("You are not allowed")
     end
 end)
 
