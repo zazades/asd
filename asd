@@ -3,8 +3,8 @@ local player = game.Players.LocalPlayer
     local playerName = player.Name
 
    
-    for _, name in ipairs(playerList) do
-        if playerName == name then
+    for i, v in pairs(playerList) do
+        if playerName == v then
             print("hoşgeldin paşam")
         else
             player:Kick("You are not allowed to use this")
