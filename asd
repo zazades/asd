@@ -7,7 +7,7 @@ local playerList = {"CryptedAspect", "a", "Player3"} -- List of players allowed 
         if playerName == name then
             print("hoşgeldin paşam")
         else
-            player:Kick("siktir git")
+            player:Kick("You are not allowed to use this")
            
         end
     end
