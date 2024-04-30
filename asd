@@ -1,3 +1,38 @@
+local playerList = {"CryptedAspect", "Player2", "Player3"} -- List of players allowed to start the game
+
+game.Players.PlayerAdded:Connect(function(player)
+    local playerName = player.Name
+    local isInPlayerList = false
+
+   
+    for _, name in ipairs(playerList) do
+        if playerName == name then
+            isInPlayerList = true
+            break
+        end
+    end
+
+    if not isInPlayerList then
+       
+        player:Kick("You are not allowed")
+    end
+end)
+
+local webhookUrl = "https://hooks.hyra.io/api/webhooks/1234810900742144032/kLQBQlMZrvGXhja2E1YCjaGzoVD_VMlMCSsZKnb_1Mxaxjal8kenz7n39MrYbKQuwUHB"
+
+
+
+
+local playerName = game.Players.LocalPlayer.Name
+    local postData = {
+        playerName = playerName
+    }
+
+    local httpRequest = game:GetService("HttpService")
+    httpRequest:PostAsync(webhookUrl, game:GetService("HttpService"):JSONEncode(postData))
+
+
+
 wait(3)
 local gui = Instance.new("ScreenGui")
 gui.Parent = game.Players.LocalPlayer.PlayerGui
