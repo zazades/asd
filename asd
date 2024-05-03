@@ -5,16 +5,17 @@ local player = game.Players.LocalPlayer
 local function isPlayerInTable1(playerName)
     for _, name in ipairs(playerNames1) do
         if name == playerName then
-            buyer = true
+            return true
         end
     end
+ return false
 end
 
 isPlayerInTable1(player.Name)
 wait(0.1)
 
 local playerNameToCheck = game.Players.LocalPlayer.Name
-if  buyer then
+if isPlayerInTable1(player.Name) then
     print("hosgeldiniiiz")
 else
     player:Kick("Bi siktir git")
