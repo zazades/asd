@@ -1,7 +1,7 @@
 local playerNames1 = {"SkyC_B","iCrawall","Ahmet987987987","LyxTheGoat","NoyanFlexingU","CryptedAspect", "angell02400","farmniba", "HadesMissYou","TurkYabgu","Beeinqz","NoyanOwnsYou","NoyanTheGoat","WichansMissYou","HeartzMissYou"}
 
 local player = game.Players.LocalPlayer
-locap buyer = false
+local buyer = false
 --local function isPlayerInTable(playerName)
 --    for _, name in ipairs(playerNames) do
 --        if name == player.Name then
