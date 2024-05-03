@@ -19,7 +19,7 @@ local function isPlayerInTable1(playerName)
 end
 
 --isPlayerInTable()
-isPlayerInTable1()
+isPlayerInTable1(player.Name)
 
 local playerNameToCheck = game.Players.LocalPlayer.Name
 if  buyer then
