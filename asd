@@ -37,7 +37,7 @@ textLabel.Text = ""
 local textLabel1 = Instance.new("TextLabel")
 textLabel1.Parent = gui
 textLabel1.Size = UDim2.new(1, 0, 0, 50)
-textLabel1.Position = UDim2.new(0, 0, 0.5, -20)
+textLabel1.Position = UDim2.new(0, 0, 0.5, 30) -- Adjusted Position to move it below textLabel
 textLabel1.BackgroundTransparency = 1
 textLabel1.TextColor3 = Color3.new(1, 1, 1)
 textLabel1.TextStrokeTransparency = 0
@@ -46,6 +46,7 @@ textLabel1.Font = Enum.Font.SourceSansBold
 textLabel1.TextSize = 24
 textLabel1.TextWrapped = true
 textLabel1.Text = ""
+
 
 local text = "Angel's Library :)"
 local text1 = "Welcome".. player.Name
