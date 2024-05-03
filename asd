@@ -11,9 +11,6 @@ local function isPlayerInTable1(playerName)
  return false
 end
 
-isPlayerInTable1(player.Name)
-wait(0.1)
-
 local playerNameToCheck = game.Players.LocalPlayer.Name
 if isPlayerInTable1(player.Name) then
     print("hosgeldiniiiz")
