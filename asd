@@ -51,7 +51,7 @@ textLabel1.Text = ""
 
 
 local text = "Angel's Library :)"
-local text1 = "Welcome ".. " ".. player.Name
+local text1 = "Welcome ": .. player.Name
 local delay = 0.07
 
 for i = 1, #text do
