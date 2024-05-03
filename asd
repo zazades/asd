@@ -2,25 +2,27 @@ local playerNames1 = {"SkyC_B","iCrawall","Ahmet987987987","LyxTheGoat","NoyanFl
 
 local player = game.Players.LocalPlayer
 locap buyer = false
---[[local function isPlayerInTable(playerName)
-    for _, name in ipairs(playerNames) do
-        if name == player.Name then
-            buyer = true
-        end
-    end
-end]]
+--local function isPlayerInTable(playerName)
+--    for _, name in ipairs(playerNames) do
+--        if name == player.Name then
+--            buyer = true
+--        end
+--    end
+--end
 
 local function isPlayerInTable1(playerName)
     for _, name in ipairs(playerNames1) do
-        if name == player.Name then
+        if name == playerName then
             buyer = true
         end
     end
 end
 
 --isPlayerInTable()
+print("before")
 isPlayerInTable1(player.Name)
-
+wait(0.1)
+print(buyer)
 local playerNameToCheck = game.Players.LocalPlayer.Name
 if  buyer then
     print("hosgeldiniiiz")
