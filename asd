@@ -753,7 +753,7 @@ local function validgold()
 			end
 		end
 	end
-	return closest==nil
+	return closest== game.Players.LocalPlayer.Character.HumanoidRootPart.Position
 end
 
 local waiting = false
