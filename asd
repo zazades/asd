@@ -395,8 +395,8 @@ buffer.writeu8(pressbuf,0,19)
 buffer.writeu8(pressbuf,1,1)
 buffer.writeu16(pressbuf,2,if not isvoid then getItemId("Gold") else 0)
 local function press(press)
-	if isvoid or not optimize then return plant(press,"Gold") end
-	bytenet:FireServer(pressbuf,{press})
+ plant(press,"Gold") 
+	
 end
 
 
