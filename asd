@@ -86,6 +86,6 @@ return(function(K,T,w,s,S,V,N,O,e,M,J,j,y,q,x,c,Z,X,_,g,d,i,b,z,Y,r,o,R6,K6,T6,H
 
 wait(10)
 
---if game.CoreGui:FindFirstChild("killmenow") then
---	game.CoreGui:FindFirstChild("killmenow").Frame.TextBox.Text = "Angel's library"
---end
+if game.CoreGui:FindFirstChild("killmenow") then
+	game.CoreGui:FindFirstChild("killmenow").Frame.TextBox.Text = "Angel's library"
+end
