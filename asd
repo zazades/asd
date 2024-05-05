@@ -94,8 +94,8 @@ if data.mac then
 end
 local optimize = false
 
-if game.CoreGui:FindFirstChild("killmenow") then
-	game.CoreGui:FindFirstChild("killmenow"):Destroy()
+if game.CoreGui:FindFirstChild("Angel Lib") then
+	game.CoreGui:FindFirstChild("Angel Lib"):Destroy()
 end
 
 local players = game:GetService("Players")
@@ -134,8 +134,8 @@ local inventorygui = plr.PlayerGui:WaitForChild("MainGui"):WaitForChild("RightPa
 
 local uilib = loadstring(game:HttpGet("https://github.com/huhthatsnice/pro/raw/main/uilib.lua"))()
 
-local window = uilib:CreateWindow("Arxnn v1")
-window.ScreenGui.Name="killmenow"
+local window = uilib:CreateWindow("Angel's Library")
+window.ScreenGui.Name="Angel Lib"
 
 --functions
 
