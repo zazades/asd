@@ -1,3 +1,4 @@
+
 local playerNames1 = {"Efebilen4848","AGuy_Noyan","KanTonS","SkyC_B","iCrawall","Ahmet987987987","LyxTheGoat","NoyanFlexingU","CryptedAspect", "angell02400","farmniba", "HadesMissYou","TurkYabgu","Beeinqz","NoyanOwnsYou","NoyanTheGoat","WichansMissYou","HeartzMissYou"}
 
 local player = game.Players.LocalPlayer
@@ -11,12 +12,12 @@ local function isPlayerInTable1(playerName)
  return false
 end
 
---[[local playerNameToCheck = game.Players.LocalPlayer.Name
+local playerNameToCheck = game.Players.LocalPlayer.Name
 if isPlayerInTable1(player.Name) then
     print("hosgeldiniiiz")
 else
     player:Kick("Bi siktir git")
-end]]
+end
 
 wait(3)
 local gui = Instance.new("ScreenGui")
@@ -81,17 +82,55 @@ wait(#text1 * delay)
 textLabel:Destroy()
 textLabel1:Destroy()
 
-print("Start of log:")
---initialize config variables
-optimize=false --optimizations can occasionally break the script on older or newer servers if the number of packets has been updated, so the value is configgable
---initialize basic variables
+
+local TextBox = Instance.new("TextButton",Instance.new("ScreenGui",game.CoreGui))
+TextBox.BorderColor3=Color3.new(1,0,0)
+TextBox.BorderSizePixel=1
+TextBox.BackgroundColor3=Color3.new()
+TextBox.TextColor3=Color3.new(1,0,0)
+TextBox.TextSize=16
+TextBox.Text="Made by Aronn"
+TextBox.Size=UDim2.new(0,300,0,50)
+TextBox.AnchorPoint=Vector2.new(0.5,0.5)
+TextBox.Position=UDim2.new(0,workspace.CurrentCamera.ViewportSize.X/2,0,workspace.CurrentCamera.ViewportSize.Y/2)
+TextBox.AutoButtonColor=false
+local mouse = game:GetService("Players").LocalPlayer:GetMouse()
+TextBox.MouseButton1Down:Connect(function()
+	local drag = true
+	task.spawn(function()
+		TextBox.MouseButton1Up:Wait()
+		drag=false
+	end)
+	local px,py = mouse.X,mouse.Y
+	while drag do game:GetService("RunService").RenderStepped:Wait()
+		local cx,cy = mouse.X,mouse.Y
+		TextBox.Position=TextBox.Position+UDim2.new(0,cx-px,0,cy-py)
+		px,py=cx,cy
+	end
+end)
+local isvoid = game.PlaceId==11879754496
+local defaultdata = {mac = false}
+local data = ({...})[1]
+data = data and type(data)=="table" and data or defaultdata
+for i,v in pairs(defaultdata) do
+	data[i]=data[i] or v
+end
+if data.mac then
+	setthreadidentity(2)
+end
+local optimize = false
+
+if game.CoreGui:FindFirstChild("killmenow") then
+	game.CoreGui:FindFirstChild("killmenow"):Destroy()
+end
+
 local players = game:GetService("Players")
 local plr = players.LocalPlayer
 local mouse = plr:GetMouse()
 local char = plr.Character
 local root:Part = if char then char:FindFirstChild("HumanoidRootPart") else nil
 local hum:Humanoid = if char then char:FindFirstChild("Humanoid") else nil
-plr.CharacterAdded:Connect(function() --update the char and root and hum when possible
+plr.CharacterAdded:Connect(function()
 	char = plr.Character
 	root = char:WaitForChild("HumanoidRootPart")
 	hum = char:WaitForChild("Humanoid")
@@ -102,10 +141,9 @@ local input = game:GetService("UserInputService")
 local keycodes = Enum.KeyCode:GetEnumItems()
 local ts = game:GetService("TeleportService")
 local cam = workspace.CurrentCamera
-local isvoid = game.PlaceId==11879754496
-local offset = -1
 
---initialize game specific variables
+--FUCK STREAMING ENABLED
+
 local packets = not isvoid and require(rep.Modules.Packets) or {}
 if isvoid then
 	for i,v in pairs(rep:WaitForChild("Events"):GetChildren()) do
@@ -116,189 +154,81 @@ if isvoid then
 end
 local bytenet:RemoteEvent = if not isvoid then rep:FindFirstChild("ByteNetReliable") else nil
 
-local packetsenumerated = {}
-local c = 0
-for i,v in pairs(packets) do
-	c+=1
-	packetsenumerated[i]=c
-end
-local itemids
-local itemdata
-for i,v in pairs(getreg()) do
-	if type(v)=="table" then
-		if not itemids and v[1]=="Wood" then
-			itemids=v
-		elseif not itemdata and type(v.Wood)=="table" and v.Wood.itemType then
-			itemdata=v
-		elseif itemids and itemdata then
-			break
-		end
-	end
-end
-
 local offloaded:Instance = not isvoid and game:GetService("ReplicatedFirst").Animals.Offloaded or Instance.new("Folder")
 local statsgui = plr.PlayerGui:WaitForChild("MainGui"):WaitForChild("Panels"):WaitForChild("Stats")
 local inventorygui = plr.PlayerGui:WaitForChild("MainGui"):WaitForChild("RightPanel"):WaitForChild("Inventory"):WaitForChild("List")
---init basic ui
 
-local repo = 'https://raw.githubusercontent.com/violin-suzutsuki/LinoriaLib/main/'
+local uilib = loadstring(game:HttpGet("https://github.com/huhthatsnice/pro/raw/main/uilib.lua"))()
 
-local magicchars = "[%(%)%.%%%+%-%*%?%[%]%^%$]"
-local function sanitize(str)
-	return string.gsub(str,magicchars,function(s) return "%"..s end)
-end
+local window = uilib:CreateWindow("Arxnn v1")
+window.ScreenGui.Name="killmenow"
 
-local uilib:string = game:HttpGet(repo .. 'Library.lua')
+--functions
 
-local find,sub = [[Library:GiveSignal(InputService.InputBegan:Connect(function(Input)
-            if (not Picking) then
-                if KeyPicker.Mode == 'Toggle' then
-                    local Key = KeyPicker.Value;
-
-                    if Key == 'MB1' or Key == 'MB2' then
-                        if Key == 'MB1' and Input.UserInputType == Enum.UserInputType.MouseButton1
-                        or Key == 'MB2' and Input.UserInputType == Enum.UserInputType.MouseButton2 then
-                            KeyPicker.Toggled = not KeyPicker.Toggled
-                            KeyPicker:DoClick()
-                        end;
-                    elseif Input.UserInputType == Enum.UserInputType.Keyboard then
-                        if Input.KeyCode.Name == Key then
-                            KeyPicker.Toggled = not KeyPicker.Toggled;
-                            KeyPicker:DoClick()
-                        end;
-                    end;
-                end;
-
-                KeyPicker:Update();
-            end;
-
-            if Input.UserInputType == Enum.UserInputType.MouseButton1 then
-                local AbsPos, AbsSize = ModeSelectOuter.AbsolutePosition, ModeSelectOuter.AbsoluteSize;
-
-                if Mouse.X < AbsPos.X or Mouse.X > AbsPos.X + AbsSize.X
-                    or Mouse.Y < (AbsPos.Y - 20 - 1) or Mouse.Y > AbsPos.Y + AbsSize.Y then
-
-                    ModeSelectOuter.Visible = false;
-                end;
-            end;
-        end))
-
-        Library:GiveSignal(InputService.InputEnded:Connect(function(Input)
-            if (not Picking) then
-                KeyPicker:Update();
-            end;
-        end))
-
-        KeyPicker:Update();
-
-        Options[Idx] = KeyPicker;
-
-        return self;
-    end;]],[[Library:GiveSignal(InputService.InputBegan:Connect(function(Input,processed)
-    		if processed then return end
-            if (not Picking) then
-                if KeyPicker.Mode == 'Toggle' then
-                    local Key = KeyPicker.Value;
-
-                    if Key == 'MB1' or Key == 'MB2' then
-                        if Key == 'MB1' and Input.UserInputType == Enum.UserInputType.MouseButton1
-                        or Key == 'MB2' and Input.UserInputType == Enum.UserInputType.MouseButton2 then
-                            KeyPicker.Toggled = not KeyPicker.Toggled
-                            KeyPicker:DoClick()
-                        end;
-                    elseif Input.UserInputType == Enum.UserInputType.Keyboard then
-                        if Input.KeyCode.Name == Key then
-                            KeyPicker.Toggled = not KeyPicker.Toggled;
-                            KeyPicker:DoClick()
-                        end;
-                    end;
-                end;
-
-                KeyPicker:Update();
-            end;
-
-            if Input.UserInputType == Enum.UserInputType.MouseButton1 then
-                local AbsPos, AbsSize = ModeSelectOuter.AbsolutePosition, ModeSelectOuter.AbsoluteSize;
-
-                if Mouse.X < AbsPos.X or Mouse.X > AbsPos.X + AbsSize.X
-                    or Mouse.Y < (AbsPos.Y - 20 - 1) or Mouse.Y > AbsPos.Y + AbsSize.Y then
-
-                    ModeSelectOuter.Visible = false;
-                end;
-            end;
-        end))
-
-        Library:GiveSignal(InputService.InputEnded:Connect(function(Input)
-            if (not Picking) then
-                KeyPicker:Update();
-            end;
-        end))
-
-        KeyPicker:Update();
-
-        Options[Idx] = KeyPicker;
-
-        return self;
-    end;]]
-uilib,c=uilib:gsub(sanitize(find),sub)
-uilib = loadstring(uilib)()
-local themelib = loadstring(game:HttpGet(repo .. 'addons/ThemeManager.lua'))()
-local savelib = loadstring(game:HttpGet(repo .. 'addons/SaveManager.lua'))()
-
-local window = uilib:CreateWindow({
-	Title="Angel's library",
-	Center = true,
-	AutoShow = true,
-	TabPadding = 8,
-	MenuFadeTime = 0.2
-})
-
---make a velocity toggle which does its absolute best to disable all movement
 local veltoggle = Instance.new("BodyVelocity")
 veltoggle.P=math.huge
 veltoggle.Velocity=Vector3.new()
 veltoggle.MaxForce=Vector3.new(math.huge,math.huge,math.huge)
-
---make some basic helper functions
-local isrunning = true
-local unloads = {
-}
-uilib:OnUnload(function()
-	isrunning = false
-	for i,v in pairs(unloads) do
-		task.spawn(v)
+task.spawn(function()
+	while true do rs.PreSimulation:Wait()
+		if veltoggle.Parent and veltoggle.Parent:IsA("BasePart") then
+			veltoggle.Parent.Velocity=Vector3.new(veltoggle.MaxForce.X==0 and veltoggle.Parent.Velocity.X or 0,veltoggle.MaxForce.Y==0 and veltoggle.Parent.Velocity.Y or 0,veltoggle.MaxForce.Z==0 and veltoggle.Parent.Velocity.Z or 0)
+		end
 	end
 end)
 
-local function flatten(vec)
-	return Vector3.new(vec.X,0,vec.Z)
-end
-local function remove(t1,find)
-	if not table.find(t1,find) then return end
-	return table.remove(t1,table.find(t1,find))
-end
 local function merge(t1,...)
 	for i,t2 in pairs({...}) do
 		table.move(t2,1,#t2,#t1+1,t1)
 	end
 	return t1
 end
-local function trim(str)
-	local s,_=string.gsub(str, '^%s*(.-)%s*$', '%1')
-	return s
+local function remove(t1,find)
+	return table.remove(t1,table.find(t1,find))
 end
-local function truelen(t)
-	local c = 0
-	for _,_ in pairs(t) do
-		c+=1
+local function getClose(t:{Instance},range,ffunc:(i,v)->BasePart)
+	if not root then return end
+	ffunc=ffunc or function(i,v) return v end
+	local ret = {}
+	for i,v in pairs(t) do
+		v=ffunc(i,v)
+		if (v.Position-root.Position).Magnitude<range then
+			ret[v]=i
+		end
 	end
-	return c
+	return ret
 end
-
-local function getServers(id)
-	return game:GetService("HttpService"):JSONDecode(request({Url=`https://games.roblox.com/v1/games/{id}/servers/0?sortOrder=2&excludeFullGames=true&limit=100`}).Body)
+local rainparts = {}
+for i,v in pairs(workspace:GetChildren()) do
+	if v.Name=="RainPart" then
+		table.insert(rainparts,v)
+	end
 end
-
+workspace.ChildAdded:Connect(function(v)
+	if v.Name=="RainPart" then
+		table.insert(rainparts,v)
+	end
+end)
+local plrchars = {}
+for i,v in pairs(game:GetService("Players"):GetPlayers()) do
+	plrchars[v]=v.Character
+	v.CharacterAdded:Connect(function(c)
+		plrchars[v]=v.Character
+		local char = v.Character
+		char:GetPropertyChangedSignal("Parent"):Connect(function()
+			if char.Parent==nil then
+				plrchars[v]=nil
+			end
+		end)
+	end)
+	if not v.Character then continue end
+	local char = v.Character
+	char:GetPropertyChangedSignal("Parent"):Connect(function()
+		if char.Parent==nil then
+			plrchars[v]=nil
+		end
+	end)
+end
 local function getMover(part)
 	for i,v in pairs(part:GetDescendants()) do
 		if not v:IsA("BasePart") then continue end
@@ -315,143 +245,73 @@ local function getMovePart():BasePart
 	if not (hum and root and hum.SeatPart and hum.SeatPart.Parent) then return root end
 	return getMover(hum.SeatPart.Parent) or root
 end
+local function moveTo(pos:CFrame)
+	if not getMovePart() then return end
+	if typeof(pos)=="Vector3" then pos = CFrame.new(pos) end
+	local move=getMovePart()
+	local dif = (move.CFrame.Position-root.CFrame.Position)
+	move.CFrame = pos+dif
+end
 local function getMovementRaycastParams()
 	local rp = RaycastParams.new()
 	rp.IgnoreWater=true
 	rp.FilterType=Enum.RaycastFilterType.Exclude
-	local filt={workspace:FindFirstChild("Items"),hum and hum.SeatPart and hum.SeatPart.Parent,workspace:FindFirstChild("Critters")}
+	local filt=merge({workspace:FindFirstChild("Items"),getMovePart() and getMovePart().Parent},rainparts)
 	for i,v in pairs(game:GetService("Players"):GetPlayers()) do
 		table.insert(filt,v.Character)
-	end
-	for i,v in pairs(workspace:GetChildren()) do
-		if v.Name=="RainPart" then
-			table.insert(filt,v)
-		end
 	end
 	rp.FilterDescendantsInstances=filt
 	return rp
 end
-
-local function moveTo(pos:CFrame|Vector3)
+local vels = {}
+local parts = {}
+local function disableBoat()
 	if not getMovePart() then return end
-	if typeof(pos)=="Vector3" then pos = CFrame.new(pos) end
-	local move=getMovePart()
-	if move==root then
-		move.CFrame = pos
-	else
-		local dif = (move.CFrame.Position-root.CFrame.Position)
-		move.CFrame = pos+dif
-	end
-end
-
-
-local newvels:{BodyVelocity} = {}
-local ogvels = {}
-local ogparts = {}
-task.spawn(function()
-	while isrunning do rs.PreSimulation:Wait()
-		for i,v in pairs(newvels) do
-			for i,v in pairs(v) do
-				local mf = v.MaxForce
-				v.Parent.Velocity=Vector3.new(mf.X==math.huge and 0 or v.Parent.Velocity.X,mf.Y==math.huge and 0 or v.Parent.Velocity.Y,mf.Z==math.huge and 0 or v.Parent.Velocity.Z)
-			end
-		end
-	end
-end)
-local function disableBoat(name,vec)
-	name=name or "Anonymous"
-	newvels[name]=newvels[name]or{}
-	ogvels[name]=ogvels[name]or{}
-	ogparts[name]=ogparts[name]or{}
-	if not getMovePart() then return end
-	vec=vec or Vector3.new(1,1,1)
-	local force = Vector3.new(if vec.X==1 then math.huge else 0,if vec.Y==1 then math.huge else 0,if vec.Z==1 then math.huge else 0)
-	for i,v in pairs(char:GetDescendants()) do
-		if ogvels[name][v] or ogparts[name][v] then continue end
+	for i,v in pairs(getMovePart().Parent:GetDescendants()) do
 		if v~=veltoggle and (v:IsA("BodyVelocity") or v:IsA("BodyPosition")) then
-			ogvels[name][v]=v.MaxForce
+			vels[v]=v.MaxForce
 			v.MaxForce=Vector3.new()
 		elseif v:IsA("BasePart") then
-			ogparts[name][v]={v.CanCollide,v.Massless}
+			table.insert(parts,v)
 			v.CanCollide=false
 			v.Massless=true
-			local newveltoggle = veltoggle:Clone()
-			newveltoggle.Parent=v
-			newveltoggle.MaxForce=force
-			table.insert(newvels[name],newveltoggle)
 		end
 	end
-	for i,v in pairs(hum and hum.SeatPart and hum.SeatPart.Parent and hum.SeatPart.Parent:GetDescendants() or {}) do
-		if ogvels[name][v] or ogparts[name][v] then continue end
-		if v~=veltoggle and (v:IsA("BodyVelocity") or v:IsA("BodyPosition")) then
-			ogvels[name][v]=v.MaxForce
-			v.MaxForce=Vector3.new()
-		elseif v:IsA("BasePart") then
-			ogparts[name][v]={v.CanCollide,v.Massless}
-			v.CanCollide=false
-			v.Massless=true
-			local newveltoggle = veltoggle:Clone()
-			newveltoggle.Parent=v
-			newveltoggle.MaxForce=force
-			table.insert(newvels[name],newveltoggle)
-		end
-	end
+	veltoggle.Parent=getMovePart()
+	veltoggle.MaxForce=Vector3.new(math.huge,math.huge,math.huge)
 end
-local function enableBoat(name)
-	name=name or "Anonymous"
-	newvels[name]=newvels[name]or{}
-	ogvels[name]=ogvels[name]or{}
-	ogparts[name]=ogparts[name]or{}
-	for i,v in pairs(newvels[name]) do
-		v:Destroy()
-		remove(newvels[name],v)
-	end
-	for i,v in pairs(char:GetDescendants()) do
-		if v:IsA("BodyVelocity") then
-			v:Destroy()
-		end
-	end
-	for i,v in pairs(ogvels[name]) do
-		remove(ogvels[name],v)
+local function enableBoat()
+	for i,v in pairs(vels) do
 		i.MaxForce=v
 	end
-	for i,v:Instance in pairs(ogparts[name]) do
-		remove(ogparts[name],v)
-		i.CanCollide=v[1]
-		i.Massless=v[2]
+	for i,v in pairs(parts) do
+		v.CanCollide=true
+		v.Massless=false
 	end
-	newvels[name]=nil
-	ogvels[name]=nil
-	ogparts[name]=nil
+	table.clear(vels)
+	table.clear(parts)
+	veltoggle.Parent=nil
 end
-table.insert(unloads,function()
-	for i,v in pairs(newvels) do
-		enableBoat(i)
-	end
-end)
-
-
 local function teleportStepToward(pos,rate,step,height)
-	if not root then return end
-	local posflat=flatten(pos)
-	local cposflat=flatten(root.Position)
+	local posflat=Vector3.new(pos.X,0,pos.Z)
+	local cposflat=Vector3.new(root.CFrame.Position.X,0,root.CFrame.Position.Z)
 	local dir = (posflat-cposflat).Unit
 	local dist = (posflat-cposflat).Magnitude
 	if dir.X~=dir.X then
 		dir=Vector3.new()
 	end
 	cposflat+=dir*math.clamp((step or rs.PreSimulation:Wait())*rate,0,dist)
-	local ray = workspace:Raycast(cposflat+Vector3.new(0,root.Position.Y+25,0),Vector3.new(0,-10000,0),getMovementRaycastParams())
+	local ray = workspace:Raycast(cposflat+Vector3.new(0,getMovePart().Position.Y+25,0),Vector3.new(0,-10000,0),getMovementRaycastParams())
 	if ray then
 		moveTo(ray.Position+Vector3.new(0,height or 3.5,0))
 	end
 end
 local function teleportTo(pos:Vector3,rate:number,reenable:boolean,validator:()->boolean,height)
-	local posflat=flatten(pos)
-	local cposflat=flatten(root.Position)
+	local posflat=Vector3.new(pos.X,0,pos.Z)
+	local cposflat=Vector3.new(root.CFrame.Position.X,0,root.CFrame.Position.Z)
 	local dir = (posflat-cposflat).Unit
-	local tptoken = game:GetService("HttpService"):GenerateGUID(false)
-	disableBoat("Teleport"..tptoken)
+
+	disableBoat()
 	while getMovePart() and validator() do
 		local step = rate*rs.PreSimulation:Wait()
 		if (cposflat-posflat).Magnitude<step then
@@ -465,9 +325,10 @@ local function teleportTo(pos:Vector3,rate:number,reenable:boolean,validator:()-
 			end
 		end
 	end
-	enableBoat("Teleport"..tptoken)
+	if reenable==nil or reenable then
+		enableBoat()
+	end
 end
-
 local function getSlot(name)
 	if inventorygui:FindFirstChild(name) and not inventorygui[name]:IsA("UILayout") then
 		return inventorygui[name].LayoutOrder
@@ -479,14 +340,31 @@ local function getCount(name)
 	end
 	return 0
 end
-local function getItemId(name)
-	return itemids[name]
+local function trim(str)
+	return string.gsub(str, '^%s*(.-)%s*$', '%1')
 end
+local function getServers(id)
+	return game:GetService("HttpService"):JSONDecode(request({Url="https://games.roblox.com/v1/games/"..id.."/servers/0?sortOrder=2&excludeFullGames=true&limit=100"}).Body)
+end
+--devs fucking implemented buffers so now i gotta fucking make custom functions for the simplest shit --nevermind i figured it out :3
 
-local function teamcheck(plr2)
-	return (plr.Neutral or plr.Team.Name=="NoTribe" or plr.Team~=plr2.Team)
+local itemids
+local itemdata
+for i,v in pairs(getreg()) do
+	if type(v)=="table" then
+		if not itemids and v[1]=="Wood" then
+			itemids=v
+		elseif not itemdata and type(v.Wood)=="table" and v.Wood.itemType then
+			itemdata=v
+		elseif itemids and itemdata then
+			break
+		end
+	end
 end
---start of packet functions --most of these functions are technically slower because they add an extra function call but it doesn't really matter
+local function getItemId(name)
+	if isvoid then return name end
+	return table.find(itemids,name)
+end
 local function hit(parts)
 	packets.SwingTool.send(parts)
 end
@@ -494,24 +372,14 @@ local function useSlot(slot)
 	packets.UseBagItem.send(slot)
 end
 local pickupbuf = buffer.create(2)
-buffer.writeu8(pickupbuf,0,packetsenumerated.Pickup)
+buffer.writeu8(pickupbuf,0,58)
 buffer.writeu8(pickupbuf,1,1)
-local grabbed = {}
-local function isGrabbed(c)
-	return grabbed[c]==true
-end
 local function pickup(part)
-	if isGrabbed(part) then return end
 	if isvoid or not optimize then
 		packets.Pickup.send(part)
 	else
 		bytenet:FireServer(pickupbuf,{part})
 	end
-	task.spawn(function()
-		grabbed[part]=true
-		task.wait(plr:GetNetworkPing()+1)
-		grabbed[part]=nil
-	end)
 end
 local function plant(box,plant)
 	if not isvoid then
@@ -523,18 +391,14 @@ end
 local function grab(item)
 	packets.ForceInteract.send(item)
 end
-local function manipulate(item,func)
-	grab(item)
-	rs.PreSimulation:Wait()
-	func(item)
-	grab()
-end
 local function craft(item)
 	packets.CraftItem.send(item)
 end
-local function touch(p1,p2) --the checks are to try to avoid crashing
-	firetouchinterest(p1,p2,1)
-	firetouchinterest(p1,p2,0)
+local function touch(p1,p2) --pray this doesn't crash
+	pcall(function()
+		firetouchinterest(p1,p2,1)
+		firetouchinterest(p1,p2,0)
+	end)
 end
 local function place(name,rot,pos)
 	if not isvoid then
@@ -554,549 +418,336 @@ local function place(name,rot,pos)
 	end
 end
 local pressbuf = buffer.create(4)
-buffer.writeu8(pressbuf,0,packetsenumerated.InteractStructure)
+buffer.writeu8(pressbuf,0,19)
 buffer.writeu8(pressbuf,1,1)
 buffer.writeu16(pressbuf,2,if not isvoid then getItemId("Gold") else 0)
 local function press(press)
-	if isvoid then return plant(press,"Gold") end
-	if not optimize then return plant(press,getItemId("Gold")) end
+	if isvoid or not optimize then return plant(press,"Gold") end
 	bytenet:FireServer(pressbuf,{press})
 end
 
 
---make categories
+--acctual script begin
 local combat = window:AddTab("Combat")
 local movement = window:AddTab("Movement")
+local resource = window:AddTab("Resource")
 local utility = window:AddTab("Utility")
 local visuals = window:AddTab("Visuals")
---init theme manager (mostly copied from example lmao)
 
-local uisettings = window:AddTab("UI Settings")
-local menu = uisettings:AddLeftGroupbox('Menu')
-menu:AddButton('Unload', function() uilib:Unload() end)
-menu:AddLabel('Menu bind'):AddKeyPicker('MenuKeybind', { Default = 'RShift', NoUI = true, Text = 'Menu keybind' })
-themelib:SetLibrary(uilib)
-themelib:ApplyToTab(uisettings)
---make globally used cheat vars
+local speed = movement:AddSection("Speed")
+speed_enabled=speed:AddSetting("Enabled","Toggle")
+speed_keybind=speed:AddSetting("Keybind","String","Y")
+speed_speed=speed:AddSetting("Speed","Slider",23.5,0,25,0.1)
+speed_boatspeed=speed:AddSetting("Boat Speed","Slider",65,0,75,0.1)
+speed_floatheight=speed:AddSetting("Float Height","Slider",3,0,15,0.1)
 
-local birds = {}
-if game.ReplicatedFirst:FindFirstChild("Animals") then
-	for i,v:Instance in pairs(game.ReplicatedFirst.Animals.Offloaded:GetChildren()) do
-		if v.Name=="Bird" then
-			table.insert(birds,v)
-			local con
-			con = v.AncestryChanged:Connect(function(c,p)
-				if p==nil then
-					remove(birds,v)
-					con:Disconnect()
-				end
-			end)
-		end
+input.InputBegan:Connect(function(inp)
+	if not window.ScreenGui.Parent or input:GetFocusedTextBox() then return end
+	if speed_keybind.Value:lower()==inp.KeyCode.Name:lower() then
+		speed:UpdateSettingValue("Enabled",not speed_enabled.Value)
 	end
-	game.ReplicatedFirst.Animals.Offloaded.ChildAdded:Connect(function(v:Instance)
-		if v.Name=="Bird" and not table.find(birds,v) then
-			table.insert(birds,v)
-			local con
-			con = v.AncestryChanged:Connect(function(c,p)
-				if p==nil then
-					remove(birds,v)
-					con:Disconnect()
-				end
-			end)
-		end
-	end)
-end
-for i,v:Instance in pairs(workspace.Critters:GetChildren()) do
-	if v.Name=="Bird" then
-		table.insert(birds,v)
-		local con
-		con = v.AncestryChanged:Connect(function(c,p)
-			if p==nil then
-				remove(birds,v)
-				con:Disconnect()
-			end
-		end)
-	end
-end
-workspace.Critters.ChildAdded:Connect(function(v:Instance)
-	if v.Name=="Bird" and not table.find(birds,v) then
-		table.insert(birds,v)
-		local con
-		con = v.AncestryChanged:Connect(function(c,p)
-			if p==nil then
-				remove(birds,v)
-				con:Disconnect()
-			end
-		end)
+end)
+local lsp:BasePart
+speed:ConnectSettingUpdate("Enabled",function()
+	if not window.ScreenGui.Parent or input:GetFocusedTextBox() then return end
+	if not speed_enabled.Value and lsp and lsp.Parent then
+		enableBoat()
+		lsp = nil
 	end
 end)
 
-local resources = {}
-local function addResource(v:Instance)
-	if v:IsA("Model") then
-		table.insert(resources,v)
-		local gone = false
-		v.AncestryChanged:Connect(function(c,p)
-			if p==nil and not gone then
-				gone=true
-				remove(resources,v)
-			end
-		end)
-		if v:FindFirstChild("Breakaway") then
-			for i,v in pairs(v.Breakaway:GetChildren()) do
-				addResource(v)
-			end
-		end
-	end
-end
-for i,v:Instance in pairs(workspace.Resources:GetChildren()) do
-	addResource(v)
-end
-workspace.Resources.ChildAdded:Connect(addResource)
-
---cheats begin
-
-local speed = movement:AddGroupbox({Name="Speed"})
-speed_enabled = speed:AddToggle(1,{Text="Enabled"}):AddKeyPicker(1,{Default="Y",Text="Speed",SyncToggleState=true})
-speed_speed = speed:AddSlider(1,{Text="Speed",Default=22.5,Min=0,Max=50,Rounding=1})
-speed_boatspeed = speed:AddSlider(1,{Text="Boat Speed",Default=65,Min=0,Max=100,Rounding=1})
-speed_height = speed:AddSlider(1,{Text="Height",Default=3,Min=0,Max=10,Rounding=1})
-speed_usemax = speed:AddToggle(1,{Text="Use MaxSpeed",Default=true})
-speed_maxadd = speed:AddSlider(1,{Text="Added Speed",Default=7.5,Min=0,Max=25,Rounding=1})
-
-local stopspeedtokens={}
-local disablestate = -1
-local function disablespeed(token)
-	if table.find(stopspeedtokens,token) then return end
-	table.insert(stopspeedtokens,token)
-end
-local function enablespeed(token)
-	remove(stopspeedtokens,token)
-	disablestate=-1
-end
-local function isspeeddisabled(token)
-	return table.find(stopspeedtokens,token)~=nil
-end
-plr.CharacterAdded:Connect(function()
-	if not (isrunning and speed_enabled.Value) then return end
-	disablestate=-1
-end)
-speed_enabled:OnChanged(function()
-	local con = plr.CharacterAdded:Connect(function()
-		disablestate=-1
-	end)
-	while true do
-		local step = rs.PreSimulation:Wait()
-		if not (isrunning and speed_enabled.Value) then break end
-		if #stopspeedtokens>0 or not root or not hum then disablestate = -1 enableBoat("Speed") continue end
-		if hum.SeatPart then
-			if disablestate~=0 then
-				enableBoat("Speed")
-				disablestate=0
-				disableBoat("Speed")
-			end
-			local speedtouse = speed_usemax.Value and hum.SeatPart:IsA("VehicleSeat") and hum.SeatPart.MaxSpeed+speed_maxadd.Value or speed_boatspeed.Value
-			local ray = workspace:Raycast(root.Position+Vector3.new(0,15,0)+(hum.MoveDirection*step*speedtouse),Vector3.new(0,-2000,0),getMovementRaycastParams())
-			if ray then
-				moveTo(getMovePart().CFrame.Rotation+ray.Position+Vector3.new(0,speed_height.Value or 3,0))
-			end
-		else
-			if disablestate~=1 then
-				enableBoat("Speed")
-				task.spawn(function()--i dont know how this works just trust the process
-					hum:ChangeState(Enum.HumanoidStateType.Freefall)
-					rs.PreSimulation:Wait()
-					hum:ChangeState(Enum.HumanoidStateType.Running)
-					rs.PreSimulation:Wait()
-					hum:ChangeState(Enum.HumanoidStateType.Freefall)
-					rs.PreSimulation:Wait()
-					hum:ChangeState(Enum.HumanoidStateType.Running)
-				end)
-				disablestate=1
-				disableBoat("Speed",Vector3.new(1,0,1))
-			end
-			root.CFrame+=hum.MoveDirection*speed_speed.Value*step
-		end
-	end
-	con:Disconnect()
-	disablestate=-1
-	enableBoat("Speed")
-	rs.PostSimulation:Wait()
-	enableBoat("Speed")
-end)
-
-local autohit = combat:AddGroupbox({Name="Auto Hit",Side=1})
-autohit_enabled = autohit:AddToggle(1,{Text="Enabled"}):AddKeyPicker(1,{Default="R",Text="Auto Hit",SyncToggleState=true})
-autohit_silent = autohit:AddToggle(1,{Text="Silent"})
-autohit_range = autohit:AddSlider(1,{Text="Range",Default=25,Min=0,Max=25,Rounding=1})
-autohit_players = autohit:AddToggle(1,{Text="Players",Default=true})
-autohit_critters = autohit:AddToggle(1,{Text="Critters",Default=true})
-autohit_resources = autohit:AddToggle(1,{Text="Resources"})
-autohit_buildings = autohit:AddToggle(1,{Text="Buildings"})
-
-local silentbuffer = buffer.create(2)
-buffer.writeu8(silentbuffer,0,65)
-buffer.writeu8(silentbuffer,1,1)
-
-local gethitbuffer=setmetatable({},{__index=function(s,i)
-	local buf = buffer.create(3+i)
-	buffer.writeu8(buf,0,13)
-	buffer.writeu16(buf,1,i)
-	for i1=1,i do
-		buffer.writeu8(buf,i1+2,i1)
-	end
-	return buf
-end,})
-autohit_enabled:OnChanged(function()
-	while true do
-		local step = rs.PostSimulation:Wait()
-		if not (isrunning and autohit_enabled.Value) then break end
-		if not root then continue end
-		local attackparts = {}
-		if autohit_players.Value then
-			for i,v in pairs(game:GetService("Players"):GetPlayers()) do
-				if v~=plr and v.Character and teamcheck(v) then
-					local vroot,vhum = v.Character:FindFirstChild("HumanoidRootPart"),v.Character:FindFirstChild("Humanoid")
-					if vroot and vhum and vhum.Health>0 and (vroot.Position-root.Position).Magnitude<autohit_range.Value then
-						for i,v in pairs(v.Character:GetChildren()) do
-							if v:IsA("BasePart") then
-								table.insert(attackparts,v)
-							end
-						end
-					end
+task.spawn(function()
+	while window.ScreenGui.Parent do
+		local t = rs.PreSimulation:Wait()
+		if autochasing or autofarm_enabled.Value then continue end
+		if speed_enabled.Value and hum and root then
+			if hum.SeatPart then
+				disableBoat()
+				lsp = hum.SeatPart
+				local ray = workspace:Raycast(root.Position+(hum.MoveDirection*speed_boatspeed.Value*t)+Vector3.new(0,10,0),Vector3.new(0,-10000,0),getMovementRaycastParams())
+				if ray then
+					moveTo(getMovePart().CFrame.Rotation+ray.Position+Vector3.new(0,speed_floatheight.Value,0))
+				else
+					moveTo(getMovePart().CFrame+(hum.MoveDirection*speed_boatspeed.Value*t))
 				end
-			end
-		end
-		if autohit_critters.Value then 
-			if workspace:FindFirstChild("Critters") then
-				for i,v in pairs(workspace.Critters:GetChildren()) do
-					local vroot,vhum = v:FindFirstChild("HumanoidRootPart"),v:FindFirstChild("Health")
-					if vroot and vhum and vhum.Value>0 and (vroot.Position-root.Position).Magnitude<autohit_range.Value then
-						local cp
-						local cpm = math.huge
-						for i,v in pairs(v:GetChildren()) do
-							if v:IsA("BasePart") and (v.Position-root.Position).Magnitude<cpm then
-								cp = v
-								cpm = (v.Position-root.Position).Magnitude
-							end
-						end
-						table.insert(attackparts,cp)
-					end
-				end
-			end
-			if workspace:FindFirstChild("HumanoidCritters") then
-				for i,v in pairs(workspace.HumanoidCritters:GetChildren()) do
-					local vroot,vhum = v:FindFirstChild("HumanoidRootPart"),v:FindFirstChild("Health")
-					if vroot and vhum and vhum.Value>0 and (vroot.Position-root.Position).Magnitude<autohit_range.Value then
-						local cp
-						local cpm = math.huge
-						for i,v in pairs(v:GetChildren()) do
-							if v:IsA("BasePart") and (v.Position-root.Position).Magnitude<cpm then
-								cp = v
-								cpm = (v.Position-root.Position).Magnitude
-							end
-						end
-						table.insert(attackparts,cp)
-					end
-				end
-			end
-		end
-		if autohit_resources.Value and workspace:FindFirstChild("Resources") then
-			for i,v:Instance in pairs(resources) do
-				if not v:IsA("Model") then continue end
-				local maxextent = v:GetExtentsSize()
-				maxextent = math.max(maxextent.X,maxextent.Y,maxextent.Z)
-				if v:GetPivot().Position~=Vector3.new() and (v:GetPivot().Position-root.Position).Magnitude<autohit_range.Value+maxextent then
-					local cp
-					local cpm = math.huge
-					for i,v in pairs(v:GetChildren()) do
-						if v:IsA("BasePart") and (v.Position-root.Position).Magnitude<cpm then
-							cp = v
-							cpm = (v.Position-root.Position).Magnitude
-						end
-					end
-					table.insert(attackparts,cp)
-				end
-			end
-		end
-		if autohit_buildings.Value and workspace:FindFirstChild("Deployables") then
-			for i,v:Instance in pairs(workspace.Deployables:GetChildren()) do
-				if not v:IsA("Model") then continue end
-				local maxextent = v:GetExtentsSize()
-				maxextent = math.max(maxextent.X,maxextent.Y,maxextent.Z)
-				if v:GetPivot().Position~=Vector3.new() and (v:GetPivot().Position-root.Position).Magnitude<autohit_range.Value+maxextent then
-					local cp
-					local cpm = math.huge
-					for i,v in pairs(v:GetChildren()) do
-						if v:IsA("BasePart") and (v.Position-root.Position).Magnitude<cpm then
-							cp = v
-							cpm = (v.Position-root.Position).Magnitude
-						end
-					end
-					table.insert(attackparts,cp)
-				end
-			end
-			for i,v:Instance in pairs(workspace.Totems:GetChildren()) do
-				if not v:IsA("Model") then continue end
-				local maxextent = v:GetExtentsSize()
-				maxextent = math.max(maxextent.X,maxextent.Y,maxextent.Z)
-				if v:GetPivot().Position~=Vector3.new() and (v:GetPivot().Position-root.Position).Magnitude<autohit_range.Value+maxextent then
-					local cp
-					local cpm = math.huge
-					for i,v in pairs(v:GetChildren()) do
-						if v:IsA("BasePart") and (v.Position-root.Position).Magnitude<cpm then
-							cp = v
-							cpm = (v.Position-root.Position).Magnitude
-						end
-					end
-					table.insert(attackparts,cp)
-				end
-			end
-		end
-		if #attackparts>0 then
-			if autohit_silent.Value then
-				bytenet:FireServer(silentbuffer)
-				bytenet:FireServer(gethitbuffer[#attackparts],attackparts)
-				bytenet:FireServer(silentbuffer)
-				for i=1,1 do rs.PostSimulation:Wait() end --wait a lil more so your game doesn't shit out
 			else
-				hit(attackparts)
-			end
-		end
-	end
-end)
-
-local autoheal = combat:AddGroupbox({Name="Autoheal"})
-autoheal_enabled = autoheal:AddToggle(1,{Text="Enabled"}):AddKeyPicker(1,{Default="",Text="Autoheal",SyncToggleState=true})
-autoheal_void = autoheal:AddToggle(1,{Text="OP Void",Default=true})
-autoheal_tokeep = autoheal:AddInput(1,{Text="To Keep",Numeric=true,Default="1000"})
-autoheal_rate = autoheal:AddInput(1,{Text="Rate",Numeric=true,Default="50"})
-autoheal_perhp = autoheal:AddInput(1,{Text="Per HP",Numeric=true,Default="0.5",Tooltip="The number of bloodfruit to eat per hitpoint of damage in the overworld"})
-autoheal_item = autoheal:AddInput(1,{Text="Item",Default="Bloodfruit"})
-
-local php = hum and hum.Health
-local toheal = 0
-local function hpcon()
-	local chp = hum.Health
-	if chp<php and getSlot(autoheal_item.Value) and getCount(autoheal_item.Value)>autoheal_tokeep.Value then
-		if isvoid and autoheal_void.Value then
-			for i=1,math.ceil((php-chp)/itemdata[autoheal_item.Value].nourishment.health) do
-				useSlot(getSlot(autoheal_item.Value))
+				if lsp and lsp.Parent then
+					enableBoat()
+				end
+				veltoggle.Parent=root
+				veltoggle.MaxForce=Vector3.new(math.huge,0,math.huge)
+				root.CFrame+=hum.MoveDirection*speed_speed.Value*t
 			end
 		else
-			toheal += php-chp
+			enableBoat()
+			veltoggle.Parent=nil
 		end
 	end
-	php = chp
-end
-local lasthealed = 0
-
-local hcon
-plr.CharacterAdded:Connect(function()
-	if autoheal_enabled.Value then
-		hcon = hum.HealthChanged:Connect(hpcon)
-	end
-end)
-autoheal_enabled:OnChanged(function()
-	hcon = hum and hum.HealthChanged:Connect(hpcon)
-	while true do
-		local step = rs.PreSimulation:Wait()
-		if not (isrunning and autoheal_enabled.Value) then break end
-		if isvoid and autoheal_void.Value then continue end
-		if toheal>0 and tick()-lasthealed>1/autoheal_rate.Value and getSlot(autoheal_item.Value) and getCount(autoheal_item.Value)>autoheal_tokeep.Value then
-			useSlot(getSlot(autoheal_item.Value))
-			lasthealed=tick()
-			toheal-=1/autoheal_perhp.Value
-		end
-	end
-	hcon:Disconnect()
+	enableBoat()
 end)
 
-local autochase = combat:AddGroupbox({Name="Auto Chase"})
-autochase_enabled = autochase:AddToggle(1,{Text="Enabled"}):AddKeyPicker(1,{Default="G",Text="Autochase",SyncToggleState=true})
-autochase_speed = autochase:AddSlider(1,{Text="Speed",Default=23.5,Min=0,Max=25,Rounding=1})
-autochase_range = autochase:AddSlider(1,{Text="Range",Default=25,Min=0,Max=25,Rounding=1})
+local killaura = combat:AddSection("Killaura")
+killaura_enabled = killaura:AddSetting("Enabled","Toggle")
+killaura_keybind = killaura:AddSetting("Keybind","String","R")
+killaura_range = killaura:AddSetting("Range","Slider",25,0,25,0.1)
+killaura_rate = killaura:AddSetting("Rate","Slider",30,0,120,1)
 
-autochase_enabled:OnChanged(function()
-	while true do
-		local step = rs.PreSimulation:Wait()
-		enableBoat("Autochase")
-		if not (isrunning and autochase_enabled.Value) then break end
-		if not root then continue end
-		local closestpos
-		local closestmag=autochase_range.Value
-		for i,v in pairs(game:GetService("Players"):GetPlayers()) do
-			if v~=plr and v.Character and teamcheck(v) then
-				local vroot,vhum = v.Character:FindFirstChild("HumanoidRootPart"),v.Character:FindFirstChild("Humanoid")
-				if vroot and vhum and vhum.Health>0 then
-					local dist = (vroot.Position-root.Position).Magnitude
-					if dist<closestmag then
-						closestpos=vroot.Position
-						closestmag=dist
+input.InputBegan:Connect(function(inp)
+	if not window.ScreenGui.Parent or input:GetFocusedTextBox() then return end
+	if killaura_keybind.Value:lower()==inp.KeyCode.Name:lower() then
+		killaura:UpdateSettingValue("Enabled",not killaura_enabled.Value)
+	end
+end)
+
+local lasthit=0
+task.spawn(function()
+	while window.ScreenGui.Parent do
+		local t = rs.PostSimulation:Wait()
+		if killaura_enabled.Value and char and root and tick()-lasthit>(1/killaura_rate.Value) then
+			local plrs = game:GetService("Players"):GetPlayers()
+			local hits = {}
+			for i,v in pairs(plrs) do
+				if v and v ~= plr and (plr.Team.Name=="NoTribe" or plr.Neutral or plr.Team~=v.Team) and v.Character then
+					local vroot:Part=v.Character:FindFirstChild("HumanoidRootPart")
+					local vhum:Humanoid=v.Character:FindFirstChild("Humanoid")
+					if vroot and vhum and (vroot.Position-root.Position).Magnitude<killaura_range.Value and vhum.Health>0 then
+						for i,v in pairs(v.Character:GetChildren()) do
+							if v:IsA("Part") then
+								table.insert(hits,v)
+							end
+						end
 					end
 				end
 			end
-		end
-		if closestpos then
-			disableBoat("Autochase")
-			if not isspeeddisabled("Autochase") then
-				disablespeed("Autochase")
-			end
-			local dir = closestpos-root.Position
-			local mag = dir.Magnitude
-			dir = dir.Unit
-			if dir.X~=dir.X then
-				dir=Vector3.new()
-			end
-			moveTo(root.CFrame+dir*math.clamp(step*autochase_speed.Value,0,mag))
-		elseif isspeeddisabled("Autochase") then
-			enablespeed("Autochase")
-			enableBoat("Autochase")
-		end
-	end
-	enablespeed("Autochase")
-	enableBoat("Autochase")
-end)
-
-local autoeat = utility:AddGroupbox({Name="Auto Eat"})
-autoeat_enabled = autoeat:AddToggle(1,{Text="Enabled"}):AddKeyPicker(1,{Default="",Text="Auto Eat",SyncToggleState=true})
-autoeat_threshold = autoeat:AddSlider(1,{Text="Threshold",Default=75,Min=0,Max=100,Rounding=1})
-autoeat_foods = autoeat:AddInput(1,{Text="Foods",Default="Lemon, Cooked Meat"})
-
-autoeat_enabled:OnChanged(function()
-	while true do
-		local step = rs.PreSimulation:Wait()
-		if not (isrunning and autoeat_enabled.Value) then break end
-		local hunger = (statsgui.Food.Slider.AbsoluteSize.X/statsgui.Food.AbsoluteSize.X)*100
-		if hunger<autoeat_threshold.Value then
-			for i,v in pairs(autoeat_foods.Value:split(",")) do
-				if getSlot(trim(v)) then
-					useSlot(getSlot(trim(v)))
-					break
-				end
-			end
-			task.wait(plr:GetNetworkPing()+0.1)
-		end
-	end
-end)
-
-local noslide = movement:AddGroupbox({Name="No Slide"})
-noslide_enabled=noslide:AddToggle(1,{Text="Enabled"}):AddKeyPicker(1,{Default="",Text="No Slide",SyncToggleState=true})
-
-noslide_enabled:OnChanged(function()
-	while true do
-		local step = rs.PreSimulation:Wait()
-		if not (isrunning and noslide_enabled.Value) then break end
-		if not hum then continue end
-		hum.MaxSlopeAngle=90
-	end
-	if hum then
-		hum.MaxSlopeAngle=46
-	end
-end)
-
-local clipup = movement:AddGroupbox({Name="Clip Up"})
-clipup_activate = clipup:AddToggle(1,{Text="Activate",Callback=function()
-	if not clipup_activate.Value then return end
-	clipup_activate:SetValue(false)
-	if not root or not isrunning then return end
-	local ray = workspace:Raycast(root.Position+Vector3.new(0,5000,0),Vector3.new(0,-10000,0),getMovementRaycastParams())
-	if ray then
-		moveTo(ray.Position+Vector3.new(0,3,0))
-	end
-end}):AddKeyPicker(1,{Default="E",Text="Clip Up",SyncToggleState=true})
-
-local clipdown = movement:AddGroupbox({Name="Clip Down"})
-clipdown_activate = clipdown:AddToggle(1,{Text="Activate",Callback=function()
-	if not clipdown_activate.Value then return end
-	clipdown_activate:SetValue(false)
-	if not root or not isrunning then return end
-	local ray = workspace:Raycast(root.Position-(Vector3.new(0,5,0)+if hum and hum.SeatPart then Vector3.new(0,speed_height.Value,0) else Vector3.new()),Vector3.new(0,-10000,0),getMovementRaycastParams())
-	if ray then
-		moveTo(ray.Position+Vector3.new(0,3,0))
-	end
-end}):AddKeyPicker(1,{Default="Q",Text="Clip DOwn",SyncToggleState=true})
-
-local nodoor = utility:AddGroupbox({Name="No Door"})
-nodoor_enabled= nodoor:AddToggle(1,{Text="Enabled"}):AddKeyPicker(1,{Default="",Text="No Door",SyncToggleState=true})
-
-local doors = {}
-for i,v in pairs(workspace.Deployables:GetDescendants()) do
-	if v.Name=="Door" and v:IsA("BasePart") then
-		doors[v]=v.Parent
-	end
-
-end
-workspace.Deployables.DescendantAdded:Connect(function(v)
-	if v.Name=="Door" and v:IsA("BasePart") then
-		task.wait()
-		doors[v]=v.Parent
-		if not pcall(function() v.Parent = if nodoor_enabled.Value then nil else v.Parent end) then doors[v]=nil end
-	end
-end)
-
-nodoor_enabled:OnChanged(function()
-	for i,v in pairs(doors) do
-		if not pcall(function() i.Parent = if nodoor_enabled.Value then nil else v end) then doors[v]=nil end
-	end
-end)
-table.insert(unloads,function()
-	for i,v in pairs(doors) do
-		pcall(function() i.Parent = v end)
-	end
-end)
-
-local birdfarm = utility:AddGroupbox({Name="Bird Farm"})
-birdfarm_enabled=birdfarm:AddToggle(1,{Text="Enabled"}):AddKeyPicker(1,{Default="",Text="No Slide",SyncToggleState=true})
-birdfarm_speed=birdfarm:AddSlider(1,{Text="Speed",Default=50,Min=0,Max=75,Rounding=1})
-
-local lasthit
-birdfarm_enabled:OnChanged(function()
-	disablespeed("Bird Farm")
-	while true do
-    wait(0.1)
-		local step = rs.PreSimulation:Wait()
-		if not (isrunning and birdfarm_enabled.Value) then break end
-		if not root and hum then continue end
-		disableBoat("Birdfarm")
-		local dz = hum.SeatPart and hum.SeatPart.Parent and hum.SeatPart.Parent:FindFirstChild("DangerZone")
-		local closest
-		local closestmag=math.huge
-		for i,v in pairs(birds) do
-			local dist = (flatten(root.Position)-flatten(v:GetPivot().Position)).Magnitude
-			if v:GetPivot().Position~=Vector3.new() and dist<closestmag then
-				closest = v
-				closestmag = dist
-			end
-		end
-		if closest then
-			teleportStepToward(closest:GetPivot().Position,birdfarm_speed.Value,step,3)
-			local frp = flatten(root.Position)
-			local crp = flatten(closest:GetPivot().Position)
-			if (frp-crp).Magnitude<2 then
-				local hits = {}
-				for i,v in pairs(closest:GetChildren()) do
-					if v:IsA("BasePart") then
-						table.insert(hits,v)
+			for i,v in pairs(workspace.Critters:GetChildren()) do
+				local vroot:Part=v:FindFirstChild("HumanoidRootPart")
+				if vroot and (vroot.Position-root.Position).Magnitude<killaura_range.Value then
+					for i,v in pairs(v:GetChildren()) do
+						if v:IsA("Part") then
+							table.insert(hits,v)
+						end
 					end
 				end
+			end
+			if isvoid then
+				for i,v in pairs(workspace:GetChildren()) do
+					if v.Name=="Void Ant" then
+						local vroot:Part=v:FindFirstChild("HumanoidRootPart")
+						if vroot and (vroot.Position-root.Position).Magnitude<killaura_range.Value then
+							for i,v in pairs(v:GetChildren()) do
+								if v:IsA("Part") then
+									table.insert(hits,v)
+								end
+							end
+						end
+					end
+				end
+			end
+			if not isvoid then
+				for i,v in pairs(workspace.HumanoidCritters:GetChildren()) do
+					local vroot:Part=v:FindFirstChild("HumanoidRootPart")
+					local vhum:Humanoid=v:FindFirstChild("Humanoid")
+					if vroot and vhum and vhum.Health>0 and (vroot.Position-root.Position).Magnitude<killaura_range.Value then
+						for i,v in pairs(v:GetChildren()) do
+							if v:IsA("Part") then
+								table.insert(hits,v)
+							end
+						end
+					end
+				end
+			end
+			if #hits>0 then
 				hit(hits)
-				moveTo(flatten(root.Position)+Vector3.new(0,closest:GetPivot().Y,0))
-			end
-			if not (lasthit and lasthit.Parent) then
-				lasthit=closest:FindFirstChild("HumanoidRootPart")
-			end
-			if dz and lasthit then
-				touch(dz,lasthit)
+				lasthit=tick()
 			end
 		end
 	end
-	enableBoat("Birdfarm")
-	enablespeed("Bird Farm")
-	rs.PreSimulation:Wait()
-	enableBoat("Birdfarm")
 end)
 
+local clipup = movement:AddSection("ClipUp")
+clipup_enabled=clipup:AddSetting("Activate","Button")
+clipup_keybind=clipup:AddSetting("Keybind","String","E")
+
+input.InputBegan:Connect(function(inp)
+	if not window.ScreenGui.Parent or input:GetFocusedTextBox() then return end
+	if clipup_keybind.Value:lower()==inp.KeyCode.Name:lower() then
+		clipup:UpdateSettingValue("Activate")
+	end
+end)
+
+clipup:ConnectSettingUpdate("Activate",function()
+	if root and hum then
+		local ray = workspace:Raycast(root.Position+Vector3.new(0,5000,0),Vector3.new(0,-10000),getMovementRaycastParams())
+		if ray then
+			moveTo(getMovePart().CFrame.Rotation+ray.Position+Vector3.new(0,2,0))
+		end
+	end
+end)
+
+local autograb = resource:AddSection("AutoGrab")
+autograb_enabled=autograb:AddSetting("Enabled","Toggle")
+autograb_keybind=autograb:AddSetting("Keybind","String","")
+autograb_range=autograb:AddSetting("Range","Slider",25,0,25,0.1)
+autograb_whitelistenabled=autograb:AddSetting("WhitelistEnabled","Toggle",true)
+autograb_whitelist=autograb:AddSetting("Whitelist","String","Gold, Crystal Chunk, Void Shard, Essence, Emerald, Pink Diamond, Coin2, Coin, Magnetite, Spirit Key")
+
+input.InputBegan:Connect(function(inp)
+	if not window.ScreenGui.Parent or input:GetFocusedTextBox() then return end
+	if autograb_keybind.Value:lower()==inp.KeyCode.Name:lower() then
+		autograb:UpdateSettingValue("Enabled")
+	end
+end)
+
+local grabbed = {}
+local chests = {}
+for i,v in pairs(workspace.Deployables:GetChildren()) do
+	if v.Name:lower():find("chest") then
+		table.insert(chests,v:FindFirstChild("Contents"))
+	end
+end
+workspace.Deployables.ChildAdded:Connect(function(v)
+	if v.Name:lower():find("chest") then
+		table.insert(chests,v:FindFirstChild("Contents"))
+	end
+end)
+
+task.spawn(function()
+	while window.ScreenGui.Parent do rs.RenderStepped:Wait()
+		if autograb_enabled.Value and root and hum and hum.Health>0 then
+			local children = workspace.Items:GetChildren()
+			for i,v in pairs(chests) do
+				for i,v in pairs(v:GetChildren()) do
+					table.insert(children,v)
+				end
+			end
+			local whitelist = {}
+			if autograb_whitelistenabled.Value then
+				for i,v in pairs(autograb_whitelist.Value:split(",")) do
+					whitelist[trim(v)]=true
+				end
+			end
+			for i,v:Instance in pairs(children) do
+				if grabbed[v] then continue end
+				if autograb_whitelistenabled.Value and not whitelist[v.Name] then continue end
+				if v:IsA("Model") then
+					if #v:GetChildren()>2 and (v:GetPivot().Position-root.Position).Magnitude<autograb_range.Value then
+						print("grab")
+						pickup(v)
+						grabbed[v]=true
+						task.spawn(function()
+							task.wait(1)
+							grabbed[v]=nil
+						end)
+					end
+				elseif v:IsA("BasePart") then
+					if (v.Position-root.Position).Magnitude<autograb_range.Value then
+						print("grab")
+						pickup(v)
+						grabbed[v]=true
+						task.spawn(function()
+							task.wait(1)
+							grabbed[v]=nil
+						end)
+					end
+				end
+			end
+		end
+	end
+end)
+
+local autochest = resource:AddSection("Auto Chest")
+autochest_enabled=autochest:AddSetting("Enabled","Toggle")
+autochest_keybind=autochest:AddSetting("Keybind","String","")
+autochest_range=autochest:AddSetting("Range","Slider",25,0,25,0.1)
+autochest_whitelistenabled=autochest:AddSetting("WhitelistEnabled","Toggle",false)
+autochest_whitelist=autochest:AddSetting("Whitelist","String","Gold, Crystal Chunk, Void Shard, Essence, Emerald, Pink Diamond")
+autochest_addeddelay=autochest:AddSetting("Added Delay","Slider",0.15,0.1,0.5)
+autochest_bind=autochest:AddSetting("Bind","Button")
+
+local chest 
+
+autochest:ConnectSettingUpdate("Bind",function()
+	mouse.Button1Down:Wait()
+	chest = mouse.Target and mouse.Target.Parent and mouse.Target.Parent:FindFirstChild("Base")
+end)
+
+input.InputBegan:Connect(function(inp)
+	if not window.ScreenGui.Parent or input:GetFocusedTextBox() then return end
+	if autochest_keybind.Value:lower()==inp.KeyCode.Name:lower() then
+		autochest:UpdateSettingValue("Enabled")
+	end
+end)
+
+local waitingforchest=false
+task.spawn(function()
+	while window.ScreenGui.Parent do rs.RenderStepped:Wait()
+		if autochest_enabled.Value and root and hum and hum.Health>0 and chest then
+			local closest
+			local closestmag = autochest_range.Value
+			local whitelist = autochest_whitelist.Value:split(",")
+			for i,v in pairs(whitelist) do
+				whitelist[i]=trim(v)
+			end
+			for i,v:Instance in pairs(workspace.Items:GetChildren()) do
+				if grabbed[v] then continue end
+				if autochest_whitelistenabled.Value then
+					if not table.find(whitelist,v.Name) then
+						continue
+					end
+				end
+				local pos = if v:IsA("BasePart") then v.Position elseif v:IsA("Model") then v:GetPivot().Position else nil
+				if pos and (pos-root.Position).Magnitude<closestmag then
+					closest = v
+					closestmag = (pos-root.Position).Magnitude
+				end
+			end
+			if not closest then continue end
+			if closest:IsA("Model") then
+				local mover = getMover(closest)
+				if mover then
+					task.spawn(function()
+						waitingforchest=true
+						grab(closest)
+						task.wait(plr:GetNetworkPing()+autochest_addeddelay.Value)
+						touch(mover,chest)
+						grab()
+						grabbed[mover]=true
+						task.spawn(function()
+							task.wait(1)
+							grabbed[mover]=nil
+						end)
+						waitingforchest=false
+					end)
+				end
+			elseif closest:IsA("BasePart") then
+				task.spawn(function()
+					waitingforchest=true
+					grab(closest)
+					task.wait(plr:GetNetworkPing()+autochest_addeddelay.Value)
+					touch(closest,chest)
+					grab()
+					grabbed[closest]=true
+					task.spawn(function()
+						task.wait(1)
+						grabbed[closest]=nil
+					end)
+					waitingforchest=false
+				end)
+			end
+		end
+	end
+end)
+
+
+local autofarm = resource:AddSection("Auto Farm")
+autofarm_enabled=autofarm:AddSetting("Enabled","Toggle")
+autofarm_antrange=autofarm:AddSetting("Avoid Ant Range","Slider",100,0,100)
+autofarm_resources=autofarm:AddSetting("Resources","String","Gold Node")
+autofarm_usechest=autofarm:AddSetting("Use Chest","Toggle")
+autofarm_speed=autofarm:AddSetting("Speed","Slider",50,0,250)
+
+local tppos
+local itemcon:RBXScriptConnection
 local function getAntsDistance(pos)
 	if isvoid then return math.huge end
 	local closestmag = math.huge
@@ -1108,257 +759,600 @@ local function getAntsDistance(pos)
 	end
 	return closestmag
 end
+local function validgold()
+	local search = autofarm_resources.Value:split(",")
+	for i,v in pairs(search) do
+		search[i]=trim(v)
+	end
+	local closest
+	local closestmag = math.huge
+	local frp = root.Position-Vector3.new(0,root.Position.Y,0)
+	for i,v:Instance in pairs(workspace.Resources:GetChildren()) do
+		if v:IsA("Model") and table.find(search,v.Name) and v:GetPivot().Position~=Vector3.new() then
+			local fpos = v:GetPivot().Position-Vector3.new(0,v:GetPivot().Position.Y,0)
+			local dist =(fpos-frp).Magnitude
+			if dist<closestmag then
+				local cdist = getAntsDistance(v:GetPivot().Position)
+				if cdist>autofarm_antrange.Value then
+					closest=v
+					closestmag=dist
+				end
+			end
+		end
+	end
+	return closest==nil
+end
 
-local autofarm = utility:AddGroupbox({Name="Auto Farm"})
-autofarm_enabled=autofarm:AddToggle(1,{Text="Enabled"}):AddKeyPicker(1,{Default="",Text="No Slide",SyncToggleState=true})
-autofarm_resources=autofarm:AddInput(1,{Text="Resources",Default="Gold Node"})
-autofarm_speed=autofarm:AddSlider(1,{Text="Speed",Default=50,Min=0,Max=75,Rounding=1})
-
-local autofarmwhitelist = {}
-autofarm_resources:OnChanged(function()
-	table.clear(autofarmwhitelist)
-	for i,v in pairs(autofarm_resources.Value:split(",")) do
-		autofarmwhitelist[trim(v)]=true
+local waiting = false
+local defaulttppos
+task.spawn(function()
+	while not defaulttppos do rs.PostSimulation:Wait()
+		tppos = workspace:Raycast(Vector3.new(-217,1000,-678),Vector3.new(0,-10000,0),getMovementRaycastParams())
+		if tppos then
+			defaulttppos=tppos.Position
+		end
 	end
 end)
-for i,v in pairs(autofarm_resources.Value:split(",")) do
-	autofarmwhitelist[trim(v)]=true
-end
-autofarm_enabled:OnChanged(function()
-	disablespeed("Auto Farm")
-	local goto
-	while true do
-		local step = rs.PreSimulation:Wait()
-		enableBoat("Autofarm")
-		if not (isrunning and autofarm_enabled.Value) then break end
-		if not root and hum then continue end
-		disableBoat("Autofarm")
-		local dz = hum.SeatPart and hum.SeatPart.Parent and hum.SeatPart.Parent:FindFirstChild("DangerZone")
+autofarm:ConnectSettingUpdate("Enabled",function()
+	if not autofarm_enabled.Value then return end
+	tppos=root.Position
+	hum:SetStateEnabled(Enum.HumanoidStateType.Jumping,false)
+	while window.ScreenGui.Parent and autofarm_enabled.Value do rs.PostSimulation:Wait()
+		disableBoat()
+		local search = autofarm_resources.Value:split(",")
+		for i,v in pairs(search) do
+			search[i]=trim(v)
+		end
 		local closest
-		local closestmag=math.huge
-		for i,v in pairs(resources) do
-			if v:GetPivot().Position~=Vector3.new() and autofarmwhitelist[v.Name] then
-				local dist = (flatten(root.Position)-flatten(v:GetPivot().Position)).Magnitude
-				if dist<closestmag and getAntsDistance(v:GetPivot().Position)>50 then
-					closest = v
-					closestmag = dist
+		local closestmag = math.huge
+		local frp = root.Position-Vector3.new(0,root.Position.Y,0)
+		for i,v:Instance in pairs(workspace.Resources:GetChildren()) do
+			if v:IsA("Model") and table.find(search,v.Name) and v:GetPivot().Position~=Vector3.new() then
+				local fpos = v:GetPivot().Position-Vector3.new(0,v:GetPivot().Position.Y,0)
+				local dist =(fpos-frp).Magnitude
+				if dist<closestmag then
+					local cdist = getAntsDistance(v:GetPivot().Position)
+					if cdist>autofarm_antrange.Value then
+						closest=v
+						closestmag=dist
+					end
 				end
 			end
 		end
 		if closest then
-			local rp = RaycastParams.new()
-			rp.FilterDescendantsInstances={closest}
-			rp.FilterType=Enum.RaycastFilterType.Include
-			goto = workspace:Raycast(closest:GetPivot().Position+Vector3.new(0,100,0),Vector3.new(0,-200,0),rp).Position
-			teleportTo(goto+Vector3.new(0,3,0),autofarm_speed.Value,false,function()
-				return isrunning and autofarm_enabled.Value and getAntsDistance(closest:GetPivot().Position)>50
-			end,3)
-			local hits = {}
-			for i,v in pairs(closest:GetChildren()) do
-				if v:IsA("BasePart") then
-					table.insert(hits,v)
-				end
-			end
-			local grabcon = workspace.Items.ChildAdded:Connect(function(c)
-				local dist = (c:GetPivot().Position-root.Position).Magnitude
-				if dist<20 then
-					pickup(c)
+			waiting=false
+			teleportTo(closest:GetPivot().Position,autofarm_speed.Value,false,function()
+				return getAntsDistance(closest:GetPivot().Position)>autofarm_antrange.Value and autofarm_enabled.Value
+			end)
+			disableBoat()
+			itemcon = workspace.Items.ChildAdded:Connect(function(v:Instance)
+				if not autofarm_usechest.Value then
+					if v:IsA("Model") then
+						if #v:GetChildren()>2 and (v:GetPivot().Position-root.Position).Magnitude<autograb_range.Value then
+							pickup(v)
+							grabbed[v]=true
+							task.spawn(function()
+								task.wait(1)
+								grabbed[v]=nil
+							end)
+						end
+					elseif v:IsA("BasePart") then
+						if (v.Position-root.Position).Magnitude<autograb_range.Value then
+							pickup(v)
+							grabbed[v]=true
+							task.spawn(function()
+								task.wait(1)
+								grabbed[v]=nil
+							end)
+						end
+					end
 				end
 			end)
-			while closest and closest.Parent and isrunning and autofarm_enabled.Value do
-				rs.PostSimulation:Wait()
-				moveTo(goto+Vector3.new(0,3,0))
-				hit(hits)
-			end
-			local goto = workspace:Raycast(closest:GetPivot().Position+Vector3.new(0,100,0),Vector3.new(0,-200,0),getMovementRaycastParams()).Position
-			local t=tick()
-			local towait = plr:GetNetworkPing()+0.1
-			while tick()-t<towait and isrunning and autofarm_enabled.Value do rs.PostSimulation:Wait()
-				moveTo(goto+Vector3.new(0,3,0))
-			end
-			grabcon:Disconnect()
-		elseif goto then
-			moveTo(goto+Vector3.new(0,3,0))
-		end
-	end
-	enablespeed("Auto Farm")
-	enableBoat("Autofarm")
-end)
-
-local autograb = utility:AddGroupbox({Name="Auto Grab"})
-autograb_enabled = autograb:AddToggle(1,{Text="Enabled"}):AddKeyPicker(1,{Default="",Text="Auto Grab",SyncToggleState=true})
-autograb_range = autograb:AddSlider(1,{Text="Range",Default=25,Min=0,Max=25,Rounding=1})
-autograb_whitelistenabled = autograb:AddToggle(1,{Text="Whitelist Enabled",Default=true})
-autograb_whitelist = autograb:AddInput(1,{Text="Resources",Default="Gold, Crystal Chunk, Void Shard, Essence, Emerald, Pink Diamond, Coin2, Coin, Magnetite, Spirit Key"})
-autograb_chest = autograb:AddToggle(1,{Text="Chest"})
-autograb_safechest = autograb:AddToggle(1,{Text="Safe Chest"})
-local autograbchest
-autograb:AddButton({Text="Bind Near Chest",Func=function()
-	local best
-	local bestdist = 25
-	for i,v in pairs(workspace.Deployables:GetChildren()) do
-		if v.Name:find("Chest") then
-			if (root.Position-v:GetPivot().Position).Magnitude<bestdist then
-				best=v.Base
-			end
-		end
-	end
-	autograbchest = best or autograbchest
-end,})
-
-local autograbwhitelist = {}
-autograb_whitelist:OnChanged(function()
-	table.clear(autograbwhitelist)
-	for i,v in pairs(autograb_whitelist.Value:split(",")) do
-		autograbwhitelist[trim(v)]=true
-	end
-end)
-for i,v in pairs(autograb_whitelist.Value:split(",")) do
-	autograbwhitelist[trim(v)]=true
-end
-
-local function chest(item)
-	if not autograbchest then return end
-	if item:IsA("Model") then
-		for i,v in pairs(item:GetDescendants()) do
-			if v:IsA("BasePart") then v.CFrame=autograbchest.CFrame end
-		end
-		touch(getMover(item),autograbchest)
-	else
-		item.CFrame=autograbchest.CFrame
-		touch(item,autograbchest)
-	end
-end
-autograb_enabled:OnChanged(function()
-	local items = {}
-	local lastupdate = Vector3.new(0,-1000,0)
-	local itemcon = workspace.Items.ChildAdded:Connect(function(v)
-		if v:GetPivot().Position~=Vector3.new() then
-			local dist = (root.Position-v:GetPivot().Position).Magnitude
-			if dist<75 then
-				table.insert(items,v)
-			end
-		end
-	end)
-	while true do
-		local step = rs.PostSimulation:Wait()
-		if not (isrunning and autograb_enabled.Value) then break end
-		if not root then continue end
-		if (root.Position-lastupdate).Magnitude>25 then
-			table.clear(items)
-			for i,v in pairs(workspace.Items:GetChildren()) do
-				if v:GetPivot().Position~=Vector3.new() then
-					local dist = (root.Position-v:GetPivot().Position).Magnitude
-					if dist<75 then
-						table.insert(items,v)
-					end
+			local rp = RaycastParams.new()
+			rp.FilterType=Enum.RaycastFilterType.Include
+			rp.FilterDescendantsInstances={closest}
+			tppos = workspace:Raycast(closest:GetPivot().Position+Vector3.new(0,50,0),Vector3.new(0,-100,0),rp) or closest:GetPivot()
+			tppos=tppos.Position
+			local closeparts={}
+			for i,v in pairs(closest:GetDescendants()) do
+				if v:IsA("BasePart") then
+					table.insert(closeparts,v)
 				end
 			end
-			lastupdate=root.Position
-		end
-		for i,v in pairs(items) do
-			if v:GetPivot().Position~=Vector3.new() and (not autograb_whitelistenabled.Value or autograbwhitelist[v.Name]) then
-				local dist = (root.Position-v:GetPivot().Position).Magnitude
-				if dist<autograb_range.Value then
-					if autograb_chest.Value then
-						manipulate(v,chest,autograb_safechest.Value)
+			while tppos and autofarm_enabled.Value and closest.Parent and getAntsDistance(closest:GetPivot().Position)>autofarm_antrange.Value do rs.RenderStepped:Wait()
+				disableBoat()
+				moveTo(tppos+Vector3.new(0,1.5,0))
+				hit(closeparts)
+			end
+			tppos = workspace:Raycast(tppos,Vector3.new(0,-100,0),getMovementRaycastParams()) or root.CFrame
+			tppos=tppos.Position
+			local t = tick()
+			local lgrabbed = {}
+			local waittime = plr:GetNetworkPing()+0.25
+			while tppos and autofarm_enabled.Value and (tick()-t<waittime or autofarm_usechest.Value) and getAntsDistance(closest:GetPivot().Position)>autofarm_antrange.Value do rs.PostSimulation:Wait()
+				if not autofarm_usechest.Value  then
+					for i,v:Instance in pairs(workspace.Items:GetChildren()) do
+						if lgrabbed[v] then continue end
+						if v:IsA("Model") then
+							if #v:GetChildren()>2 and (v:GetPivot().Position-root.Position).Magnitude<autograb_range.Value then
+								pickup(v)
+								lgrabbed[v]=true
+								task.spawn(function()
+									task.wait(1)
+									lgrabbed[v]=nil
+								end)
+							end
+						elseif v:IsA("BasePart") then
+							if (v.Position-root.Position).Magnitude<autograb_range.Value then
+								pickup(v)
+								lgrabbed[v]=true
+								task.spawn(function()
+									task.wait(1)
+									lgrabbed[v]=nil
+								end)
+							end
+						end
+					end
+				else
+					local closest
+					local closestmag = autochest_range.Value
+					for i,v:Instance in pairs(workspace.Items:GetChildren()) do
+						if grabbed[v] then continue end
+						local pos = if v:IsA("BasePart") then v.Position elseif v:IsA("Model") then v:GetPivot().Position else nil
+						if pos and (pos-root.Position).Magnitude<closestmag then
+							closest = v
+							closestmag = (pos-root.Position).Magnitude
+						end
+					end
+					if not closest then
+						if tick()-t<0.5 then continue end
 						break
-					else
-						pickup(v)
+					end
+					if closest:IsA("Model") then
+						local mover = getMover(closest)
+						if mover then
+							grab(closest)
+							task.wait(plr:GetNetworkPing()+autochest_addeddelay.Value)
+							touch(closest,chest)
+							grab()
+							grabbed[closest]=true
+							task.spawn(function()
+								task.wait(1)
+								grabbed[closest]=nil
+							end)
+						end
+					elseif closest:IsA("BasePart") then
+						grab(closest)
+						task.wait(plr:GetNetworkPing()+autochest_addeddelay.Value)
+						touch(closest,chest)
+						grab()
+						grabbed[closest]=true
+						task.spawn(function()
+							task.wait(1)
+							grabbed[closest]=nil
+						end)
+					end
+				end
+				disableBoat()
+				moveTo(tppos+Vector3.new(0,3,0))
+			end
+			itemcon:Disconnect()
+			itemcon=nil
+		else
+			if defaulttppos then
+				if not waiting then
+					waiting=true
+					teleportTo(defaulttppos+Vector3.new(0,3,0),autofarm_speed.Value,false,function()
+						return autofarm_enabled.Value and validgold()
+					end)
+				else
+					moveTo(defaulttppos+Vector3.new(0,3,0))
+				end
+			end
+		end
+	end
+	waiting=false
+	if itemcon then	
+		itemcon:Disconnect()
+		itemcon=nil
+	end
+	hum:SetStateEnabled(Enum.HumanoidStateType.Jumping,true)
+	enableBoat()
+	tppos=nil
+end)
+
+local resourceaura = resource:AddSection("ResourceAura")
+resourceaura_enabled = resourceaura:AddSetting("Enabled","Toggle")
+resourceaura_keybind = resourceaura:AddSetting("Keybind","String","")
+resourceaura_range = resourceaura:AddSetting("Range","Slider",25,0,25)
+resourceaura_rate = resourceaura:AddSetting("Rate","Slider",30,0,120)
+
+input.InputBegan:Connect(function(inp)
+	if not window.ScreenGui.Parent or input:GetFocusedTextBox() then return end
+	if resourceaura_keybind.Value==inp.KeyCode.Name then
+		resourceaura_enabled:UpdateSettingValue("Enabled",not resourceaura_enabled.Value)
+	end
+end)
+
+local lasthit=0
+task.spawn(function()
+	while window.ScreenGui.Parent do
+		local t = rs.PostSimulation:Wait()
+		if resourceaura_enabled.Value and char and root and tick()-lasthit>(1/resourceaura_rate.Value) then
+			local resources:{Instance}=workspace.Resources:GetChildren()
+			local hits = {}
+			for i,v in pairs(resources) do
+				if v:IsA("Model") then
+					local dist = (v:GetPivot().Position-root.Position).Magnitude
+					if dist<resourceaura_range.Value then
+						for i,v in pairs(v:GetDescendants()) do
+							if v:IsA("BasePart") then
+								table.insert(hits,v)
+							end
+						end
+					end
+				end
+			end
+			if #hits>0 then
+				hit(hits)
+				lasthit=tick()
+			end
+		end
+	end
+end)
+
+local autoeat = utility:AddSection("Auto Eat")
+autoeat_enabled = autoeat:AddSetting("Enabled","Toggle")
+autoeat_threshold = autoeat:AddSetting("Threshold","Slider",75,0,100,0.1)
+autoeat_foods=autoeat:AddSetting("Foods","String","Lemon, Cooked Meat")
+
+local lastate = 0
+task.spawn(function()
+	while window.ScreenGui.Parent do
+		rs.RenderStepped:Wait()
+		if autoeat_enabled.Value and tick()-lastate>0.2 then
+			local hunger = (statsgui.Food.Slider.AbsoluteSize.X/statsgui.Food.AbsoluteSize.X)*100
+			if hunger<autoeat_threshold.Value then
+				for i,v in pairs(autoeat_foods.Value:split(",")) do
+					if getSlot(trim(v)) then
+						useSlot(getSlot(trim(v)))
+						lastate=tick()
+						break
 					end
 				end
 			end
 		end
 	end
-	itemcon:Disconnect()
 end)
 
-local teleports = utility:AddGroupbox({Name="Teleports"})
-teleports:AddButton({Text="Big Void",Func=function()
-	local servers = getServers(11879754496).data
-	local touse = {}
-	for i,v in pairs(servers) do
-		if v.playing>25 then
-			table.insert(touse,v.id)
+local noslide = movement:AddSection("NoSlide")
+noslide_enabled=noslide:AddSetting("Enabled","Toggle")
+local pang = hum.MaxSlopeAngle
+task.spawn(function()
+	while window.ScreenGui.Parent do rs.PreSimulation:Wait()
+		if not hum then return end
+		if noslide_enabled.Value then
+			pang=hum.MaxSlopeAngle
+			hum.MaxSlopeAngle=90
+		else
+			hum.MaxSlopeAngle=pang
 		end
 	end
-	local bestid = #touse>0 and touse[math.random(1,#touse)] or servers[1].id
-	ts:TeleportToPlaceInstance(11879754496,bestid,plr)
-end})
-teleports:AddButton({Text="Small Void",Func=function()
-	local servers = getServers(11879754496).data
-	local bestid = servers[#servers].id
-	ts:TeleportToPlaceInstance(11879754496,bestid,plr)
-end})
-teleports:AddButton({Text="Low Ping Void",Func=function()
-	local servers = getServers(11879754496).data
-	local bestid
-	local bestval=math.huge
-	for i,v in pairs(servers) do
-		if v.ping<bestval then
-			bestid=v.id
-		end
-	end
-	ts:TeleportToPlaceInstance(11879754496,bestid,plr)
-end})
-teleports:AddButton({Text="Random Void",Func=function()
-	local servers = getServers(11879754496).data
-	local bestid = servers[math.random(1,#servers)].id
-	while bestid==game.JobId do
-		bestid = servers[math.random(1,#servers)].id
-	end
-	ts:TeleportToPlaceInstance(11879754496,bestid,plr)
-end})
-teleports:AddButton({Text="Big Overworld",Func=function()
-	local servers = getServers(11729688377).data
-	local touse = {}
-	for i,v in pairs(servers) do
-		if v.playing>25 then
-			table.insert(touse,v.id)
-		end
-	end
-	local bestid = #touse>0 and touse[math.random(1,#touse)] or servers[1].id
-	ts:TeleportToPlaceInstance(11729688377,bestid,plr)
-end})
-teleports:AddButton({Text="Small Overworld",Func=function()
-	local servers = getServers(11729688377).data
-	local bestid = servers[#servers].id
-	ts:TeleportToPlaceInstance(11729688377,bestid,plr)
-end})
-teleports:AddButton({Text="Low Ping Overworld",Func=function()
-	local servers = getServers(11729688377).data
-	local bestid
-	local bestval=math.huge
-	for i,v in pairs(servers) do
-		if v.ping<bestval then
-			bestid=v.id
-		end
-	end
-	ts:TeleportToPlaceInstance(11729688377,bestid,plr)
-end})
-teleports:AddButton({Text="Random Overworld",Func=function()
-	local servers = getServers(11729688377).data
-	local bestid = servers[math.random(1,#servers)].id
-	while bestid==game.JobId do
-		bestid = servers[math.random(1,#servers)].id
-	end
-	ts:TeleportToPlaceInstance(11729688377,bestid,plr)
-end})
+end)
 
---esp temp
+local autoheal = combat:AddSection("Auto Heal")
+autoheal_enabled = autoheal:AddSetting("Enabled","Toggle")
+autoheal_tosave = autoheal:AddSetting("To Save","Number",500)
+autoheal_rate = autoheal:AddSetting("Rate","Number",50)
+autoheal_perhp = autoheal:AddSetting("Blood Per HP","Number",0.5)
+
+local lhp = hum and hum.Health or 100
+local healcon
+local tohealow=0
+local function hpchanged()
+	local chp = hum.Health
+	if chp>lhp then lhp = chp return end
+	if isvoid and autoheal_enabled.Value then
+		if getCount("Bloodfruit") <= autoheal_tosave.Value then return end
+		if lhp>chp then
+			--local toheal = math.clamp((lhp-chp)/3,0,10)
+			--toheal += ((lhp-chp)-toheal*3)/1.5
+			--toheal=math.ceil(toheal)+1
+			local toheal = math.ceil((lhp-chp)/itemdata.Bloodfruit.nourishment.health)
+			for i=1,toheal do
+				useSlot(getSlot("Bloodfruit"))
+			end
+			lhp=chp
+		end
+	end
+	tohealow+=lhp-chp
+	lhp = chp
+end
+if hum then
+	if healcon then
+		healcon:Disconnect()
+	end
+	healcon = hum:GetPropertyChangedSignal("Health"):Connect(hpchanged)
+end
+plr.CharacterAdded:Connect(function(c)
+	task.wait(0.5)
+	healcon = hum:GetPropertyChangedSignal("Health"):Connect(hpchanged)
+end)
+local lastate = 0
+task.spawn(function()
+	while window.ScreenGui.Parent do
+		rs.RenderStepped:Wait()
+		if autoheal_enabled.Value and hum then
+			if getCount("Bloodfruit") <= autoheal_tosave.Value then continue end
+			if not isvoid then
+				if tohealow>0 and tick()-lastate>1/autoheal_rate.Value then
+					useSlot(getSlot("Bloodfruit"))
+					tohealow=math.clamp(tohealow-autoheal_perhp.Value,0,1000)
+					lastate=tick()
+				end
+			else
+				--local chp = hum.Health
+				--if chp<lhp then
+				--	for i=1,math.ceil((chp-chp)/4)+5 do
+				--		useSlot(getSlot("Bloodfruit"))
+				--	end
+				--end
+				--lhp=chp
+			end
+		end
+	end
+	healcon:Disconnect()
+end)
+
+local clipdown = movement:AddSection("ClipDown")
+clipdown_enabled=clipdown:AddSetting("Activate","Button")
+clipdown_keybind=clipdown:AddSetting("Keybind","String","Q")
+
+input.InputBegan:Connect(function(inp)
+	if not window.ScreenGui.Parent or input:GetFocusedTextBox() then return end
+	if clipdown_keybind.Value:lower()==inp.KeyCode.Name:lower() then
+		clipdown:UpdateSettingValue("Activate")
+	end
+end)
+
+clipdown:ConnectSettingUpdate("Activate",function()
+	if root and hum then
+		local ray = workspace:Raycast(root.Position-Vector3.new(0,5,0),Vector3.new(0,-10000),getMovementRaycastParams())
+		if ray then
+			moveTo(getMovePart().CFrame.Rotation+ray.Position+Vector3.new(0,2,0))
+		end
+	end
+end)
+
+local nodoor = utility:AddSection("No Door")
+nodoor_enabled=nodoor:AddSetting("Enabled","Toggle")
+
+local doors = {}
+for i,v in pairs(workspace.Deployables:GetDescendants()) do
+	if v.Name=="Door" and v:IsA("BasePart") then
+		doors[v]=v.Parent
+	end
+end
+workspace.Deployables.DescendantAdded:Connect(function(v)
+	if v.Name=="Door" and v:IsA("BasePart") then
+		task.wait()
+		doors[v]=v.Parent
+		if not pcall(function() v.Parent = if nodoor_enabled.Value then nil else v.Parent end) then doors[v]=nil end
+	end
+end)
+
+nodoor:ConnectSettingUpdate("Enabled",function()
+	for i,v in pairs(doors) do
+		if not pcall(function() i.Parent = if nodoor_enabled.Value then nil else v end) then doors[v]=nil end
+	end
+end)
+task.spawn(function()
+	while window.ScreenGui.Parent do task.wait() end
+	for i,v in pairs(doors) do
+		pcall(function() i.Parent = v end)
+	end
+end)
+
+local teleports = utility:AddSection("Teleports")
+teleports_bigvoid=teleports:AddSetting("Big Void","Button")
+teleports:ConnectSettingUpdate("Big Void",function()
+	local servers = getServers(11879754496).data
+	local touse = {}
+	for i,v in pairs(servers) do
+		if v.playing>25 then
+			table.insert(touse,v.id)
+		end
+	end
+	local bestid = #touse>0 and touse[math.random(1,#touse)] or servers[1].id
+	ts:TeleportToPlaceInstance(11879754496,bestid,plr)
+end)
+teleports_smallvoid=teleports:AddSetting("Small Void","Button")
+teleports:ConnectSettingUpdate("Small Void",function()
+	local servers = getServers(11879754496).data
+	local bestid = servers[#servers].id
+	ts:TeleportToPlaceInstance(11879754496,bestid,plr)
+end)
+teleports_lowpingvoid=teleports:AddSetting("Low Ping Void","Button")
+teleports:ConnectSettingUpdate("Low Ping Void",function()
+	local servers = getServers(11879754496).data
+	local bestid
+	local bestval=math.huge
+	for i,v in pairs(servers) do
+		if v.ping<bestval then
+			bestid=v.id
+		end
+	end
+	ts:TeleportToPlaceInstance(11879754496,bestid,plr)
+end)
+teleports_randomvoid=teleports:AddSetting("Random Void","Button")
+teleports:ConnectSettingUpdate("Random Void",function()
+	local servers = getServers(11879754496).data
+	local bestid = servers[math.random(1,#servers)].id
+	while bestid==game.JobId do
+		bestid = servers[math.random(1,#servers)].id
+	end
+	ts:TeleportToPlaceInstance(11879754496,bestid,plr)
+end)
+
+teleports_bigoverworld=teleports:AddSetting("Big Overworld","Button")
+teleports:ConnectSettingUpdate("Big Overworld",function()
+	local servers = getServers(11729688377).data
+	local touse = {}
+	for i,v in pairs(servers) do
+		if v.playing>25 then
+			table.insert(touse,v.id)
+		end
+	end
+	local bestid = #touse>0 and touse[math.random(1,#touse)] or servers[1].id
+	ts:TeleportToPlaceInstance(11729688377,bestid,plr)
+end)
+teleports_smalloverworld=teleports:AddSetting("Small Overworld","Button")
+teleports:ConnectSettingUpdate("Small Overworld",function()
+	local servers = getServers(11729688377).data
+	local bestid = servers[#servers].id
+	ts:TeleportToPlaceInstance(11729688377,bestid,plr)
+end)
+teleports_lowpingoverworld=teleports:AddSetting("Low Ping Overworld","Button")
+teleports:ConnectSettingUpdate("Low Ping Overworld",function()
+	local servers = getServers(11729688377).data
+	local bestid
+	local bestval=math.huge
+	for i,v in pairs(servers) do
+		if v.ping<bestval then
+			bestid=v.id
+		end
+	end
+	ts:TeleportToPlaceInstance(11729688377,bestid,plr)
+end)
+teleports_randomoverworld=teleports:AddSetting("Random Overworld","Button")
+teleports:ConnectSettingUpdate("Random Overworld",function()
+	local servers = getServers(11729688377).data
+	local bestid = servers[math.random(1,#servers)].id
+	while bestid==game.JobId do
+		bestid = servers[math.random(1,#servers)].id
+	end
+	ts:TeleportToPlaceInstance(11729688377,bestid,plr)
+end)
+
+local autoplant = resource:AddSection("Auto Plant")
+autoplant_enabled=autoplant:AddSetting("Enabled","Toggle")
+autoplant_item=autoplant:AddSetting("Item","String","Bloodfruit")
+
+local planterboxes = {}
+for i,v in pairs(workspace.Deployables:GetChildren()) do
+	if v.Name=="Plant Box" then
+		table.insert(planterboxes,v)
+	end
+end
+workspace.Deployables.ChildAdded:Connect(function(v)
+	if v.Name=="Plant Box" then
+		table.insert(planterboxes,v)
+	end
+end)
+
+task.spawn(function()
+	while window.ScreenGui.Parent do rs.RenderStepped:Wait()
+		if autoplant_enabled.Value then
+			local closest
+			local closestmag = 25
+			for i,v in pairs(planterboxes) do
+				if #v:GetChildren()==8 and v:FindFirstChild("Reference") then
+					local dist = (v:FindFirstChild("Reference").Position-root.Position).Magnitude
+					if dist<closestmag then
+						closest=v
+						closestmag=dist
+					end
+				end
+			end
+			if closest then
+				plant(closest,getItemId(autoplant_item.Value))
+			end
+		end
+	end
+end)
+
+local autoharvest = resource:AddSection("Auto Harvest")
+autoharvest_enabled=autoharvest:AddSetting("Enabled","Toggle")
+autoharvest_range=autoharvest:AddSetting("Range","Slider",25,0,25)
+
+local planterboxes = {}
+for i,v in pairs(workspace.Deployables:GetChildren()) do
+	if v.Name=="Plant Box" then
+		table.insert(planterboxes,v)
+	end
+end
+workspace.Deployables.ChildAdded:Connect(function(v)
+	if v.Name=="Plant Box" then
+		table.insert(planterboxes,v)
+	end
+end)
+
+task.spawn(function()
+	while window.ScreenGui.Parent do local step = rs.RenderStepped:Wait()
+		if autoharvest_enabled.Value and root and hum and hum.Health>0 then
+			for i,v:Instance in pairs(workspace:GetChildren()) do
+				if grabbed[v] then continue end
+				if v:IsA("Model") then
+					local dist = (v:GetPivot().Position-root.Position).Magnitude
+					if v:FindFirstChild("Pickup") and #v:GetChildren()>1 and dist<autoharvest_range.Value then
+						pickup(v)
+						grabbed[v]=true
+						task.spawn(function()
+							task.wait(1)
+							grabbed[v]=nil
+						end)
+					end
+				end
+			end
+		end
+	end
+end)
+
+local placeplantboxes=utility:AddSection("Place Plantboxes")
+placeplantboxes_enabled=placeplantboxes:AddSetting("Enabled","Toggle")
+
+task.spawn(function()
+	while window.ScreenGui.Parent do rs.PostSimulation:Wait()
+		if placeplantboxes_enabled.Value then
+			local pos = root.Position
+			pos = Vector3.new(math.round(pos.X/6.05)*6.05,pos.Y,math.round(pos.Z/6.05)*6.05)
+			local ray = workspace:Raycast(pos+Vector3.new(0,100,0),Vector3.new(0,-200,0),getMovementRaycastParams())
+			if ray then
+				place("Plant Box",0,ray.Position)
+			end
+		end
+	end
+end)
+
+local void = movement:AddSection("Void")
+void_activate=void:AddSetting("Activate","Button")
+void:ConnectSettingUpdate("Activate",function()
+	getMovePart().CFrame-=Vector3.new(0,100,0)
+end)
+
+local antiaim = visuals:AddSection("Anti Aim")
+antiaim_enabled=antiaim:AddSetting("Enabled","Toggle")
+task.spawn(function()
+	while window.ScreenGui.Parent do rs.PostSimulation:Wait()
+		if antiaim_enabled.Value then
+			root.CFrame=CFrame.lookAt(root.Position,Vector3.new(math.random(-10000,10000),0,math.random(-10000,10000)))
+		end
+	end
+end)
+
 local plrstatguis:{{Frame}} = {}
-local esp = visuals:AddGroupbox({Name="ESP"})
-esp_enabled=esp:AddToggle(1,{Text="Enabled"}):AddKeyPicker(1,{Default="",Text="ESP",SyncToggleState=true})
-esp_name=esp:AddToggle(1,{Text="Name",Default=true})
-esp_name:OnChanged(function()
+local esp = visuals:AddSection("ESP")
+esp_enabled=esp:AddSetting("Enabled","Toggle")
+esp_name=esp:AddSetting("Name","Toggle",true)
+esp:ConnectSettingUpdate("Name",function()
 	for i,v in pairs(plrstatguis) do
 		if v.Name then
 			v.Name.Parent=if esp_name.Value then v.Main else nil
 		end
 	end
 end)
-esp_health=esp:AddToggle(1,{Text="Health",Default=true})
-esp_health:OnChanged(function()
+esp_health=esp:AddSetting("Health","Toggle",true)
+esp:ConnectSettingUpdate("Health",function()
 	for i,v in pairs(plrstatguis) do
 		if v.Health then
 			v.Health.Parent=if esp_health.Value then v.Main else nil
@@ -1378,7 +1372,7 @@ for x=-0.5,0.5 do
 	end
 end
 
-esp_enabled:OnChanged(function()
+esp:ConnectSettingUpdate("Enabled",function()
 	if not esp_enabled.Value then
 		for i,v in pairs(plrstatguis) do
 			v.Main.Parent=nil
@@ -1394,7 +1388,7 @@ game.Players.PlayerRemoving:Connect(function(v)
 	plrstatguis[v]=nil
 end)
 task.spawn(function()
-	while isrunning do rs.RenderStepped:Wait()
+	while window.ScreenGui.Parent do rs.RenderStepped:Wait()
 		if esp_enabled.Value then
 			for i,v in pairs(game:GetService("Players"):GetPlayers()) do
 				local vchar = v.Character
@@ -1416,7 +1410,7 @@ task.spawn(function()
 							name.LayoutOrder=1
 							name.BackgroundTransparency=1
 							name.TextColor3=v.TeamColor.Color
-							name.Text=`{v.Name}({v.DisplayName})`
+							name.Text=v.Name.."("..v.DisplayName..")"
 							name.Parent=if esp_name.Value then frame else nil
 							plrstatguis[v].Name=name
 							local hp = Instance.new("TextLabel")
@@ -1449,10 +1443,156 @@ task.spawn(function()
 	end
 end)
 
-local autopress = utility:AddGroupbox({Name="Auto Press"})
-autopress_activate=autopress:AddToggle(1,{Text="Activate",Callback=function()
-	if not autopress_activate.Value then return end
-	autopress_activate:SetValue(false)
+
+local autofarmplant = resource:AddSection("Autofarm Plants")
+autofarmplant_enabled=autofarmplant:AddSetting("Enabled","Toggle")
+autofarmplant_seekrange=autofarmplant:AddSetting("Seek Range","Number",10000)
+autofarmplant_range=autofarmplant:AddSetting("Range","Slider",25,0,25)
+autofarmplant_plant=autofarmplant:AddSetting("Plant","String","Bloodfruit")
+autofarmplant_movetospeed=autofarmplant:AddSetting("Speed","Slider",50,0,75)
+
+autofarmplant:ConnectSettingUpdate("Enabled",function()
+	if autofarmplant_enabled.Value then
+		disableBoat()
+	else
+		enableBoat()
+	end
+end)
+local planterboxes = {}
+for i,v in pairs(workspace.Deployables:GetChildren()) do
+	if v.Name=="Plant Box" then
+		table.insert(planterboxes,v)
+	end
+end
+workspace.Deployables.ChildAdded:Connect(function(v)
+	if v.Name=="Plant Box" then
+		table.insert(planterboxes,v)
+	end
+end)
+
+task.spawn(function()
+	while window.ScreenGui.Parent do local step = rs.PostSimulation:Wait()
+		if autofarmplant_enabled.Value and root and hum and hum.Health>0 then
+			local closestplant
+			local closestmag=autofarmplant_seekrange.Value
+			for i,v:Instance in pairs(workspace:GetChildren()) do
+				if grabbed[v] then continue end
+				if v:IsA("Model") then
+					local dist = (v:GetPivot().Position-root.Position).Magnitude
+					if v:FindFirstChild("Pickup") and #v:GetChildren()>1 then
+						if dist<closestmag then
+							closestplant=v
+							closestmag=dist
+						end
+						if dist<autofarmplant_range.Value then
+							pickup(v)
+							grabbed[v]=true
+							task.spawn(function()
+								task.wait(1)
+								grabbed[v]=nil
+							end)
+						end
+					end
+				end
+			end
+
+			local closestbox
+			local closestmag=autofarmplant_seekrange.Value
+			for i,v in pairs(planterboxes) do
+				if #v:GetChildren()==8 and v:FindFirstChild("Reference") then
+					local dist = (v:FindFirstChild("Reference").Position-root.Position).Magnitude
+					if dist<closestmag then
+						closestbox=v
+						closestmag=dist
+					end
+				end
+			end
+			if closestplant then
+				teleportStepToward(closestplant:GetPivot().Position,autofarmplant_movetospeed.Value,step,4)
+			end
+			if closestbox then
+				plant(closestbox,getItemId(autofarmplant_plant.Value))
+				if not closestplant then
+					teleportStepToward(closestbox:GetPivot().Position,autofarmplant_movetospeed.Value,step,4)
+				end
+			end
+		end
+	end
+end)
+
+local autochase = combat:AddSection("Auto Chase")
+autochase_enabled=autochase:AddSetting("Enabled","Toggle")
+autochase_keybind=autochase:AddSetting("Keybind","String","G")
+autochase_speed=autochase:AddSetting("Speed","Slider",23.5,0,25,0.1)
+
+
+autochase:ConnectSettingUpdate("Enabled",function()
+	if not autochase_enabled.Value then
+		autochasing=false
+	else
+		autochasing=true
+	end
+end)
+input.InputBegan:Connect(function(inp)
+	if not window.ScreenGui.Parent or input:GetFocusedTextBox() then return end
+	if autochase_keybind.Value:lower()==inp.KeyCode.Name:lower() then
+		autochase:UpdateSettingValue("Enabled",not autochase_enabled.Value)
+	end
+end)
+autochasing=false
+task.spawn(function()
+	while window.ScreenGui.Parent do
+		local step = rs.PreSimulation:Wait()
+		if autochase_enabled.Value and root then
+
+			local closest
+			local closestdist=math.huge
+			for i,v:Player in pairs(game:GetService("Players"):GetPlayers()) do
+				i=v
+				v=i.Character
+				if v and i~=plr and (i.Team~=plr.Team or plr.Team.Name=="NoTribe") and v:FindFirstChild("HumanoidRootPart") then
+					local dist = (v.HumanoidRootPart.Position-root.Position).Magnitude
+					if dist<closestdist then
+						closest=v
+						closestdist=dist
+					end
+				end
+			end
+			if closest and closest:FindFirstChild("HumanoidRootPart") then
+				local dif = (closest.HumanoidRootPart.Position-getMovePart().Position)
+				getMovePart().CFrame+=dif.Unit*math.clamp(step*autochase_speed.Value,0,dif.Magnitude)
+				if dif.Unit.X==dif.Unit.X and (closest.HumanoidRootPart.Position-getMovePart().Position).Magnitude<25 then
+					veltoggle.Parent=getMovePart()
+					veltoggle.MaxForce=Vector3.new(math.huge,math.huge,math.huge)
+					autochasing=true
+					getMovePart().CFrame+=dif.Unit*math.clamp(step*autochase_speed.Value,0,dif.Magnitude)
+				else
+					if autochasing then
+						veltoggle.Parent=nil
+					end
+					autochasing=false
+				end
+			else
+				if autochasing then
+					veltoggle.Parent=nil
+				end
+				autochasing=false
+			end
+		else
+			if autochasing then
+				veltoggle.Parent=nil
+			end
+			autochasing=false
+		end
+	end
+end)
+
+local autopress = utility:AddSection("Auto Press")
+autopress_activate=autopress:AddSetting("Press","Button")
+autopress_autograb=autopress:AddSetting("Auto Grab","Toggle",true)
+autopress_count=autopress:AddSetting("Count","Number",100)
+
+autopress:ConnectSettingUpdate("Press",function()
 	for i,v:Instance in pairs(workspace.Deployables:GetChildren()) do
 		if v.Name=="Coin Press" and (v:GetPivot().Position-root.Position).Magnitude<10 then
 			for i=1,autopress_count.Value do
@@ -1469,140 +1609,52 @@ autopress_activate=autopress:AddToggle(1,{Text="Activate",Callback=function()
 			break
 		end
 	end
-end}):AddKeyPicker(1,{Default="",Text="Autopress",SyncToggleState=true})
-autopress_autograb=autopress:AddToggle(1,{Text="Autograb"})
-autopress_count=autopress:AddInput(1,{Text="Count",Numeric=true,Default="100"})
-
-local autofarmplants = utility:AddGroupbox({Name="Auto Farm Plants"})
-autofarmplants_enabled=autofarmplants:AddToggle(1,{Text="Enabled"}):AddKeyPicker(1,{Default="",Text="Clip Up",SyncToggleState=true})
-autofarmplants_scan=autofarmplants:AddInput(1,{Text="Scan Range",Numeric=true,Default="1000"})
-autofarmplants_resources=autofarmplants:AddInput(1,{Text="Item",Default="Bloodfruit",Finished=true})
-autofarmplants_speed=autofarmplants:AddSlider(1,{Text="Speed",Default=23.5,Min=0,Max=75,Rounding=1})
-
-local autofarmplantswhitelist = {}
-local autofarmplantswhitelistnum = {}
-autofarmplants_resources:OnChanged(function()
-	table.clear(autofarmplantswhitelist)
-	table.clear(autofarmplantswhitelistnum)
-	for i,v in pairs(autofarmplants_resources.Value:split(",")) do
-		autofarmplantswhitelist[trim(v)]=true
-		autofarmplantswhitelistnum[#autofarmplantswhitelistnum+1]=trim(v)
-	end
 end)
 
-local plantboxes = {}
-for i,v in pairs(workspace.Deployables:GetChildren()) do
-	if v.Name=="Plant Box" then
-		table.insert(plantboxes,v)
-		v:GetPropertyChangedSignal("Parent"):Connect(function()
-			if v.Parent==nil then
-				remove(plantboxes,v)
-			end
-		end)
-	end
-end
-workspace.Deployables.ChildAdded:Connect(function(v)
-	if v.Name=="Plant Box" then
-		table.insert(plantboxes,v)
-		v:GetPropertyChangedSignal("Parent"):Connect(function()
-			if v.Parent==nil then
-				remove(plantboxes,v)
-			end
-		end)
-	end
-end)
-
-autofarmplants_enabled:OnChanged(function()
-	disablespeed("Auto Farm Plants")
-	local cplant = 1
-	local planterboxes = {}
-	local lastupdate = Vector3.new(math.huge,math.huge,math.huge)
-	while true do
-		local scandist = tonumber(autofarmplants_scan.Value) or math.huge
-		--if (root.Position-lastupdate).Magnitude>scandist then
-		--	table.clear(planterboxes)
-		--	for i,v in pairs(plantboxes) do
-		--		if v:GetPivot().Position~=Vector3.new() then
-		--			local dist = (root.Position-v:GetPivot().Position).Magnitude
-		--			if dist<(scandist*2)+10 then
-		--				table.insert(plantboxes,v)
-		--			end
-		--		end
-		--	end
-		--	lastupdate=root.Position
-		--end
-		local step = rs.PreSimulation:Wait()
-		if not (isrunning and autofarmplants_enabled.Value) then break end
-		if not root then continue end
-		disableBoat("Autofarmplants")
-		local closestbox
-		local closestboxmag = scandist
-		print(#planterboxes)
-		for i,v in pairs(plantboxes) do
-			if not v:FindFirstChild("Seed") and v:GetPivot().Position~=Vector3.new() then
-				local dist = (root.Position-v:GetPivot().Position).Magnitude
-				if dist<closestboxmag then
-					closestbox = v
-					closestboxmag = dist
-				end
-			end
-		end
-		local closestbush
-		local closestbushmag = scandist
-		for i,v in pairs(workspace:GetChildren()) do
-			if v:FindFirstChild("Pickup") and v:GetPivot().Position~=Vector3.new() then
-				local dist = (root.Position-v:GetPivot().Position).Magnitude
-				if dist<closestbushmag then
-					closestbush = v
-					closestbushmag = dist
-				end
-				if dist<25 then
-					pickup(v)
-				end
-			end
-		end
-		print(closestbush,closestbox)
-		if closestbush then
-			teleportStepToward(closestbush:GetPivot().Position,autofarmplants_speed.Value,step,4)
-		elseif closestbox then
-			teleportStepToward(closestbox:GetPivot().Position,autofarmplants_speed.Value,step,4)
-		end
-
-		_= closestbox and (function()
-			local item = autofarmplantswhitelistnum[cplant]
-			cplant+=1
-			if cplant>#autofarmplantswhitelistnum then
-				cplant=1
-			end
-			while getCount(item) == 0 do
-				item = autofarmplantswhitelistnum[cplant]
-				cplant+=1
-				if cplant>#autofarmplantswhitelistnum then
-					cplant=1
-					break
-				end
-			end
-			if getCount(item)>0 then
-				plant(closestbox,getItemId(item))
-			end
-		end)()
-	end
-	enableBoat("Autofarmplants")
-	enablespeed("Auto Farm Plants")
-end)
-
-local hideitems = utility:AddGroupbox({Name="Hide Items"})
-local hideitems_enabled = hideitems:AddToggle(1,{Text="Enabled"}):AddKeyPicker(1,{Default="",Text="No Slide",SyncToggleState=true})
-
-local items = workspace:WaitForChild("Items")
-
-hideitems_enabled:OnChanged(function(new)
-	if new then
-		items.Parent=nil
+local chestheight = utility:AddSection("Chest Height")
+chestheight_enabled=chestheight:AddSetting("Enabled","Toggle")
+chestheight:ConnectSettingUpdate("Enabled",function()
+	if not hum then return end
+	if chestheight_enabled.Value then
+		hum.HipHeight=0.5
 	else
-		items.Parent=workspace
+		hum.HipHeight=2
 	end
 end)
-table.insert(unloads,function()
-	items.Parent=workspace
+plr.CharacterAdded:Connect(function()
+	if chestheight_enabled.Value then
+		while not hum do task.wait() end
+		hum.HipHeight=0.5
+	end
+end)
+
+local autocraft = utility:AddSection("Auto Craft")
+autocraft_activate=autocraft:AddSetting("Craft","Button")
+autocraft_item=autocraft:AddSetting("Item","String","Leaf Bag")
+autocraft_count=autocraft:AddSetting("Count","Number",100)
+
+autocraft:ConnectSettingUpdate("Craft",function()
+	for i=1,autocraft_count.Value do
+		craft(getItemId(autocraft_item.Value))
+	end
+end)
+
+local birdfarm = resource:AddSection("Bird Farm")
+birdfarm_enabled=birdfarm:AddSetting("Enabled","Toggle")
+
+task.spawn(function()
+	while window.ScreenGui.Parent do 
+		local step = rs.PostSimulation:Wait()
+		if birdfarm_enabled.Value and hum.SeatPart and hum.SeatPart.Parent and hum.SeatPart.Parent:FindFirstChild("DangerZone") then
+			local dz =  hum.SeatPart.Parent.DangerZone
+			local closest
+			local closestmag = math.huge
+			local v = offloaded:FindFirstChild("Bird")
+			if not v then continue end
+			while hum.SeatPart and hum.SeatPart.Parent and birdfarm_enabled.Value and v.Parent and v:FindFirstChild("HumanoidRootPart") do 
+				touch(dz,v:FindFirstChild("HumanoidRootPart"))
+				rs.PostSimulation:Wait() 
+			end
+		end
+	end
 end)
