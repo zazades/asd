@@ -1,5 +1,5 @@
 
-local playerNames1 = {"Autoheal100","Efebilen4848","AGuy_Noyan","KanTonS","SkyC_B","iCrawall","Ahmet987987987","LyxTheGoat","NoyanFlexingU","CryptedAspect", "angell02400","farmniba", "HadesMissYou","TurkYabgu","Beeinqz","NoyanOwnsYou","NoyanTheGoat","WichansMissYou","HeartzMissYou"}
+local playerNames1 = {"RaizenDrainYou","Autoheal100","Efebilen4848","AGuy_Noyan","KanTonS","SkyC_B","iCrawall","Ahmet987987987","LyxTheGoat","NoyanFlexingU","CryptedAspect", "angell02400","farmniba", "HadesMissYou","TurkYabgu","Beeinqz","NoyanOwnsYou","NoyanTheGoat","WichansMissYou","HeartzMissYou"}
 
 local player = game.Players.LocalPlayer
 
