@@ -16,7 +16,7 @@ local playerNameToCheck = game.Players.LocalPlayer.Name
 if isPlayerInTable1(player.Name) then
     print("hosgeldiniiiz")
 else
-    player:Kick("Bi siktir git")
+    player:Kick("Çık git gözüm görmesin seni amk")
 end
 
 wait(3)
