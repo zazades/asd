@@ -247,7 +247,7 @@ local themelib = loadstring(game:HttpGet(repo .. 'addons/ThemeManager.lua'))()
 local savelib = loadstring(game:HttpGet(repo .. 'addons/SaveManager.lua'))()
 
 local window = uilib:CreateWindow({
-	Title="Pineapple V2",
+	Title="Angel's library",
 	Center = true,
 	AutoShow = true,
 	TabPadding = 8,
