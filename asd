@@ -695,47 +695,6 @@ Teleports:AddButton({
   	end    
 })
 
-Teleports:AddButton({
-	Name = "Big Overworld Server (More Players)",
-	Callback = function()
-        local servers = getServers(11729688377).data
-        local touse = {}
-        for i, v in pairs(servers) do
-            if v.playing > 25 then
-                table.insert(touse, v.id)
-            end
-        end
-        local bestid = #touse > 0 and touse[math.random(1, #touse)] or servers[1].id
-        ts:TeleportToPlaceInstance(11729688377, bestid, plr)
-  	end    
-})
-
-Teleports:AddButton({
-	Name = "Low Latency Overworld",
-	Callback = function()
-        local servers = getServers(11729688377).data
-        local bestid
-        local bestval = math.huge
-        for i, v in pairs(servers) do
-            if v.ping < bestval then
-                bestid = v.id
-            end
-        end
-        ts:TeleportToPlaceInstance(11729688377, bestid, plr)
-  	end    
-})
-
-Teleports:AddButton({
-	Name = "Random Overworld",
-	Callback = function()
-        local servers = getServers(11729688377).data
-        local bestid = servers[math.random(1, #servers)].id
-        while bestid == game.JobId do
-            bestid = servers[math.random(1, #servers)].id
-        end
-        ts:TeleportToPlaceInstance(11729688377, bestid, plr)
-  	end    
-})
 
 
 
