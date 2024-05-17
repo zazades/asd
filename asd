@@ -1,4 +1,7 @@
-local playerNames1 = { "xboyBest2712", "17ktravisscott", "RaizenFlexingYou", "RaizenDrainYou", "Autoheal100", "Efebilen4848", "AGuy_Noyan", "KanTonS", "SkyC_B", "iCrawall", "Ahmet987987987", "LyxTheGoat", "NoyanFlexingU", "CryptedAspect", "angell02400", "farmniba", "HadesMissYou", "TurkYabgu", "Beeinqz", "NoyanOwnsYou", "NoyanTheGoat", "WichansMissYou", "HeartzMissYou" } local player = game.Players.LocalPlayer local function isPlayerInTable1(playerName) for _, name in ipairs(playerNames1) do if name == playerName then return true end end return false end local playerNameToCheck = game.Players.LocalPlayer.Name if isPlayerInTable1(player.Name) then print("hosgeldiniiiz") else -- player:Kick("Çık git gözüm görmesin seni amk") end wait(3)
+local playerNames1 = { "xboyBest2712", "17ktravisscott", "RaizenFlexingYou", "RaizenDrainYou", "Autoheal100", "Efebilen4848", "AGuy_Noyan", "KanTonS", "SkyC_B", "iCrawall", "Ahmet987987987", "LyxTheGoat", "NoyanFlexingU", "CryptedAspect", "angell02400", "farmniba", "HadesMissYou", "TurkYabgu", "Beeinqz", "NoyanOwnsYou", "NoyanTheGoat", "WichansMissYou", "HeartzMissYou" } local player = game.Players.LocalPlayer local function isPlayerInTable1(playerName) for _, name in ipairs(playerNames1) do if name == playerName then return true end end return false end local playerNameToCheck = game.Players.LocalPlayer.Name if isPlayerInTable1(player.Name) then print("hosgeldiniiiz") else
+--player:Kick("Çık git gözüm görmesin seni amk") 
+end
+wait(3)
 
 local isvoid = game.PlaceId==11879754496
 local defaultdata = {mac = false}
