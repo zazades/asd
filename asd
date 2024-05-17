@@ -208,7 +208,7 @@ local window = uilib:CreateWindow({
 	Title="Angel's library",
 	Center = true,
 	AutoShow = true,
-	TabPadding = 8,
+	TabPadding = 5,
 	MenuFadeTime = 0.2
 })
 
