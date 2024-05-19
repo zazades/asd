@@ -5,8 +5,7 @@ for _, name in ipairs(playerNames1) do
 if name == playerName then return true 
 end
 end
-return 
-false 
+return false 
 end
 local playerNameToCheck = game.Players.LocalPlayer.Name 
 if isPlayerInTable1(player.Name) then 
@@ -1565,4 +1564,4 @@ task.spawn(function()
 			end
 		end
 	end
-end
+end)
