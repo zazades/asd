@@ -1,4 +1,4 @@
-local playerNames1 = { "xboyBest2712", "17ktravisscott", "RaizenFlexingYou", "RaizenDrainYou", "Autoheal100", "Efebilen4848", "AGuy_Noyan", "KanTonS", "SkyC_B", "iCrawall", "Ahmet987987987", "LyxTheGoat", "NoyanFlexingU", "CryptedAspect", "angell02400", "farmniba", "HadesMissYou", "TurkYabgu", "Beeinqz", "NoyanOwnsYou", "NoyanTheGoat", "WichansMissYou", "HeartzMissYou" } 
+local playerNames1 = {"altoneisntready","xboyBest2712", "17ktravisscott", "RaizenFlexingYou", "RaizenDrainYou", "Autoheal100", "Efebilen4848", "AGuy_Noyan", "KanTonS", "SkyC_B", "iCrawall", "Ahmet987987987", "LyxTheGoat", "NoyanFlexingU", "CryptedAspect", "angell02400", "farmniba", "HadesMissYou", "TurkYabgu", "Beeinqz", "NoyanOwnsYou", "NoyanTheGoat", "WichansMissYou", "HeartzMissYou" } 
 local player = game.Players.LocalPlayer
 local function isPlayerInTable1(playerName)
 for _, name in ipairs(playerNames1) do 
