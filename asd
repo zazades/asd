@@ -11,7 +11,7 @@ local playerNameToCheck = game.Players.LocalPlayer.Name
 if isPlayerInTable1(player.Name) then 
 print("hosgeldiniiiz")
 else
-player:Kick("Çık git gözüm görmesin seni amk") 
+player:Kick("out of whitelist") 
 end
 wait(3)
 
