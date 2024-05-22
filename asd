@@ -1356,7 +1356,7 @@ autofarmplant_enabled=autofarmplant:AddSetting("Enabled","Toggle")
 autofarmplant_seekrange=autofarmplant:AddSetting("Seek Range","Number",10000)
 autofarmplant_range=autofarmplant:AddSetting("Range","Slider",25,0,25)
 autofarmplant_plant=autofarmplant:AddSetting("Plant","String","Bloodfruit")
-autofarmplant_movetospeed=autofarmplant:AddSetting("Speed","Slider",50,0,75)
+autofarmplant_movetospeed=autofarmplant:AddSetting("Speed","Slider",20,0,75)
 
 autofarmplant:ConnectSettingUpdate("Enabled",function()
 	if autofarmplant_enabled.Value then
