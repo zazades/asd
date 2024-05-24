@@ -67,7 +67,7 @@ local inventorygui = plr.PlayerGui:WaitForChild("MainGui"):WaitForChild("RightPa
 
 local uilib = loadstring(game:HttpGet("https://github.com/huhthatsnice/pro/raw/main/uilib.lua"))()
 
-local window = uilib:CreateWindow("Angel's library")
+local window = uilib:CreateWindow("Arxnn v1")
 window.ScreenGui.Name="killmenow"
 
 --functions
@@ -208,11 +208,9 @@ local function teleportStepToward(pos,rate,step,height)
 		dir=Vector3.new()
 	end
 	cposflat+=dir*math.clamp((step or rs.PreSimulation:Wait())*rate,0,dist)
-	local ray = workspace:Raycast(cposflat+Vector3.new(0,getMovePart().Position.Y+25,0),Vector3.new(0,-10,0),getMovementRaycastParams())
+	local ray = workspace:Raycast(cposflat+Vector3.new(0,getMovePart().Position.Y+25,0),Vector3.new(0,-10000,0),getMovementRaycastParams())
 	if ray then
 		moveTo(ray.Position+Vector3.new(0,height or 3.5,0))
-	else
-		if ray.Instance == "Gold Node" then ray.Instance:Destroy() end
 	end
 end
 local function teleportTo(pos:Vector3,rate:number,reenable:boolean,validator:()->boolean,height)
@@ -224,13 +222,19 @@ local function teleportTo(pos:Vector3,rate:number,reenable:boolean,validator:()-
 	while getMovePart() and validator() do
 		local step = rate*rs.PreSimulation:Wait()
 		if (cposflat-posflat).Magnitude<step then
+			local position = pos  -- Example position
+			local rayStart = position + Vector3.new(0, 20, 0)  -- Start slightly above the position
+			local rayEnd = position - Vector3.new(0, 20, 0)    -- End slightly below the position
+
+			local hitPart, hitPosition = workspace:FindPartOnRayWithIgnoreList(Ray.new(rayStart, (rayEnd - rayStart).unit * (rayEnd - rayStart).magnitude), {})
+			 if hitPart.Position.Y < root.Position.Y - 10 then hitPart.Parent:Destroy() return end
 			moveTo(pos)
 			break
 		else
 			cposflat+=dir*step
-			local ray = workspace:Raycast(cposflat+Vector3.new(0,1,0),Vector3.new(0,-10,0),getMovementRaycastParams())
+			local ray = workspace:Raycast(cposflat+Vector3.new(0,1000,0),Vector3.new(0,-2000,0),getMovementRaycastParams())
 			if ray then
-				moveTo(ray.Position+Vector3.new(0,height or 5,0))
+				moveTo(ray.Position)
 			end
 		end
 	end
@@ -373,11 +377,10 @@ task.spawn(function()
 			if hum.SeatPart then
 				disableBoat()
 				lsp = hum.SeatPart
-				local ray = workspace:Raycast(root.Position+(hum.MoveDirection*speed_boatspeed.Value*t)+Vector3.new(0,10,0),Vector3.new(0,-5,0),getMovementRaycastParams())
+				local ray = workspace:Raycast(root.Position+(hum.MoveDirection*speed_boatspeed.Value*t)+Vector3.new(0,10,0),Vector3.new(0,-10000,0),getMovementRaycastParams())
 				if ray then
 					moveTo(getMovePart().CFrame.Rotation+ray.Position+Vector3.new(0,speed_floatheight.Value,0))
 				else
-					ray.Instance
 					moveTo(getMovePart().CFrame+(hum.MoveDirection*speed_boatspeed.Value*t))
 				end
 			else
@@ -1359,7 +1362,7 @@ autofarmplant_enabled=autofarmplant:AddSetting("Enabled","Toggle")
 autofarmplant_seekrange=autofarmplant:AddSetting("Seek Range","Number",10000)
 autofarmplant_range=autofarmplant:AddSetting("Range","Slider",25,0,25)
 autofarmplant_plant=autofarmplant:AddSetting("Plant","String","Bloodfruit")
-autofarmplant_movetospeed=autofarmplant:AddSetting("Speed","Slider",20,0,75)
+autofarmplant_movetospeed=autofarmplant:AddSetting("Speed","Slider",50,0,75)
 
 autofarmplant:ConnectSettingUpdate("Enabled",function()
 	if autofarmplant_enabled.Value then
