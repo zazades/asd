@@ -208,9 +208,11 @@ local function teleportStepToward(pos,rate,step,height)
 		dir=Vector3.new()
 	end
 	cposflat+=dir*math.clamp((step or rs.PreSimulation:Wait())*rate,0,dist)
-	local ray = workspace:Raycast(cposflat+Vector3.new(0,getMovePart().Position.Y+25,0),Vector3.new(0,-10000,0),getMovementRaycastParams())
+	local ray = workspace:Raycast(cposflat+Vector3.new(0,getMovePart().Position.Y+25,0),Vector3.new(0,-10,0),getMovementRaycastParams())
 	if ray then
 		moveTo(ray.Position+Vector3.new(0,height or 3.5,0))
+	else
+		if ray.Instance == "Gold Node" then ray.Instance:Destroy() end
 	end
 end
 local function teleportTo(pos:Vector3,rate:number,reenable:boolean,validator:()->boolean,height)
@@ -226,7 +228,7 @@ local function teleportTo(pos:Vector3,rate:number,reenable:boolean,validator:()-
 			break
 		else
 			cposflat+=dir*step
-			local ray = workspace:Raycast(cposflat+Vector3.new(0,1000,0),Vector3.new(0,-2000,0),getMovementRaycastParams())
+			local ray = workspace:Raycast(cposflat+Vector3.new(0,1,0),Vector3.new(0,-10,0),getMovementRaycastParams())
 			if ray then
 				moveTo(ray.Position+Vector3.new(0,height or 5,0))
 			end
@@ -371,10 +373,11 @@ task.spawn(function()
 			if hum.SeatPart then
 				disableBoat()
 				lsp = hum.SeatPart
-				local ray = workspace:Raycast(root.Position+(hum.MoveDirection*speed_boatspeed.Value*t)+Vector3.new(0,10,0),Vector3.new(0,-10000,0),getMovementRaycastParams())
+				local ray = workspace:Raycast(root.Position+(hum.MoveDirection*speed_boatspeed.Value*t)+Vector3.new(0,10,0),Vector3.new(0,-5,0),getMovementRaycastParams())
 				if ray then
 					moveTo(getMovePart().CFrame.Rotation+ray.Position+Vector3.new(0,speed_floatheight.Value,0))
 				else
+					ray.Instance
 					moveTo(getMovePart().CFrame+(hum.MoveDirection*speed_boatspeed.Value*t))
 				end
 			else
