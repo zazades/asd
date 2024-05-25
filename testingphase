@@ -266,17 +266,13 @@ end
 local function call()
     local closestPart = findTarget()
     if closestPart then
-        local movementRate = _G.Rate or 1
+        local movementRate = _G.Rate 
         local reenable = true
         local validator = function() return true end
         local height = 9
         local destination = closestPart.Position
         if not destination then
             
-            return
-        end
-        if (destination - root.Position).Magnitude < 3 then
-            addResource()
             return
         end
         moveTowards(destination, movementRate, reenable, validator, height)
@@ -306,7 +302,7 @@ local function call()
         local validator = function() return true end -- Example validator function
         local height = 9 -- Example height parameter
         local destination = closestPart.Position
-	if (destination - humrp.Position).magnitude < 3 then  addResource() return end
+	
 	if not destination then return end
         moveTowards(destination, movementRate, reenable, validator, height)
         addResource()
