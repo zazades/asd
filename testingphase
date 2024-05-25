@@ -13,14 +13,27 @@ local stop = false
 local rs = game:GetService("RunService")
 task.spawn(function()
     game.Workspace.Resources.ChildAdded:Connect(function(child)
-        if child.Name == "Gold Node" then 
+        if child.Name == "Gold Node" then
+	    v.ModelStreamingMode = "Default"
             table.insert(find, child) 
         end
     end)
-    for i, v in pairs(resource:GetChildren()) do
+    for i,v:Instance in pairs(workspace.Resources:GetChildren()) do
         if v.Name == "Gold Node" and v:FindFirstChild("Reference") then
+		print(v:GetPivot().Position)
             local trgt = v:FindFirstChild("Reference")
            if trgt.CFrame.Y > -30 and trgt.CFrame.Y < 100 then
+		v.ModelStreamingMode = "Default"
+                table.insert(find, v)
+            end
+        end
+    end
+
+     for i,v:Instance in pairs(workspace.Resources:GetChildren()) do
+        if v.Name == "Ice Chunk" and v:FindFirstChild("Gold Node") then
+            local trgt = v:FindFirstChild("Gold Node"):FindFirstChild("Reference")
+           if trgt.CFrame.Y > -30 and trgt.CFrame.Y < 100 then
+		v.ModelStreamingMode = "Default"
                 table.insert(find, v)
             end
         end
@@ -32,6 +45,16 @@ local function addResource()
         if v.Name == "Gold Node" and v:FindFirstChild("Reference") then
             local trgt = v:FindFirstChild("Reference")
              if trgt.CFrame.Y > -35 and trgt.CFrame.Y < 85 then
+		v.ModelStreamingMode = "Default"
+                table.insert(find, v)
+            end
+        end
+    end
+     for i,v:Instance in pairs(workspace.Resources:GetChildren()) do
+        if v.Name == "Ice Chunk" and v:FindFirstChild("Gold Node") then
+            local trgt = v:FindFirstChild("Gold Node"):FindFirstChild("Reference")
+           if trgt.CFrame.Y > -30 and trgt.CFrame.Y < 100 then
+		print(trgt.CFrame)
                 table.insert(find, v)
             end
         end
