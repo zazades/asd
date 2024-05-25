@@ -165,108 +165,116 @@ end
 
 local function moveTowards(destination, rate, reenable, validator, height)
     local path = createPath(destination)
-    local waypoints = path:GetWaypoints()
-    local currentPositionIndex = 1
-    
-local function teleportTo(pos)
-    if not pos then
-        print("Error: Destination position is nil")
+    if not path then
+     
         return
     end
+    local waypoints = path:GetWaypoints()
+    local currentPositionIndex = 1
 
-    local posflat = Vector3.new(pos.X, 0, pos.Z)
-    local cposflat = Vector3.new(root.CFrame.Position.X, 0, root.CFrame.Position.Z)
-    local dir = (posflat - cposflat).Unit
+    local function teleportTo(pos)
+    end
 
-   
-
-    while getMovePart() and validator() do
-        local step = rate * rs.PreSimulation:Wait()
-        if (cposflat - posflat).Magnitude < step then
-            repeat
-                wait()
-                stop = true
-            until closeResource(humrp.Position) == false
-            stop = false
+    local function walkTo(destination)
+        local humrp = root
+        if not humrp then
+            
             return
-        else
-            cposflat += dir * step
-            local ray = workspace:Raycast(cposflat + Vector3.new(0, 1000, 0), Vector3.new(0, -2000, 0))
-            if ray then
-                moveTo(ray.Position)
+        end
+
+        local uzak = (humrp.Position - destination).Magnitude
+        while uzak > 3 do
+            local distanceToDestination = (destination - humrp.Position).Magnitude
+            if distanceToDestination < 3 then
+                teleportTo(destination)
+                return
             end
-        end
-    end
-    print("Teleport loop exited without reaching destination")
-end
 
-local function walkTo(destination)
-   -- Add this line to check destination value
-    local uzak = (humrp.Position - destination).magnitude
-    while uzak > 3 do
-        local humrp = root -- assuming root is the HumanoidRootPart
-        local distanceToDestination = (destination - humrp.Position).Magnitude
-        if distanceToDestination < 3 then
-            teleportTo(destination)
-        end
-        
-        local currentWaypoint = waypoints[currentPositionIndex]
-        local nextWaypoint = waypoints[currentPositionIndex + 1]
+            local currentWaypoint = waypoints[currentPositionIndex]
+            local nextWaypoint = waypoints[currentPositionIndex + 1]
 
-        
+            if nextWaypoint then
+                local direction = (nextWaypoint.Position - humrp.Position).Unit
+                local distanceToNextWaypoint = (nextWaypoint.Position - humrp.Position).Magnitude
+                local steps = math.ceil(distanceToNextWaypoint / rate)
 
-        if nextWaypoint then
-            local direction = (nextWaypoint.Position - humrp.Position).Unit
+                for step = 1, steps do
+                    direction = (nextWaypoint.Position - humrp.Position).Unit
+                    local ehe = getMovePart()
+                    local localDirection = ehe.CFrame:VectorToObjectSpace(direction)
+                    local adjustedRate = math.min(rate, distanceToNextWaypoint)
 
-            local distanceToNextWaypoint = (nextWaypoint.Position - humrp.Position).Magnitude
-            local steps = math.ceil(distanceToNextWaypoint / rate)
-
-            for step = 1, steps do
-                -- Get direction relative to character's local space
-                direction = (nextWaypoint.Position - humrp.Position).Unit
-                local ehe = getMovePart()
-                local localDirection = ehe.CFrame:VectorToObjectSpace(direction)
-
-                -- Adjust movement rate based on distance to waypoint
-                local adjustedRate = math.min(rate, distanceToNextWaypoint)
-
-                -- Move character in local space
-                local newCFrame = humrp.CFrame * CFrame.new(
-                    localDirection.X * adjustedRate,
-                    localDirection.Y * adjustedRate * 0.5,
-                    localDirection.Z * adjustedRate
-                )
-                ehe.CFrame = newCFrame
-                wait()
-            end
-        else
-            print("Error: No next waypoint found")
-            break  -- No more waypoints, break out of the loop
-        end
-
-        currentPositionIndex = currentPositionIndex + 1
-        if currentPositionIndex > #waypoints then
-            -- Reached the end of the current path
-            addResource()  -- Destroy the resource at the end of the path
-            local newPath = findTarget()  -- Find a new target
-            if newPath then
-                path = createPath(newPath)  -- Create a new path
-                waypoints = path:GetWaypoints()
-                currentPositionIndex = 1  -- Reset the current index
+                    local newCFrame = humrp.CFrame * CFrame.new(
+                        localDirection.X * adjustedRate,
+                        localDirection.Y * adjustedRate * 0.5,
+                        localDirection.Z * adjustedRate
+                    )
+                    ehe.CFrame = newCFrame
+                    wait()
+                end
             else
-                print("Error: No valid target found")
-                break  -- No valid target found, break out of the loop
+              
+                break
+            end
+
+            currentPositionIndex = currentPositionIndex + 1
+            if currentPositionIndex > #waypoints then
+                addResource()
+                local newPath = findTarget()
+                if newPath then
+                    path = createPath(newPath)
+                    if not path then
+                        
+                        break
+                    end
+                    waypoints = path:GetWaypoints()
+                    currentPositionIndex = 1
+                else
+                    
+                    break
+                end
             end
         end
     end
-end
-
 
     walkTo(destination)
 end
 
-_G.Start = true
-_G.Rate  = 1
+local function call()
+    local closestPart = findTarget()
+    if closestPart then
+        local movementRate = _G.Rate or 1
+        local reenable = true
+        local validator = function() return true end
+        local height = 9
+        local destination = closestPart.Position
+        if not destination then
+            
+            return
+        end
+        if (destination - root.Position).Magnitude < 3 then
+            addResource()
+            return
+        end
+        moveTowards(destination, movementRate, reenable, validator, height)
+        addResource()
+    else
+       
+    end
+
+task.spawn(function()
+    while _G.Start do
+        wait()
+        if stop then 
+            wait()
+        else
+            call()
+        end
+    end
+end)
+    walkTo(destination)
+end
+
 local function call()
     local closestPart = findTarget()
     if closestPart then
@@ -276,17 +284,17 @@ local function call()
         local height = 9 -- Example height parameter
         local destination = closestPart.Position
 	if (destination - humrp.Position).magnitude < 3 then  addResource() return end
+	if not destination then return end
         moveTowards(destination, movementRate, reenable, validator, height)
         addResource()
     else
-        print("No valid targets found")
+       
     end
 end
 
 task.spawn(function()
     while _G.Start do
         wait()
-	if closeResource(humrp.Position) then return end
         if stop then 
             wait()
         else
