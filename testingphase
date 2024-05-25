@@ -138,7 +138,13 @@ local function createPath(destination)
         wait()
         destination = findTarget()
         if destination then
-            path = PathfindingService:CreatePath({AgentHeight = 1})
+            local path = PathfindingService:CreatePath({
+  			AgentHeight = 1,  -- Height of the agent
+   	 		AgentRadius = 0.5, -- Radius of the agent
+  			AgentCanJump = true, -- Allow the agent to jump if necessary
+    			AgentJumpHeight = 3, -- Height the agent can jump
+    			AgentMaxSlope = 45 -- Maximum slope the agent can climb
+		})
             local success, err = pcall(function()
                 path:ComputeAsync(humrp.Position, destination.Position)
             end)
