@@ -16,6 +16,7 @@ task.spawn(function()
         if child.Name == "Gold Node" then
 		    child.ModelStreamingMode = "Default"
 	    local trgt = child:FindFirstChild("Reference")
+		 if trgt.CFrame.Y < -30 then v:Destroy() return end
 		if trgt.CFrame.Y > -30 and trgt.CFrame.Y < 100 then
             table.insert(find, child) 
 		end
@@ -25,11 +26,11 @@ task.spawn(function()
         if v.Name == "Gold Node" and v:FindFirstChild("Reference") then
 		
             local trgt = v:FindFirstChild("Reference")
+	    if trgt.CFrame.Y < -30 then v:Destroy() return end
            if trgt.CFrame.Y > -30 and trgt.CFrame.Y < 100 then
 		v.ModelStreamingMode = "Default"
 		
                 table.insert(find, v)
-		if trgt.CFrame.Y < -30 then v:Destroy() table.remove(find,v) end
             end
         end
     end
@@ -37,10 +38,11 @@ task.spawn(function()
      for i,v:Instance in pairs(workspace.Resources:GetChildren()) do
         if v.Name == "Ice Chunk" and v:FindFirstChild("Gold Node") then
             local trgt = v:FindFirstChild("Gold Node"):FindFirstChild("Reference")
+	     if trgt.CFrame.Y < -30 then v:Destroy() return end
            if trgt.CFrame.Y > -30 and trgt.CFrame.Y < 100 then
 		v.ModelStreamingMode = "Default"
                 table.insert(find, v)
-		if trgt.CFrame.Y < -30 then v:Destroy() table.remove(find,v) end
+		
             end
         end
     end
@@ -50,20 +52,22 @@ local function addResource()
     for i, v in pairs(resource:GetChildren()) do
         if v.Name == "Gold Node" and v:FindFirstChild("Reference") then
             local trgt = v:FindFirstChild("Reference")
+		if trgt.CFrame.Y < -30 then v:Destroy() return end
              if trgt.CFrame.Y > -35 and trgt.CFrame.Y < 85 then
 		v.ModelStreamingMode = "Default"
                 table.insert(find, v)
-		if trgt.CFrame.Y < -30 then v:Destroy() table.remove(find,v) end
+		
             end
         end
     end
      for i,v:Instance in pairs(workspace.Resources:GetChildren()) do
         if v.Name == "Ice Chunk" and v:FindFirstChild("Gold Node") then
             local trgt = v:FindFirstChild("Gold Node"):FindFirstChild("Reference")
+		 if trgt.CFrame.Y < -30 then v:Destroy() return end
            if trgt.CFrame.Y > -30 and trgt.CFrame.Y < 100 then
 		v.ModelStreamingMode = "Default"
                 table.insert(find, v)
-		if trgt.CFrame.Y < -30 then print("destroyed some") v:Destroy() table.remove(find,v) end
+		
             end
         end
     end
