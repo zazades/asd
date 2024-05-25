@@ -1,1 +1,262 @@
+local RunService = game:GetService('RunService')
+local PathfindingService = game:GetService('PathfindingService')
+local c = game.Players.LocalPlayer.Character
+local hum = c.Humanoid
+hum.MaxSlopeAngle=90
+local humrp = c.HumanoidRootPart
+local Animator = hum.Animator
+local resource = game.Workspace.Resources
+local root = c.HumanoidRootPart
+local find = {}
+local stop = false
 
+local rs = game:GetService("RunService")
+task.spawn(function()
+    game.Workspace.Resources.ChildAdded:Connect(function(child)
+        if child.Name == "Gold Node" then 
+            table.insert(find, child) 
+        end
+    end)
+    for i, v in pairs(resource:GetChildren()) do
+        if v.Name == "Gold Node" and v:FindFirstChild("Reference") then
+            local trgt = v:FindFirstChild("Reference")
+           if trgt.CFrame.Y > -30 and trgt.CFrame.Y < 100 then
+                table.insert(find, v)
+            end
+        end
+    end
+end)
+
+local function addResource()
+    for i, v in pairs(resource:GetChildren()) do
+        if v.Name == "Gold Node" and v:FindFirstChild("Reference") then
+            local trgt = v:FindFirstChild("Reference")
+             if trgt.CFrame.Y > -35 and trgt.CFrame.Y < 85 then
+                table.insert(find, v)
+            end
+        end
+    end
+end
+
+
+local function getMover(part)
+    for _, descendant in pairs(part:GetDescendants()) do
+        if not descendant:IsA("BasePart") then
+            continue
+        end
+        local originalCFrame = descendant.CFrame
+        descendant.CFrame = CFrame.new()
+        if descendant.CFrame == CFrame.new() then
+            descendant.CFrame = originalCFrame
+            return descendant
+        end
+    end
+end
+
+local function getMovePart()
+    if not root then
+        return nil
+    end
+    if not (hum and root and hum.SeatPart and hum.SeatPart.Parent) then
+        return root
+    end
+    return getMover(hum.SeatPart.Parent) or root
+end
+
+
+local function findTarget()
+    local resource = game.Workspace.Resources:GetChildren()
+    local MaxDistance = math.huge
+    local nearestTarget
+    local golds = find
+    for _, goldNode in ipairs(golds) do
+        if goldNode and goldNode:FindFirstChild("Reference") then
+            local target = goldNode:FindFirstChild("Reference")
+            local distance = (humrp.Position - target.Position).Magnitude
+
+            if distance < MaxDistance then
+                nearestTarget = target
+                MaxDistance = distance
+            end
+        end
+    end
+
+    return nearestTarget 
+end
+
+local function createPath(destination)
+    local pathFound = false
+    local path
+
+    repeat
+        wait()
+        destination = findTarget()
+        if destination then
+            path = PathfindingService:CreatePath({AgentHeight = 1})
+            local success, err = pcall(function()
+                path:ComputeAsync(humrp.Position, destination.Position)
+            end)
+            if success then
+                if path.Status == Enum.PathStatus.Success then
+                    pathFound = true
+                    addResource()
+                else
+                    for i, v in ipairs(find) do
+                        if v == destination.Parent then
+                            table.remove(find, i)
+                            if #find == 0 then
+                                path:ComputeAsync(humrp.Position, Vector3.new(-98.7, -3, 78))
+                                pathFound = false
+                                addResource()
+                            end
+                        end
+                    end
+                end
+            else
+                print("Error during path computation:", err)
+            end
+        else
+            path = PathfindingService:CreatePath({AgentHeight = 1})
+            path:ComputeAsync(humrp.Position, Vector3.new(-98.7, -3, 78))
+            addResource()
+            pathFound = true
+        end
+    until pathFound
+    return path
+end
+
+local function closeResource(position)
+    for _, resource in ipairs(game.Workspace.Resources:GetChildren()) do
+        if resource.Name == "Gold Node" and resource:FindFirstChild("Reference") then 
+            local tar = resource:FindFirstChild("Reference")
+            if (tar.Position - position).Magnitude < 3 then
+                return true
+            end
+        end
+    end
+
+    return false
+end
+
+
+local function moveTo(pos:CFrame)
+	if not getMovePart() then return end
+	if typeof(pos)=="Vector3" then pos = CFrame.new(pos) end
+	local move=getMovePart()
+	local dif = (move.CFrame.Position-root.CFrame.Position)
+	move.CFrame = pos+dif
+end
+
+local function moveTowards(destination, rate, reenable, validator, height)
+    local path = createPath(destination)
+    local waypoints = path:GetWaypoints()
+    local currentPositionIndex = 1
+    
+    local function teleportTo(pos)
+        local posflat = Vector3.new(destination.X, 0, destination.Z)
+        local cposflat = Vector3.new(root.CFrame.Position.X, 0, root.CFrame.Position.Z)
+        local dir = (posflat - cposflat).Unit
+
+        while getMovePart() and validator() do
+            local step = rate * rs.PreSimulation:Wait()
+            if (cposflat - posflat).Magnitude < step then
+               	repeat wait() stop = true until closeResource(humrp.Position) == false
+		stop = false
+		return
+            else
+                cposflat += dir * step
+                local ray = workspace:Raycast(cposflat + Vector3.new(0, 1000, 0), Vector3.new(0, -2000, 0))
+                if ray then
+                    moveTo(ray.Position)
+                end
+            end
+        end
+    end
+
+    local function walkTo(destination)
+        while true do
+            local humrp = root -- assuming root is the HumanoidRootPart
+            local distanceToDestination = (destination - humrp.Position).Magnitude
+            if distanceToDestination < 3 then
+                teleportTo(destination)
+            end
+            
+            local currentWaypoint = waypoints[currentPositionIndex]
+            local nextWaypoint = waypoints[currentPositionIndex + 1]
+
+            if nextWaypoint then
+                local direction = (nextWaypoint.Position - humrp.Position).Unit
+
+                local distanceToNextWaypoint = (nextWaypoint.Position - humrp.Position).Magnitude
+                local steps = math.ceil(distanceToNextWaypoint / rate)
+
+                for step = 1, steps do
+                    -- Get direction relative to character's local space
+                    direction = (nextWaypoint.Position - humrp.Position).Unit
+                    local localDirection = humrp.CFrame:VectorToObjectSpace(direction)
+
+                    -- Adjust movement rate based on distance to waypoint
+                    local adjustedRate = math.min(rate, distanceToNextWaypoint)
+
+                    -- Move character in local space
+                    local newCFrame = humrp.CFrame * CFrame.new(
+                        localDirection.X * adjustedRate,
+                        localDirection.Y * adjustedRate * 0.5,
+                        localDirection.Z * adjustedRate
+                    )
+                    humrp.CFrame = newCFrame
+                    wait()
+                end
+            else
+                break
+            end
+
+            currentPositionIndex = currentPositionIndex + 1
+            if currentPositionIndex > #waypoints then
+		addResource()
+                local newPath = findTarget()
+                path = createPath(newPath)
+                waypoints = path:GetWaypoints()
+                currentPositionIndex = 1
+            end
+        end
+    end
+
+    walkTo(destination)
+end
+
+
+
+local function call()
+local closestPart = findTarget()
+if closestPart then
+    local movementRate = 1 -- Example movement rate
+    local reenable = true -- Example reenable parameter
+    local validator = function() return true end -- Example validator function
+    local height =9 -- Example height parameter
+    local destination = closestPart.Position
+    moveTowards(destination, movementRate, reenable, validator, height)
+    addResource()
+else
+    local movementRate = 1 -- Example movement rate
+    local reenable = true -- Example reenable parameter
+    local validator = function() return true end -- Example validator function
+    local height =9 -- Example height parameter
+    local destination = Vector3.new(-98.7, -3, 78)
+    moveTowards(destination, movementRate, reenable, validator, height)
+    addResource()
+    print("nothing found sadly")
+end
+end
+
+_G.Start = true
+task.spawn(function()
+    while _G.Start do
+        wait()
+        if stop then 
+            wait()
+        else
+            call()
+        end
+    end
+end)
