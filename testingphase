@@ -205,7 +205,7 @@ local function moveTowards(destination, rate, reenable, validator, height)
                         localDirection.Y * adjustedRate * 0.5,
                         localDirection.Z * adjustedRate
                     )
-                    humrp.CFrame = newCFrame
+                    ehe.CFrame = newCFrame
                     wait()
                 end
             else
