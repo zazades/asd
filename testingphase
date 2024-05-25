@@ -15,9 +15,10 @@ task.spawn(function()
     game.Workspace.Resources.ChildAdded:Connect(function(child)
         if child.Name == "Gold Node" then
 		    child.ModelStreamingMode = "Default"
-	    
+	    local trgt = child:FindFirstChild("Reference")
+		if trgt.CFrame.Y > -30 and trgt.CFrame.Y < 100 then
             table.insert(find, child) 
-		if child:GetPivot().CFrame.Y < -30 then child:Destroy() table.remove(find,child) end
+		end
         end
     end)
     for i,v:Instance in pairs(workspace.Resources:GetChildren()) do
@@ -28,7 +29,7 @@ task.spawn(function()
 		v.ModelStreamingMode = "Default"
 		
                 table.insert(find, v)
-		if v:GetPivot().CFrame.Y < -30 then v:Destroy() table.remove(find,v) end
+		if trgt.CFrame.Y < -30 then v:Destroy() table.remove(find,v) end
             end
         end
     end
@@ -39,7 +40,7 @@ task.spawn(function()
            if trgt.CFrame.Y > -30 and trgt.CFrame.Y < 100 then
 		v.ModelStreamingMode = "Default"
                 table.insert(find, v)
-		if v:GetPivot().CFrame.Y < -30 then v:Destroy() table.remove(find,v) end
+		if trgt.CFrame.Y < -30 then v:Destroy() table.remove(find,v) end
             end
         end
     end
@@ -52,7 +53,7 @@ local function addResource()
              if trgt.CFrame.Y > -35 and trgt.CFrame.Y < 85 then
 		v.ModelStreamingMode = "Default"
                 table.insert(find, v)
-		if v:GetPivot().CFrame.Y < -30 then v:Destroy() table.remove(find,v) end
+		if trgt.CFrame.Y < -30 then v:Destroy() table.remove(find,v) end
             end
         end
     end
@@ -62,7 +63,7 @@ local function addResource()
            if trgt.CFrame.Y > -30 and trgt.CFrame.Y < 100 then
 		v.ModelStreamingMode = "Default"
                 table.insert(find, v)
-		if v:GetPivot().CFrame.Y < -30 then v:Destroy() table.remove(find,v) end
+		if trgt.CFrame.Y < -30 then print("destroyed some") v:Destroy() table.remove(find,v) end
             end
         end
     end
@@ -269,7 +270,6 @@ local function moveTowards(destination, rate, reenable, validator, height)
 
     walkTo(destination)
 end
-
 local function call()
     local closestPart = findTarget()
     if closestPart then
