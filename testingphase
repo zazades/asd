@@ -20,7 +20,7 @@ task.spawn(function()
     end)
     for i,v:Instance in pairs(workspace.Resources:GetChildren()) do
         if v.Name == "Gold Node" and v:FindFirstChild("Reference") then
-		print(v:GetPivot().Position)
+		
             local trgt = v:FindFirstChild("Reference")
            if trgt.CFrame.Y > -30 and trgt.CFrame.Y < 100 then
 		v.ModelStreamingMode = "Default"
@@ -54,7 +54,7 @@ local function addResource()
         if v.Name == "Ice Chunk" and v:FindFirstChild("Gold Node") then
             local trgt = v:FindFirstChild("Gold Node"):FindFirstChild("Reference")
            if trgt.CFrame.Y > -30 and trgt.CFrame.Y < 100 then
-		print(trgt.CFrame)
+		v.ModelStreamingMode = "Default"
                 table.insert(find, v)
             end
         end
