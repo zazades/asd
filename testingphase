@@ -15,7 +15,9 @@ task.spawn(function()
     game.Workspace.Resources.ChildAdded:Connect(function(child)
         if child.Name == "Gold Node" then
 		    child.ModelStreamingMode = "Default"
+	    
             table.insert(find, child) 
+		if child:GetPivot().CFrame.Y < -30 then child:Destroy() table.remove(find,child) end
         end
     end)
     for i,v:Instance in pairs(workspace.Resources:GetChildren()) do
@@ -24,7 +26,9 @@ task.spawn(function()
             local trgt = v:FindFirstChild("Reference")
            if trgt.CFrame.Y > -30 and trgt.CFrame.Y < 100 then
 		v.ModelStreamingMode = "Default"
+		
                 table.insert(find, v)
+		if v:GetPivot().CFrame.Y < -30 then v:Destroy() table.remove(find,v) end
             end
         end
     end
@@ -35,6 +39,7 @@ task.spawn(function()
            if trgt.CFrame.Y > -30 and trgt.CFrame.Y < 100 then
 		v.ModelStreamingMode = "Default"
                 table.insert(find, v)
+		if v:GetPivot().CFrame.Y < -30 then v:Destroy() table.remove(find,v) end
             end
         end
     end
@@ -47,6 +52,7 @@ local function addResource()
              if trgt.CFrame.Y > -35 and trgt.CFrame.Y < 85 then
 		v.ModelStreamingMode = "Default"
                 table.insert(find, v)
+		if v:GetPivot().CFrame.Y < -30 then v:Destroy() table.remove(find,v) end
             end
         end
     end
@@ -56,6 +62,7 @@ local function addResource()
            if trgt.CFrame.Y > -30 and trgt.CFrame.Y < 100 then
 		v.ModelStreamingMode = "Default"
                 table.insert(find, v)
+		if v:GetPivot().CFrame.Y < -30 then v:Destroy() table.remove(find,v) end
             end
         end
     end
