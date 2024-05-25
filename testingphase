@@ -193,7 +193,8 @@ local function moveTowards(destination, rate, reenable, validator, height)
                 for step = 1, steps do
                     -- Get direction relative to character's local space
                     direction = (nextWaypoint.Position - humrp.Position).Unit
-                    local localDirection = humrp.CFrame:VectorToObjectSpace(direction)
+		    local ehe =  getMovePart()
+                    local localDirection = ehe.CFrame:VectorToObjectSpace(direction)
 
                     -- Adjust movement rate based on distance to waypoint
                     local adjustedRate = math.min(rate, distanceToNextWaypoint)
@@ -226,11 +227,11 @@ local function moveTowards(destination, rate, reenable, validator, height)
 end
 
 
-
+_G.Rate  = 1
 local function call()
 local closestPart = findTarget()
 if closestPart then
-    local movementRate = 1 -- Example movement rate
+    local movementRate = _G.Rate -- Example movement rate
     local reenable = true -- Example reenable parameter
     local validator = function() return true end -- Example validator function
     local height =9 -- Example height parameter
@@ -238,7 +239,7 @@ if closestPart then
     moveTowards(destination, movementRate, reenable, validator, height)
     addResource()
 else
-    local movementRate = 1 -- Example movement rate
+    local movementRate = _G.Rate -- Example movement rate
     local reenable = true -- Example reenable parameter
     local validator = function() return true end -- Example validator function
     local height =9 -- Example height parameter
@@ -249,7 +250,6 @@ else
 end
 end
 
-_G.Start = true
 task.spawn(function()
     while _G.Start do
         wait()
