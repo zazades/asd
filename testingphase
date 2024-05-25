@@ -14,7 +14,7 @@ local rs = game:GetService("RunService")
 task.spawn(function()
     game.Workspace.Resources.ChildAdded:Connect(function(child)
         if child.Name == "Gold Node" then
-		    v.ModelStreamingMode = "Default"
+		    child.ModelStreamingMode = "Default"
             table.insert(find, child) 
         end
     end)
