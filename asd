@@ -61,7 +61,7 @@ if isvoid then
 end
 local bytenet:RemoteEvent = if not isvoid then rep:FindFirstChild("ByteNetReliable") else nil
 
-local offloaded:Instance = not isvoid and game:GetService("ReplicatedFirst").Animals.Offloaded or Instance.new("Folder")
+
 local statsgui = plr.PlayerGui:WaitForChild("MainGui"):WaitForChild("Panels"):WaitForChild("Stats")
 local inventorygui = plr.PlayerGui:WaitForChild("MainGui"):WaitForChild("RightPanel"):WaitForChild("Inventory"):WaitForChild("List")
 
@@ -1549,25 +1549,5 @@ autocraft_count=autocraft:AddSetting("Count","Number",100)
 autocraft:ConnectSettingUpdate("Craft",function()
 	for i=1,autocraft_count.Value do
 		craft(getItemId(autocraft_item.Value))
-	end
-end)
-
-local birdfarm = resource:AddSection("Bird Farm")
-birdfarm_enabled=birdfarm:AddSetting("Enabled","Toggle")
-
-task.spawn(function()
-	while window.ScreenGui.Parent do 
-		local step = rs.PostSimulation:Wait()
-		if birdfarm_enabled.Value and hum.SeatPart and hum.SeatPart.Parent and hum.SeatPart.Parent:FindFirstChild("DangerZone") then
-			local dz =  hum.SeatPart.Parent.DangerZone
-			local closest
-			local closestmag = math.huge
-			local v = offloaded:FindFirstChild("Bird")
-			if not v then continue end
-			while hum.SeatPart and hum.SeatPart.Parent and birdfarm_enabled.Value and v.Parent and v:FindFirstChild("HumanoidRootPart") do 
-				touch(dz,v:FindFirstChild("HumanoidRootPart"))
-				rs.PostSimulation:Wait() 
-			end
-		end
 	end
 end)
