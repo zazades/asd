@@ -14,11 +14,8 @@ local rs = game:GetService("RunService")
 task.spawn(function()
     game.Workspace.Resources.ChildAdded:Connect(function(child)
         if child.Name == "Gold Node" then
-	    local trgt = child:FindFirstChild("Reference")
-	    if trgt.CFrame.Y > -30 and trgt.CFrame.Y < 100 then
-	    child.ModelStreamingMode = "Default"
+		    v.ModelStreamingMode = "Default"
             table.insert(find, child) 
-	    end
         end
     end)
     for i,v:Instance in pairs(workspace.Resources:GetChildren()) do
@@ -266,40 +263,6 @@ local function moveTowards(destination, rate, reenable, validator, height)
     walkTo(destination)
 end
 
-local function call()
-    local closestPart = findTarget()
-    if closestPart then
-        local movementRate = _G.Rate or 1
-        local reenable = true
-        local validator = function() return true end
-        local height = 9
-        local destination = closestPart.Position
-        if not destination then
-            
-            return
-        end
-        if (destination - root.Position).Magnitude < 3 then
-            addResource()
-            return
-        end
-        moveTowards(destination, movementRate, reenable, validator, height)
-        addResource()
-    else
-       
-    end
-
-task.spawn(function()
-    while _G.Start do
-        wait()
-        if stop then 
-            wait()
-        else
-            call()
-        end
-    end
-end)
-    walkTo(destination)
-end
 
 local function call()
     local closestPart = findTarget()
