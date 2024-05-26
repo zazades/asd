@@ -14,22 +14,19 @@ local rs = game:GetService("RunService")
 task.spawn(function()
     game.Workspace.Resources.ChildAdded:Connect(function(child)
         if child.Name == "Gold Node" then
-		    child.ModelStreamingMode = "Default"
 	    local trgt = child:FindFirstChild("Reference")
-		 if trgt.CFrame.Y < -30 then child:Destroy() return end
-		if trgt.CFrame.Y > -30 and trgt.CFrame.Y < 100 then
+	    if trgt.CFrame.Y > -30 and trgt.CFrame.Y < 100 then
+	    child.ModelStreamingMode = "Default"
             table.insert(find, child) 
-		end
+	    end
         end
     end)
     for i,v:Instance in pairs(workspace.Resources:GetChildren()) do
         if v.Name == "Gold Node" and v:FindFirstChild("Reference") then
 		
             local trgt = v:FindFirstChild("Reference")
-	    if trgt.CFrame.Y < -30 then v:Destroy() return end
            if trgt.CFrame.Y > -30 and trgt.CFrame.Y < 100 then
 		v.ModelStreamingMode = "Default"
-		
                 table.insert(find, v)
             end
         end
@@ -38,11 +35,9 @@ task.spawn(function()
      for i,v:Instance in pairs(workspace.Resources:GetChildren()) do
         if v.Name == "Ice Chunk" and v:FindFirstChild("Gold Node") then
             local trgt = v:FindFirstChild("Gold Node"):FindFirstChild("Reference")
-	     if trgt.CFrame.Y < -30 then v:Destroy() return end
            if trgt.CFrame.Y > -30 and trgt.CFrame.Y < 100 then
 		v.ModelStreamingMode = "Default"
                 table.insert(find, v)
-		
             end
         end
     end
@@ -52,22 +47,18 @@ local function addResource()
     for i, v in pairs(resource:GetChildren()) do
         if v.Name == "Gold Node" and v:FindFirstChild("Reference") then
             local trgt = v:FindFirstChild("Reference")
-		if trgt.CFrame.Y < -30 then v:Destroy() return end
              if trgt.CFrame.Y > -35 and trgt.CFrame.Y < 85 then
 		v.ModelStreamingMode = "Default"
                 table.insert(find, v)
-		
             end
         end
     end
      for i,v:Instance in pairs(workspace.Resources:GetChildren()) do
         if v.Name == "Ice Chunk" and v:FindFirstChild("Gold Node") then
             local trgt = v:FindFirstChild("Gold Node"):FindFirstChild("Reference")
-		 if trgt.CFrame.Y < -30 then v:Destroy() return end
            if trgt.CFrame.Y > -30 and trgt.CFrame.Y < 100 then
 		v.ModelStreamingMode = "Default"
                 table.insert(find, v)
-		
             end
         end
     end
@@ -138,7 +129,7 @@ local function createPath(destination)
         wait()
         destination = findTarget()
         if destination then
-            local path = PathfindingService:CreatePath({AgentHeight = 1})
+            path = PathfindingService:CreatePath({AgentHeight = 1})
             local success, err = pcall(function()
                 path:ComputeAsync(humrp.Position, destination.Position)
             end)
@@ -274,16 +265,21 @@ local function moveTowards(destination, rate, reenable, validator, height)
 
     walkTo(destination)
 end
+
 local function call()
     local closestPart = findTarget()
     if closestPart then
-        local movementRate = _G.Rate 
+        local movementRate = _G.Rate or 1
         local reenable = true
         local validator = function() return true end
         local height = 9
         local destination = closestPart.Position
         if not destination then
             
+            return
+        end
+        if (destination - root.Position).Magnitude < 3 then
+            addResource()
             return
         end
         moveTowards(destination, movementRate, reenable, validator, height)
@@ -313,7 +309,7 @@ local function call()
         local validator = function() return true end -- Example validator function
         local height = 9 -- Example height parameter
         local destination = closestPart.Position
-	
+	if (destination - humrp.Position).magnitude < 3 then  addResource() return end
 	if not destination then return end
         moveTowards(destination, movementRate, reenable, validator, height)
         addResource()
