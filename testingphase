@@ -16,7 +16,7 @@ task.spawn(function()
         if child.Name == "Gold Node" then
 		    child.ModelStreamingMode = "Default"
 	    local trgt = child:FindFirstChild("Reference")
-		 if trgt.CFrame.Y < -30 then v:Destroy() return end
+		 if trgt.CFrame.Y < -30 then child:Destroy() return end
 		if trgt.CFrame.Y > -30 and trgt.CFrame.Y < 100 then
             table.insert(find, child) 
 		end
