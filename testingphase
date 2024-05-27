@@ -96,10 +96,12 @@ local function findTarget()
         if goldNode and goldNode:FindFirstChild("Reference") then
             local target = goldNode:FindFirstChild("Reference")
             local distance = (humrp.Position - target.Position).Magnitude
-
+	    
             if distance < MaxDistance then
-                nearestTarget = target
-                MaxDistance = distance
+		if target.Position.Y > -30 then 
+                	nearestTarget = target
+               		MaxDistance = distance
+		end
             end
         end
     end
