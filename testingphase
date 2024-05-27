@@ -1,3 +1,132 @@
+local char = game.Players.LocalPlayer.Character
+
+local humrp = char.HumanoidRootPart
+
+local chair
+local deb
+local deb2
+
+local resource = game.Workspace.Deployables
+
+local findC = {}
+task.spawn(function()
+    game.Workspace.Deployables.ChildAdded:Connect(function(child)
+        if child.Name == "Chair" then
+	    child.ModelStreamingMode = "Default"
+            table.insert(findC, v) 
+        end
+    end)
+    for i,v:Instance in pairs(workspace.Deployables:GetChildren()) do
+        if v.Name == "Chair" and v:FindFirstChild("Seat") then
+            local trgt = v:FindFirstChild("Reference")
+		v.ModelStreamingMode = "Default"
+                table.insert(findC, v)
+        end
+    end
+end)
+
+local function addResourceC()
+    for i, v in pairs(resource:GetChildren()) do
+        if v.Name == "Chair" and v:FindFirstChild("Seat") then
+            local trgt = v:FindFirstChild("Reference")
+            
+		v.ModelStreamingMode = "Default"
+                table.insert(findC, v)
+            
+        end
+    end
+end
+
+local function findTargetC()
+    local resource = game.Workspace.Resources:GetChildren()
+    local MaxDistance = math.huge
+    local nearestTarget
+    local golds = findC
+    if #golds == 0 then addResourceC() end
+    for _, goldNode in ipairs(golds) do
+        if goldNode and goldNode:FindFirstChild("Seat") then
+            local target = goldNode:FindFirstChild("Seat")
+            local distance = (humrp.Position - target.Position).Magnitude
+
+            if distance < MaxDistance then
+                nearestTarget = target
+                MaxDistance = distance
+            end
+        end
+    end
+
+    return nearestTarget 
+end
+
+local function teleport()
+    if deb then return end
+    chair = findTargetC()
+    if not chair then addResourceC() chair = findTargetC() end
+    deb = true
+    
+    chair.CFrame = humrp.CFrame * CFrame.new(0,1.5,0)
+    task.wait(1)
+    chair.CFrame = humrp.CFrame * CFrame.new(0,15,0)
+    task.wait(2.5)
+    chair.CFrame = humrp.CFrame * CFrame.new(0,0,0)
+    repeat wait() until char.Humanoid.SeatPart ~= nil
+    
+    humrp.CFrame = chair.CFrame * CFrame.new(0,25,0)
+    task.wait(0.2)
+    chair.CFrame = chair.CFrame * CFrame.new(0,25,0)
+
+    char.Humanoid.Sit = false
+    
+    task.wait(0.2)
+    char.Humanoid.Sit = true
+    task.wait(0.2)
+    char.Humanoid.Sit = false
+    deb = false
+end
+
+
+local function closeResource(position)
+    for _, resource in ipairs(game.Workspace.Resources:GetChildren()) do
+        if resource.Name == "Gold Node" and resource:FindFirstChild("Reference") then 
+            local tar = resource:FindFirstChild("Reference")
+            if (tar.Position - position).Magnitude < 10 then
+		
+                return true
+            end
+        end
+    end
+
+    return false
+end
+
+
+local dep = workspace.Deployables
+local function closePart()
+        wait()
+        if closeResource(humrp.Position) then
+            for i, v in pairs(find) do
+                if v.Name == "Chair" and v:FindFirstChild("Seat") then
+                    if (v:FindFirstChild("Part").Position - humrp.Position).magnitude < 10 then
+                        table.remove(findC, i)
+                        print(i)
+                    end
+                end
+            end
+        else
+            print("elsed")
+            for i, v in pairs(findC) do
+                if v.Name == "Chair" and v:FindFirstChild("Seat") then
+                    if (v:FindFirstChild("Part").Position - humrp.Position).magnitude < 10 then
+                        print("hi")
+                        table.remove(findC, i)
+                        print(i)
+                    end
+                end
+            end
+            teleport() 
+        end
+end
+
 local RunService = game:GetService('RunService')
 local PathfindingService = game:GetService('PathfindingService')
 local c = game.Players.LocalPlayer.Character
@@ -14,7 +143,6 @@ local rs = game:GetService("RunService")
 task.spawn(function()
     game.Workspace.Resources.ChildAdded:Connect(function(child)
         if child.Name == "Gold Node" then
-		    v.ModelStreamingMode = "Default"
             table.insert(find, child) 
         end
     end)
@@ -22,20 +150,18 @@ task.spawn(function()
         if v.Name == "Gold Node" and v:FindFirstChild("Reference") then
 		
             local trgt = v:FindFirstChild("Reference")
-           if trgt.CFrame.Y > -30 and trgt.CFrame.Y < 100 then
-		v.ModelStreamingMode = "Default"
+           
                 table.insert(find, v)
-            end
+            
         end
     end
 
      for i,v:Instance in pairs(workspace.Resources:GetChildren()) do
         if v.Name == "Ice Chunk" and v:FindFirstChild("Gold Node") then
             local trgt = v:FindFirstChild("Gold Node"):FindFirstChild("Reference")
-           if trgt.CFrame.Y > -30 and trgt.CFrame.Y < 100 then
-		v.ModelStreamingMode = "Default"
+           
                 table.insert(find, v)
-            end
+           
         end
     end
 end)
@@ -44,19 +170,17 @@ local function addResource()
     for i, v in pairs(resource:GetChildren()) do
         if v.Name == "Gold Node" and v:FindFirstChild("Reference") then
             local trgt = v:FindFirstChild("Reference")
-             if trgt.CFrame.Y > -35 and trgt.CFrame.Y < 85 then
-		v.ModelStreamingMode = "Default"
+             
                 table.insert(find, v)
-            end
+           
         end
     end
      for i,v:Instance in pairs(workspace.Resources:GetChildren()) do
         if v.Name == "Ice Chunk" and v:FindFirstChild("Gold Node") then
             local trgt = v:FindFirstChild("Gold Node"):FindFirstChild("Reference")
-           if trgt.CFrame.Y > -30 and trgt.CFrame.Y < 100 then
-		v.ModelStreamingMode = "Default"
+          
                 table.insert(find, v)
-            end
+            
         end
     end
 end
@@ -96,12 +220,10 @@ local function findTarget()
         if goldNode and goldNode:FindFirstChild("Reference") then
             local target = goldNode:FindFirstChild("Reference")
             local distance = (humrp.Position - target.Position).Magnitude
-	    
+
             if distance < MaxDistance then
-		if target.Position.Y > -30 then 
-                	nearestTarget = target
-               		MaxDistance = distance
-		end
+                nearestTarget = target
+                MaxDistance = distance
             end
         end
     end
@@ -179,6 +301,27 @@ local function closeResource(position)
     return false
 end
 
+local function closeResourceC(position)
+    for _, resource in ipairs(game.Workspace.Resources:GetChildren()) do
+        if resource.Name == "Chair" and resource:FindFirstChild("Seat") then 
+            local tar = resource:FindFirstChild("Seat")
+            if (tar.Position - position).Magnitude < 10 then
+                return resource
+            end
+        end
+    end
+end
+
+local function findI()
+ for _, resource in ipairs(game.Workspace.Resources:GetChildren()) do
+        if resource.Name == "Chair" and resource:FindFirstChild("Seat") then 
+            local tar = resource:FindFirstChild("Seat")
+            if (tar.Position - position).Magnitude < 10 then
+                return i
+            end
+        end
+    end
+end
 
 local function moveTo(pos:CFrame)
 	if not getMovePart() then return end
@@ -211,8 +354,12 @@ local function moveTowards(destination, rate, reenable, validator, height)
         while uzak > 3 do
             local distanceToDestination = (destination - humrp.Position).Magnitude
             if distanceToDestination < 3 then
-                teleportTo(destination)
-                return
+		 if closeResourceC() then
+		    local remve = closeResourceC()
+		    repeat until not closeResource()
+		    table.remove(findC, findI())
+		end
+		return
             end
 
             local currentWaypoint = waypoints[currentPositionIndex]
@@ -243,29 +390,13 @@ local function moveTowards(destination, rate, reenable, validator, height)
             end
 
             currentPositionIndex = currentPositionIndex + 1
-            if currentPositionIndex > #waypoints then
-                addResource()
-                local newPath = findTarget()
-                if newPath then
-                    path = createPath(newPath)
-                    if not path then
-                        
-                        break
-                    end
-                    waypoints = path:GetWaypoints()
-                    currentPositionIndex = 1
-                else
-                    
-                    break
-                end
             end
-        end
     end
 
     walkTo(destination)
 end
 
-
+_G.Rate = 0.8
 local function call()
     local closestPart = findTarget()
     if closestPart then
@@ -283,13 +414,24 @@ local function call()
     end
 end
 
-task.spawn(function()
-    while _G.Start do
-        wait()
-        if stop then 
-            wait()
-        else
-            call()
+local function closeResource2(position)
+    for _, resource in ipairs(game.Workspace.Resources:GetChildren()) do
+        if resource.Name == "Gold Node" and resource:FindFirstChild("Reference") then 
+            local tar = resource:FindFirstChild("Reference")
+            if (tar.Position - position).Magnitude < 100 then
+                return true
+            end
         end
     end
-end)
+
+    return false
+end
+
+while true do wait()
+    if closeResource2(humrp.Position) then
+	call()
+    else
+	closePart()
+    end
+end
+
