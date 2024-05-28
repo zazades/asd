@@ -245,7 +245,7 @@ local function moveTowards(destination, rate, reenable, validator, height)
                 local distanceToNextWaypoint = (nextWaypoint.Position - humrp.Position).Magnitude
                 local steps = math.ceil(distanceToNextWaypoint / rate)
 
-                for step = 0.1, steps do
+                for step = 0.2, steps do
                     direction = (nextWaypoint.Position - humrp.Position).Unit
                     local ehe = getMovePart()
                     local localDirection = ehe.CFrame:VectorToObjectSpace(direction)
