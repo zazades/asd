@@ -9,22 +9,34 @@ local resource = game.Workspace.Resources
 local root = c.HumanoidRootPart
 local find = {}
 local stop = false
-
+_G.Start = 1
+_G.Rate = 0.8
 local rs = game:GetService("RunService")
 task.spawn(function()
     game.Workspace.Resources.ChildAdded:Connect(function(child)
         if child.Name == "Gold Node" then
+            local trgt = child:FindFirstChild("Reference")
+              if trgt.Position.Y < -30 then child:Destroy() else
+           if trgt.Position.Y > -30 and trgt.Position.Y < 100 then
 		    child.ModelStreamingMode = "Default"
             table.insert(find, child) 
+           end
+           end
         end
     end)
     for i,v:Instance in pairs(workspace.Resources:GetChildren()) do
         if v.Name == "Gold Node" and v:FindFirstChild("Reference") then
 		
             local trgt = v:FindFirstChild("Reference")
-           if trgt.CFrame.Y > -30 and trgt.CFrame.Y < 100 then
+             if trgt.Position.Y < -30 then  
+                  v:Destroy() 
+                  
+                   else
+              
+           if trgt.Position.Y > -30 and trgt.Position.Y < 100 then
 		v.ModelStreamingMode = "Default"
                 table.insert(find, v)
+           end
             end
         end
     end
@@ -32,9 +44,14 @@ task.spawn(function()
      for i,v:Instance in pairs(workspace.Resources:GetChildren()) do
         if v.Name == "Ice Chunk" and v:FindFirstChild("Gold Node") then
             local trgt = v:FindFirstChild("Gold Node"):FindFirstChild("Reference")
-           if trgt.CFrame.Y > -30 and trgt.CFrame.Y < 100 then
+             if trgt.Position.Y < -30 then 
+                 v:Destroy()  
+                 else
+                
+           if trgt.Position.Y > -30 and trgt.Position.Y < 100 then
 		v.ModelStreamingMode = "Default"
                 table.insert(find, v)
+                 end
             end
         end
     end
@@ -44,18 +61,25 @@ local function addResource()
     for i, v in pairs(resource:GetChildren()) do
         if v.Name == "Gold Node" and v:FindFirstChild("Reference") then
             local trgt = v:FindFirstChild("Reference")
-             if trgt.CFrame.Y > -35 and trgt.CFrame.Y < 85 then
-		v.ModelStreamingMode = "Default"
+               if trgt.Position.Y < -30 then 
+                   v:Destroy()
+               else 
+           if trgt.Position.Y > -30 and trgt.Position.Y < 100 then
+	        	v.ModelStreamingMode = "Default"
                 table.insert(find, v)
+                end
             end
         end
     end
      for i,v:Instance in pairs(workspace.Resources:GetChildren()) do
         if v.Name == "Ice Chunk" and v:FindFirstChild("Gold Node") then
             local trgt = v:FindFirstChild("Gold Node"):FindFirstChild("Reference")
-           if trgt.CFrame.Y > -30 and trgt.CFrame.Y < 100 then
+              if trgt.Position.Y < -30 then 
+                  v:Destroy() 
+           if trgt.Position.Y > -30 and trgt.Position.Y < 100 then
 		v.ModelStreamingMode = "Default"
                 table.insert(find, v)
+           end
             end
         end
     end
@@ -96,10 +120,11 @@ local function findTarget()
         if goldNode and goldNode:FindFirstChild("Reference") then
             local target = goldNode:FindFirstChild("Reference")
             local distance = (humrp.Position - target.Position).Magnitude
-            if target.Position.Y < -35 then target.Parent:Destroy() end
+            if target.Position.Y < -35 then goldNode:Destroy() else
             if distance < MaxDistance then
                 nearestTarget = target
                 MaxDistance = distance
+            end
             end
         end
     end
