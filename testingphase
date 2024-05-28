@@ -186,8 +186,7 @@ local function createPath(destination)
     lastPathTime = os.time()
     return path
 end
-_G.Start = true
-_G.Rate = 2
+
 local function closeResource(position)
     for _, resource in ipairs(game.Workspace.Resources:GetChildren()) do
         if resource.Name == "Gold Node" and resource:FindFirstChild("Reference") then 
