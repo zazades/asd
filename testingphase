@@ -9,7 +9,8 @@ local resource = game.Workspace.Resources
 local root = c.HumanoidRootPart
 local find = {}
 local stop = false
-
+_G.Start = false
+_G.Rate = 0.8
 local rs = game:GetService("RunService")
 task.spawn(function()
     game.Workspace.Resources.ChildAdded:Connect(function(child)
@@ -106,9 +107,9 @@ local function getMovePart()
     if not (hum and root and hum.SeatPart and hum.SeatPart.Parent) then
         return root
     end
-    return getMover(hum.SeatPart.Parent) or root
+    return hum.SeatPart or root
 end
-
+ 
 
 local function findTarget()
     local resource = game.Workspace.Resources:GetChildren()
@@ -187,7 +188,8 @@ local function createPath(destination)
     lastPathTime = os.time()
     return path
 end
-
+_G.Start = true
+_G.Rate = 2
 local function closeResource(position)
     for _, resource in ipairs(game.Workspace.Resources:GetChildren()) do
         if resource.Name == "Gold Node" and resource:FindFirstChild("Reference") then 
@@ -245,7 +247,7 @@ local function moveTowards(destination, rate, reenable, validator, height)
                 local distanceToNextWaypoint = (nextWaypoint.Position - humrp.Position).Magnitude
                 local steps = math.ceil(distanceToNextWaypoint / rate)
 
-                for step = 1, steps do
+                for step = 0.1, steps do
                     direction = (nextWaypoint.Position - humrp.Position).Unit
                     local ehe = getMovePart()
                     local localDirection = ehe.CFrame:VectorToObjectSpace(direction)
