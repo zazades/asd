@@ -309,7 +309,7 @@ local function call()
         moveTowards(destination, movementRate, reenable, validator, height)
         print(#find)
     else
-       moveTowards(humrp.Position + Vector3.new(5,0,0), movementRate, reenable, validator, height)
+       moveTowards(humrp.Position + Vector3.new(5,0,0), 0.8, true, function() return true end, 9)
 	addResource()
 	print("hi 0")
     end
