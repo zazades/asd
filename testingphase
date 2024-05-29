@@ -165,24 +165,7 @@ local function createPath(destination)
                         if v == destination.Parent then
                             table.remove(find, i)
                             if #find == 0 then
-                                local succ, err = pcall(function() 
-                                    path:ComputeAsync(humrp.Position, Vector3.new(-98.7, -3, 78))
-                                end)
-                                if succ then
-                                    if path.Status == Enum.PathStatus.Success then
-                                        pathFound = true
-                                        cachedPaths.default = path
-                                       
-                                        addResource()
-                                    else
-                                        path:ComputeAsync(humrp.Position, humrp.Position + Vector3.new(-13,0,0))
-                                        print("path found inside cave")
-                                        pathFound = true
-                                        cachedPaths.default = path
-                                        
-                                        addResource()
-                                    end
-                                end
+                                addResource()
                             end
                         end
                     end
@@ -196,18 +179,18 @@ local function createPath(destination)
                 path:ComputeAsync(humrp.Position, Vector3.new(-98.7, -3, 78))
             end)
             if succ then
-		if path.Status == Enum.PathStatus.Success then
+	    if path.Status == Enum.PathStatus.Success then
             pathFound = true
             cachedPaths.default = path
 		    
             addResource()
         else
              print("path found inside cave")
-			path:ComputeAsync(humrp.Position, humrp.Position + Vector3.new(-13,0,0))
-			pathFound = true
+	    path:ComputeAsync(humrp.Position, humrp.Position + Vector3.new(-13,0,0))
+	    pathFound = true
             cachedPaths.default = path
 		    
-            ddResource()
+            addResource()
 		end
             end
         end
@@ -221,7 +204,7 @@ local function closeResource(position)
     for _, resource in ipairs(game.Workspace.Resources:GetChildren()) do
         if resource.Name == "Gold Node" and resource:FindFirstChild("Reference") then 
             local tar = resource:FindFirstChild("Reference")
-            if (tar.Position - position).Magnitude < 3 then
+            if (tar.Position - position).Magnitude < 12 then
                 return true
             end
         end
@@ -274,7 +257,7 @@ local function moveTowards(destination, rate, reenable, validator, height)
                 local distanceToNextWaypoint = (nextWaypoint.Position - humrp.Position).Magnitude
                 local steps = math.ceil(distanceToNextWaypoint / rate)
 
-                for step = 0.2, steps do
+                for step = 1, steps do
                     direction = (nextWaypoint.Position - humrp.Position).Unit
                     local ehe = getMovePart()
                     local localDirection = ehe.CFrame:VectorToObjectSpace(direction)
@@ -325,7 +308,7 @@ local function call()
         local validator = function() return true end -- Example validator function
         local height = 9 -- Example height parameter
         local destination = closestPart.Position
-	if (destination - humrp.Position).magnitude < 3 then  addResource() return end
+	if (destination - humrp.Position).magnitude < 12 then  addResource() return end
 	if not destination then return end
         moveTowards(destination, movementRate, reenable, validator, height)
         addResource()
