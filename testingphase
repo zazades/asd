@@ -65,7 +65,7 @@ local function addResource()
                    v:Destroy()
                else 
            if trgt.Position.Y > -36 and trgt.Position.Y < 100 then
-	        	v.ModelStreamingMode = "Default"
+	        v.ModelStreamingMode = "Default"
                 table.insert(find, v)
                 end
             end
@@ -169,18 +169,20 @@ local function createPath(destination)
                                     path:ComputeAsync(humrp.Position, Vector3.new(-98.7, -3, 78))
                                 end)
                                 if succ then
-                                    pathFound = true
-                                    cachedPaths.default = path
-                                    addResource()
-                                else
-                                    path:ComputeAsync(humrp.Position, Vector3.new(-98.7, -3, 78))
-                                    pathFound = true
-                                    cachedPaths.default = path
-                                    addResource()
+                                    if path.Status == Enum.PathStatus.Success then
+                                        pathFound = true
+                                        cachedPaths.default = path
+                                       
+                                        addResource()
+                                    else
+                                        path:ComputeAsync(humrp.Position, humrp.Position + Vector3.new(-13,0,0))
+                                        print("path found inside cave")
+                                        pathFound = true
+                                        cachedPaths.default = path
+                                        
+                                        addResource()
+                                    end
                                 end
-                                pathFound = true
-                                cachedPaths.default = path
-                                addResource()
                             end
                         end
                     end
@@ -194,14 +196,19 @@ local function createPath(destination)
                 path:ComputeAsync(humrp.Position, Vector3.new(-98.7, -3, 78))
             end)
             if succ then
+		if path.Status == Enum.PathStatus.Success then
             pathFound = true
             cachedPaths.default = path
+		    
             addResource()
-            else
-                 path:ComputeAsync(humrp.Position, humrp.Position + Vector3.new(13,0,0))
-                 pathFound = true
+        else
+             print("path found inside cave")
+			path:ComputeAsync(humrp.Position, humrp.Position + Vector3.new(-13,0,0))
+			pathFound = true
             cachedPaths.default = path
-            addResource()
+		    
+            ddResource()
+		end
             end
         end
     until pathFound
