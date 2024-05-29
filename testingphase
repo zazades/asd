@@ -14,7 +14,7 @@ task.spawn(function()
     game.Workspace.Resources.ChildAdded:Connect(function(child)
         if child.Name == "Gold Node" then
             local trgt = child:FindFirstChild("Reference")
-              if trgt.Position.Y < -30 then child:Destroy() else
+              if trgt.Position.Y < -35 then child:Destroy() else
            if trgt.Position.Y > -30 and trgt.Position.Y < 100 then
 		    child.ModelStreamingMode = "Default"
             table.insert(find, child) 
@@ -26,7 +26,7 @@ task.spawn(function()
         if v.Name == "Gold Node" and v:FindFirstChild("Reference") then
 		
             local trgt = v:FindFirstChild("Reference")
-             if trgt.Position.Y < -30 then  
+             if trgt.Position.Y < -35 then  
                   v:Destroy() 
                   
                    else
@@ -42,7 +42,7 @@ task.spawn(function()
      for i,v:Instance in pairs(workspace.Resources:GetChildren()) do
         if v.Name == "Ice Chunk" and v:FindFirstChild("Gold Node") then
             local trgt = v:FindFirstChild("Gold Node"):FindFirstChild("Reference")
-             if trgt.Position.Y < -30 then 
+             if trgt.Position.Y < -35 then 
                  v:Destroy()  
                  else
                 
@@ -59,7 +59,7 @@ local function addResource()
     for i, v in pairs(resource:GetChildren()) do
         if v.Name == "Gold Node" and v:FindFirstChild("Reference") then
             local trgt = v:FindFirstChild("Reference")
-               if trgt.Position.Y < -30 then 
+               if trgt.Position.Y < -35 then 
                    v:Destroy()
                else 
            if trgt.Position.Y > -30 and trgt.Position.Y < 100 then
@@ -72,7 +72,7 @@ local function addResource()
      for i,v:Instance in pairs(workspace.Resources:GetChildren()) do
         if v.Name == "Ice Chunk" and v:FindFirstChild("Gold Node") then
             local trgt = v:FindFirstChild("Gold Node"):FindFirstChild("Reference")
-              if trgt.Position.Y < -30 then 
+              if trgt.Position.Y < -35 then 
                   v:Destroy() 
            if trgt.Position.Y > -30 and trgt.Position.Y < 100 then
 		v.ModelStreamingMode = "Default"
@@ -166,7 +166,7 @@ local function createPath(destination)
                                 path:ComputeAsync(humrp.Position, Vector3.new(-98.7, -3, 78))
                                 pathFound = true
                                 cachedPaths.default = path
-                                addResource()
+                               
                             end
                         end
                     end
@@ -176,10 +176,18 @@ local function createPath(destination)
             end
         else
             path = PathfindingService:CreatePath({AgentHeight = 1})
-            path:ComputeAsync(humrp.Position, Vector3.new(-98.7, -3, 78))
-            pathFound = true
+	     local success, err = pcall(function()
+                  path:ComputeAsync(humrp.Position, Vector3.new(-98.7, -3, 78))
+            end)
+             if success then
+		pathFound = true
+		else
+		pathFound = true
+		path:ComputeAsync(humrp.Position + Vector3.new(15,0,0), Vector3.new(-98.7, -3, 78))
+	end
+            
             cachedPaths.default = path
-            addResource()
+            
         end
     until pathFound
 
@@ -265,7 +273,7 @@ local function moveTowards(destination, rate, reenable, validator, height)
 
             currentPositionIndex = currentPositionIndex + 1
             if currentPositionIndex > #waypoints then
-                addResource()
+                
                 local newPath = findTarget()
                 if newPath then
                     path = createPath(newPath)
@@ -289,18 +297,20 @@ end
 
 local function call()
     local closestPart = findTarget()
-    if closestPart then
+    if #find > 0 then
         local movementRate = _G.Rate -- Example movement rate
         local reenable = true -- Example reenable parameter
         local validator = function() return true end -- Example validator function
         local height = 9 -- Example height parameter
         local destination = closestPart.Position
-	if (destination - humrp.Position).magnitude < 3 then  addResource() return end
+	
 	if not destination then return end
         moveTowards(destination, movementRate, reenable, validator, height)
-        addResource()
+        print(#find)
     else
-       
+       moveTowards(humrp.Position + Vector3.new(5,0,0), movementRate, reenable, validator, height)
+	addResource()
+	print("hi 0")
     end
 end
 
