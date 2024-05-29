@@ -10,6 +10,8 @@ local root = c.HumanoidRootPart
 local find = {}
 local stop = false
 local rs = game:GetService("RunService")
+_G.Rate = 0.8
+_G.Start = true
 task.spawn(function()
     game.Workspace.Resources.ChildAdded:Connect(function(child)
         if child.Name == "Gold Node" then
@@ -74,7 +76,6 @@ local function addResource()
             local trgt = v:FindFirstChild("Gold Node"):FindFirstChild("Reference")
               if trgt.Position.Y < -36 then 
                   v:Destroy() 
-		else
            if trgt.Position.Y > -36 and trgt.Position.Y < 100 then
 		v.ModelStreamingMode = "Default"
                 table.insert(find, v)
@@ -119,7 +120,7 @@ local function findTarget()
         if goldNode and goldNode:FindFirstChild("Reference") then
             local target = goldNode:FindFirstChild("Reference")
             local distance = (humrp.Position - target.Position).Magnitude
-            if target.Position.Y < -35 then goldNode:Destroy() else
+            if target.Position.Y < -36 then goldNode:Destroy() else
             if distance < MaxDistance then
                 nearestTarget = target
                 MaxDistance = distance
@@ -164,10 +165,22 @@ local function createPath(destination)
                         if v == destination.Parent then
                             table.remove(find, i)
                             if #find == 0 then
-                                path:ComputeAsync(humrp.Position, Vector3.new(-98.7, -3, 78))
+                                local succ, err = pcall(function() 
+                                    path:ComputeAsync(humrp.Position, Vector3.new(-98.7, -3, 78))
+                                end)
+                                if succ then
+                                    pathFound = true
+                                    cachedPaths.default = path
+                                    addResource()
+                                else
+                                    path:ComputeAsync(humrp.Position, Vector3.new(-98.7, -3, 78))
+                                    pathFound = true
+                                    cachedPaths.default = path
+                                    addResource()
+                                end
                                 pathFound = true
                                 cachedPaths.default = path
-                               
+                                addResource()
                             end
                         end
                     end
@@ -177,18 +190,19 @@ local function createPath(destination)
             end
         else
             path = PathfindingService:CreatePath({AgentHeight = 1})
-	     local success, err = pcall(function()
-                  path:ComputeAsync(humrp.Position, Vector3.new(-98.7, -3, 78))
+            local succ, err = pcall(function() 
+                path:ComputeAsync(humrp.Position, Vector3.new(-98.7, -3, 78))
             end)
-             if success then
-		pathFound = true
-		else
-		pathFound = true
-		path:ComputeAsync(humrp.Position + Vector3.new(15,0,0), Vector3.new(-98.7, -3, 78))
-	end
-            
+            if succ then
+            pathFound = true
             cachedPaths.default = path
-            
+            addResource()
+            else
+                 path:ComputeAsync(humrp.Position, humrp.Position + Vector3.new(13,0,0))
+                 pathFound = true
+            cachedPaths.default = path
+            addResource()
+            end
         end
     until pathFound
 
@@ -251,9 +265,9 @@ local function moveTowards(destination, rate, reenable, validator, height)
             if nextWaypoint then
                 local direction = (nextWaypoint.Position - humrp.Position).Unit
                 local distanceToNextWaypoint = (nextWaypoint.Position - humrp.Position).Magnitude
-                local steps = math.ceil(distanceToNextWaypoint / rate) 
+                local steps = math.ceil(distanceToNextWaypoint / rate)
 
-                for step = 1, steps do
+                for step = 0.2, steps do
                     direction = (nextWaypoint.Position - humrp.Position).Unit
                     local ehe = getMovePart()
                     local localDirection = ehe.CFrame:VectorToObjectSpace(direction)
@@ -274,7 +288,7 @@ local function moveTowards(destination, rate, reenable, validator, height)
 
             currentPositionIndex = currentPositionIndex + 1
             if currentPositionIndex > #waypoints then
-                
+                addResource()
                 local newPath = findTarget()
                 if newPath then
                     path = createPath(newPath)
@@ -298,20 +312,18 @@ end
 
 local function call()
     local closestPart = findTarget()
-    if #find > 0 then
+    if closestPart then
         local movementRate = _G.Rate -- Example movement rate
         local reenable = true -- Example reenable parameter
         local validator = function() return true end -- Example validator function
         local height = 9 -- Example height parameter
         local destination = closestPart.Position
-	
+	if (destination - humrp.Position).magnitude < 3 then  addResource() return end
 	if not destination then return end
         moveTowards(destination, movementRate, reenable, validator, height)
-        print(#find)
+        addResource()
     else
-       moveTowards(humrp.Position + Vector3.new(5,0,0), 0.8, true, function() return true end, 9)
-	addResource()
-	print("hi 0")
+       
     end
 end
 
