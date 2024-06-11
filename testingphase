@@ -244,7 +244,8 @@ local function moveTowards(destination, rate, reenable, validator, height)
         local uzak = (humrp.Position - destination).Magnitude
         while uzak > 3 do
             local distanceToDestination = (destination - humrp.Position).Magnitude
-            if distanceToDestination < 3 then
+            if distanceToDestination < 3 then	
+		wait()
                 teleportTo(destination)
                 return
             end
