@@ -1,0 +1,24 @@
+----- Please execute this every start of match.
+----- it will highlight the death note user.
+----- u can see death note user's Name in console (u can reach by pressing F9 or typing '/console' in chat)
+
+-- !! KIRA MUST USE DEATH NOTE FIRST ELSE U CAN'T SEE HIM !! 
+local function DeathNoteUsed(part)
+    if part.Name ~= "DeathNoteBook" then return end
+    local inst = Instance.new("Highlight")
+    inst.Parent = part.Parent
+    print(part.Parent.Humanoid.DisplayName .. " Using :" .. part.Name)
+end
+
+local function connectCharacters(character)
+    character.ChildAdded:Connect(DeathNoteUsed) 
+end
+
+
+for _, player in ipairs(game.Players:GetPlayers()) do
+    if player.Character then
+        connectCharacters(player.Character)
+    else
+        player.CharacterAdded:Connect(connectCharacters)
+    end
+end
