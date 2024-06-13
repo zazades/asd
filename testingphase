@@ -228,6 +228,7 @@ local function moveTowards(destination, rate, reenable, validator, height)
      
         return
     end
+    stop = true
     local waypoints = path:GetWaypoints()
     local currentPositionIndex = 1
 
@@ -244,8 +245,9 @@ local function moveTowards(destination, rate, reenable, validator, height)
         local uzak = (humrp.Position - destination).Magnitude
         while uzak > 3 do
             local distanceToDestination = (destination - humrp.Position).Magnitude
-            if distanceToDestination < 3 then	
+            if distanceToDestination < 7 then	
 		wait()
+		
                 teleportTo(destination)
                 return
             end
