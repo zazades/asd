@@ -174,7 +174,7 @@ local function createPath(destination)
                 print("Error during path computation:", err)
             end
         else
-            path = PathfindingService:CreatePath({AgentHeight = 1})
+            path = PathfindingService:CreatePath({AgentRadius = 1})
             local succ, err = pcall(function() 
                 path:ComputeAsync(humrp.Position, Vector3.new(-98.7, -3, 78))
             end)
@@ -243,7 +243,7 @@ local function moveTowards(destination, rate, reenable, validator, height)
         end
 
         local uzak = (humrp.Position - destination).Magnitude
-        while uzak > 3 do
+        while true do
             local distanceToDestination = (destination - humrp.Position).Magnitude
             if distanceToDestination < 7 then	
 		wait()
@@ -255,11 +255,11 @@ local function moveTowards(destination, rate, reenable, validator, height)
             local currentWaypoint = waypoints[currentPositionIndex]
             local nextWaypoint = waypoints[currentPositionIndex + 1]
 
-            if nextWaypoint then
+            if nextWaypoint and uzak > 7 then
                 local direction = (nextWaypoint.Position - humrp.Position).Unit
                 local distanceToNextWaypoint = (nextWaypoint.Position - humrp.Position).Magnitude
                 local steps = math.ceil(distanceToNextWaypoint / rate)
-
+		stop = true
                 for step = 1, steps do
                     direction = (nextWaypoint.Position - humrp.Position).Unit
                     local ehe = getMovePart()
@@ -268,17 +268,17 @@ local function moveTowards(destination, rate, reenable, validator, height)
 
                     local newCFrame = humrp.CFrame * CFrame.new(
                         localDirection.X * adjustedRate,
-                        localDirection.Y * adjustedRate * 0.5,
+                        localDirection.Y * adjustedRate * 1.5,
                         localDirection.Z * adjustedRate
                     )
                     ehe.CFrame = newCFrame
                     wait()
+		    for i,v in pairs(ehe.Parent:GetChildren() do if v:IsA("BasePart") then v.CanCollide = false end
                 end
             else
-              
+              	stop = false
                 break
             end
-
             currentPositionIndex = currentPositionIndex + 1
             if currentPositionIndex > #waypoints then
                 addResource()
