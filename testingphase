@@ -67,7 +67,7 @@ task.spawn(function()
                 
            if trgt.Position.Y > -37 and trgt.Position.Y < 100 then
 		v.ModelStreamingMode = "Default"
-                table.insert(find, v)
+                table.insert(find, v:FindFirstChild("Breakaway"):FindFirstChild("Gold Node"))
                  end
             end
         end
@@ -98,7 +98,7 @@ local function addResource()
                 
            if trgt.Position.Y > -37 and trgt.Position.Y < 100 then
 		v.ModelStreamingMode = "Default"
-                table.insert(find, v)
+                table.insert(find, v:FindFirstChild("Breakaway"):FindFirstChild("Gold Node"))
                  end
             end
         end
