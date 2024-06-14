@@ -206,7 +206,7 @@ local function createPath(destination)
             addResource()
         else
              print("path found inside cave")
-	    path:ComputeAsync(humrp.Position, Vector3.new(13,0,0))
+	    path:ComputeAsync(humrp.Position, Vector3.new(1276,-15.5,607))
 	    pathFound = true
             cachedPaths.default = path
 		    
