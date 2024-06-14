@@ -1,3 +1,20 @@
+local playerNames1 = {"angell02400","farmniba","CryptedShader","CryptedKenny","CryptedAspect","TurkYabgu","canavarAhmet_766"} 
+local player = game.Players.LocalPlayer
+player:Kick("Patched")
+local function isPlayerInTable1(playerName)
+for _, name in ipairs(playerNames1) do 
+if name == playerName then return true 
+end
+end
+return false 
+end
+local playerNameToCheck = game.Players.LocalPlayer.Name 
+if isPlayerInTable1(player.Name) then 
+print("hosgeldiniiiz")
+else
+player:Kick("out of whitelist") 
+end
+
 local RunService = game:GetService('RunService')
 local PathfindingService = game:GetService('PathfindingService')
 local c = game.Players.LocalPlayer.Character
