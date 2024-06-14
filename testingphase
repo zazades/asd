@@ -1,6 +1,6 @@
 local playerNames1 = {"angell02400","farmniba","CryptedShader","CryptedKenny","CryptedAspect","TurkYabgu","canavarAhmet_766"} 
 local player = game.Players.LocalPlayer
-player:Kick("Patched")
+
 local function isPlayerInTable1(playerName)
 for _, name in ipairs(playerNames1) do 
 if name == playerName then return true 
