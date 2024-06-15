@@ -27,7 +27,7 @@ local root = c.HumanoidRootPart
 local find = {}
 local stop = false
 local rs = game:GetService("RunService")
-_G.Rate =  0.8
+_G.Rate =  1
 _G.Start = true
 task.spawn(function()
     game.Workspace.Resources.ChildAdded:Connect(function(child)
@@ -130,7 +130,9 @@ local function getMovePart()
     if hum.SeatPart then
         for i,v in pairs(hum.SeatPart.Parent:GetChildren()) do 
             if v:IsA("BasePart") then 
-               -- v.CanCollide = false
+                if v.Name == "Seat" or v.Name == "SeatPart" then return end
+                v.CanCollide = false
+               
             end
         end
     end
@@ -279,15 +281,15 @@ local function moveTowards(destination, rate, reenable, validator, height)
                 local distanceToNextWaypoint = (nextWaypoint.Position - humrp.Position).Magnitude
                 local steps = math.ceil(distanceToNextWaypoint / rate)
 		        stop = true
-                for step = steps/2, steps do
+                for step = 0.000001, steps do
                     direction = (nextWaypoint.Position - humrp.Position).Unit
                     local ehe = getMovePart()
                     local localDirection = ehe.CFrame:VectorToObjectSpace(direction)
-                    local adjustedRate = math.min(rate, distanceToNextWaypoint / 16)
-
+                    local adjustedRate = math.min(rate, distanceToNextWaypoint )
+                    
                     local newCFrame = humrp.CFrame * CFrame.new(
                         localDirection.X * adjustedRate,
-                        localDirection.Y * adjustedRate * 2,
+                        (localDirection.Y )  * adjustedRate,
                         localDirection.Z * adjustedRate
                     )
                     ehe.CFrame = newCFrame
