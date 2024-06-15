@@ -27,7 +27,7 @@ local root = c.HumanoidRootPart
 local find = {}
 local stop = false
 local rs = game:GetService("RunService")
-_G.Rate =  1
+_G.Rate =  0.8
 _G.Start = true
 task.spawn(function()
     game.Workspace.Resources.ChildAdded:Connect(function(child)
@@ -277,6 +277,7 @@ local function moveTowards(destination, rate, reenable, validator, height)
             local nextWaypoint = waypoints[currentPositionIndex + 1]
 
             if nextWaypoint and uzak > 7 then
+		if (waypoints[currentPositionIndex + 1].Position - humrp.Position).magnitude > 15 then _G.Rate = 0.4 else _G.Rate = 0.8 end
                 local direction = (nextWaypoint.Position - humrp.Position).Unit
                 local distanceToNextWaypoint = (nextWaypoint.Position - humrp.Position).Magnitude
                 local steps = math.ceil(distanceToNextWaypoint / rate)
@@ -289,7 +290,7 @@ local function moveTowards(destination, rate, reenable, validator, height)
                     
                     local newCFrame = humrp.CFrame * CFrame.new(
                         localDirection.X * adjustedRate,
-                        (localDirection.Y )  * adjustedRate,
+                        (localDirection.Y )  * adjustedRate * 2,
                         localDirection.Z * adjustedRate
                     )
                     ehe.CFrame = newCFrame
