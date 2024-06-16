@@ -289,12 +289,13 @@ local function moveTowards(destination, rate, reenable, validator, height)
                     distanceToNextWaypoint = (nextWaypoint.Position - humrp.Position).Magnitude
                     task.wait() -- Adjust as needed for smoother movement
                 end
+		  currentPositionIndex = currentPositionIndex + 1
             else
 		stop = false
                 break
             end
 
-            currentPositionIndex = currentPositionIndex + 1
+          
             if currentPositionIndex > #waypoints then
                 addResource()
                 local newPath = findTarget()
