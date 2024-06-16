@@ -27,7 +27,7 @@ local root = c.HumanoidRootPart
 local find = {}
 local stop = false
 local rs = game:GetService("RunService")
-_G.Rate =  0.9
+_G.Rate =  0.7
 _G.Start = true
 task.spawn(function()
     game.Workspace.Resources.ChildAdded:Connect(function(child)
@@ -131,7 +131,7 @@ local function getMovePart()
         for i,v in pairs(hum.SeatPart.Parent:GetChildren()) do 
             if v:IsA("BasePart") then 
                 if v.Name == "Seat" or v.Name == "SeatPart" then return end
-                v.CanCollide = false
+              --v.CanCollide = true
                
             end
         end
@@ -255,15 +255,16 @@ local function moveTowards(destination, rate, reenable, validator, height)
     if not path then
         return
     end
+    
     local waypoints = path:GetWaypoints()
     local currentPositionIndex = 1
-
+    
     local function walkTo(destination)
-        local humrp = root
+        local humrp = root  -- Assuming `root` is your character's HumanoidRootPart
         if not humrp then
             return
         end
-
+        
         while true do
             local currentWaypoint = waypoints[currentPositionIndex]
             local nextWaypoint = waypoints[currentPositionIndex + 1]
@@ -271,37 +272,34 @@ local function moveTowards(destination, rate, reenable, validator, height)
             if nextWaypoint then
                 local direction = (nextWaypoint.Position - humrp.Position).Unit
                 local distanceToNextWaypoint = (nextWaypoint.Position - humrp.Position).Magnitude
+                local steps = math.ceil(distanceToNextWaypoint / rate)
 
-                if distanceToNextWaypoint > 1 then
-		    print(distanceToNextWaypoint)
-		    distanceToNextWaypoint = (nextWaypoint.Position - humrp.Position).Magnitude
-		    stop = true
+                for step = steps/120, steps do
                     direction = (nextWaypoint.Position - humrp.Position).Unit
-                    local ehe = getMovePart()
-                    local localDirection = ehe.CFrame:VectorToObjectSpace(direction)
-                    local adjustedRate = math.min(rate, distanceToNextWaypoint)
 
-                    local newCFrame = humrp.CFrame * CFrame.new(
-                        localDirection.X * adjustedRate ,
-                        (localDirection.Y + 5) * adjustedRate,
-                        localDirection.Z * adjustedRate
-                    )
-                    ehe.CFrame = newCFrame
+                    local ehe = getMovePart()  -- Assuming getMovePart() retrieves the part to move
+                    if ehe then
+                        local localDirection = ehe.CFrame:VectorToObjectSpace(direction / 16)
+                        local adjustedRate = math.min(rate, distanceToNextWaypoint)
 
-                    distanceToNextWaypoint = (nextWaypoint.Position - humrp.Position).Magnitude
-                    task.wait() -- Adjust as needed for smoother movement
-		else
-		     currentPositionIndex = currentPositionIndex + 1
+                        local newCFrame = ehe.CFrame * CFrame.new(
+                            localDirection.X * adjustedRate * 24,
+                            localDirection.Y * adjustedRate * 2  ,  -- Adjusted Y movement if necessary
+                            localDirection.Z * adjustedRate * 24
+                        )
+                        ehe.CFrame = newCFrame
+                    end
+
+                    wait()  -- Wait briefly for smoothness
                 end
             else
-		stop = false
                 break
             end
 
-          
+            currentPositionIndex = currentPositionIndex + 1
             if currentPositionIndex > #waypoints then
-                addResource()
-                local newPath = findTarget()
+                addResource()  -- Placeholder function; add your logic here
+                local newPath = findTarget()  -- Placeholder function; find your new path/target here
                 if newPath then
                     path = createPath(newPath)
                     if not path then
