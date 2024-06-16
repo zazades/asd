@@ -131,7 +131,7 @@ local function getMovePart()
         for i,v in pairs(hum.SeatPart.Parent:GetChildren()) do 
             if v:IsA("BasePart") then 
                 if v.Name == "Seat" or v.Name == "SeatPart" then return end
-              --v.CanCollide = true
+                v.CanCollide = false
                
             end
         end
@@ -279,18 +279,18 @@ local function moveTowards(destination, rate, reenable, validator, height)
 
                     local ehe = getMovePart()  -- Assuming getMovePart() retrieves the part to move
                     if ehe then
-                        local localDirection = ehe.CFrame:VectorToObjectSpace(direction / 16)
+                        local localDirection = ehe.CFrame:VectorToObjectSpace(direction/16)
                         local adjustedRate = math.min(distanceToNextWaypoint/16, distanceToNextWaypoint)
 
                         local newCFrame = ehe.CFrame * CFrame.new(
-                            localDirection.X * adjustedRate * 28,
-                            localDirection.Y * adjustedRate * 2  ,  -- Adjusted Y movement if necessary
-                            localDirection.Z * adjustedRate * 28
+                            localDirection.X * adjustedRate * 24,
+                            localDirection.Y * adjustedRate * 2,  -- Adjusted Y movement if necessary
+                            localDirection.Z * adjustedRate * 24
                         )
                         ehe.CFrame = newCFrame
                     end
 
-                   
+                    wait()  -- Wait briefly for smoothness
                 end
             else
                 break
