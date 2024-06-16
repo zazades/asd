@@ -283,7 +283,7 @@ local function moveTowards(destination, rate, reenable, validator, height)
 
                     local newCFrame = humrp.CFrame * CFrame.new(
                         localDirection.X * adjustedRate ,
-                        localDirection.Y * adjustedRate * 2,
+                        (localDirection.Y + 2) * adjustedRate * 2,
                         localDirection.Z * adjustedRate
                     )
                     ehe.CFrame = newCFrame
