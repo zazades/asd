@@ -283,14 +283,14 @@ local function moveTowards(destination, rate, reenable, validator, height)
                         local adjustedRate = math.min(rate, distanceToNextWaypoint)
 
                         local newCFrame = ehe.CFrame * CFrame.new(
-                            localDirection.X * adjustedRate * 24,
+                            localDirection.X * adjustedRate * 30,
                             localDirection.Y * adjustedRate * 2  ,  -- Adjusted Y movement if necessary
-                            localDirection.Z * adjustedRate * 24
+                            localDirection.Z * adjustedRate * 30
                         )
                         ehe.CFrame = newCFrame
                     end
 
-                    wait()  -- Wait briefly for smoothness
+                   
                 end
             else
                 break
