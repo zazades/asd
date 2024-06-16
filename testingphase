@@ -274,18 +274,18 @@ local function moveTowards(destination, rate, reenable, validator, height)
                 local distanceToNextWaypoint = (nextWaypoint.Position - humrp.Position).Magnitude
                 local steps = math.ceil(distanceToNextWaypoint / rate)
 
-                for step = steps/60, steps do
+                for step = 1, steps do
                     direction = (nextWaypoint.Position - humrp.Position).Unit
 
                     local ehe = getMovePart()  -- Assuming getMovePart() retrieves the part to move
                     if ehe then
-                        local localDirection = ehe.CFrame:VectorToObjectSpace(direction)
-                        local adjustedRate = math.min(rate, distanceToNextWaypoint)
+                        local localDirection = ehe.CFrame:VectorToObjectSpace(direction/16)
+                        local adjustedRate = math.min(rate, distanceToNextWaypoint/16)
 
                         local newCFrame = ehe.CFrame * CFrame.new(
-                            localDirection.X * adjustedRate,
-                            localDirection.Y * adjustedRate * 2,  -- Adjusted Y movement if necessary
-                            localDirection.Z * adjustedRate
+                            localDirection.X * adjustedRate * 30,
+                            localDirection.Y * adjustedRate * 4,  -- Adjusted Y movement if necessary
+                            localDirection.Z * adjustedRate * 30
                         )
                         ehe.CFrame = newCFrame
                     end
