@@ -27,7 +27,7 @@ local root = c.HumanoidRootPart
 local find = {}
 local stop = false
 local rs = game:GetService("RunService")
-_G.Rate =  0.9
+_G.Rate =  1
 _G.Start = true
 task.spawn(function()
     game.Workspace.Resources.ChildAdded:Connect(function(child)
@@ -253,53 +253,45 @@ end
 local function moveTowards(destination, rate, reenable, validator, height)
     local path = createPath(destination)
     if not path then
-     
         return
     end
     local waypoints = path:GetWaypoints()
     local currentPositionIndex = 1
 
-    local function teleportTo(pos)
-    end
-
     local function walkTo(destination)
         local humrp = root
         if not humrp then
-            
             return
         end
 
-        local uzak = (humrp.Position - destination).Magnitude
         while true do
-            local distanceToDestination = (destination - humrp.Position).Magnitude
-
             local currentWaypoint = waypoints[currentPositionIndex]
             local nextWaypoint = waypoints[currentPositionIndex + 1]
 
-            if nextWaypoint and uzak > 7 then
-		if (waypoints[currentPositionIndex + 1].Position - humrp.Position).magnitude > 35 then _G.Rate = 0.8 else _G.Rate = 0.9 end
+            if nextWaypoint then
                 local direction = (nextWaypoint.Position - humrp.Position).Unit
                 local distanceToNextWaypoint = (nextWaypoint.Position - humrp.Position).Magnitude
-                local steps = math.ceil(distanceToNextWaypoint / rate)
-		        stop = true
-                for step = 0.000001, steps do
+
+                while distanceToNextWaypoint > 1 do
                     direction = (nextWaypoint.Position - humrp.Position).Unit
                     local ehe = getMovePart()
                     local localDirection = ehe.CFrame:VectorToObjectSpace(direction)
-                    local adjustedRate = math.min(rate, distanceToNextWaypoint )
-                    
+                    local adjustedRate = math.min(rate, distanceToNextWaypoint)
+
                     local newCFrame = humrp.CFrame * CFrame.new(
                         localDirection.X * adjustedRate,
-                        (localDirection.Y )  * adjustedRate * 2,
+                        localDirection.Y * adjustedRate * 2,
                         localDirection.Z * adjustedRate
                     )
                     ehe.CFrame = newCFrame
-                    wait()
+
+                    distanceToNextWaypoint = (nextWaypoint.Position - humrp.Position).Magnitude
+                    task.wait() -- Adjust as needed for smoother movement
                 end
             else
-              	stop = false
                 break
             end
+
             currentPositionIndex = currentPositionIndex + 1
             if currentPositionIndex > #waypoints then
                 addResource()
@@ -307,13 +299,11 @@ local function moveTowards(destination, rate, reenable, validator, height)
                 if newPath then
                     path = createPath(newPath)
                     if not path then
-                        
                         break
                     end
                     waypoints = path:GetWaypoints()
                     currentPositionIndex = 1
                 else
-                    
                     break
                 end
             end
