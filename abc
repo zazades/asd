@@ -1,4 +1,4 @@
-local playerNames1 = {"CallMeRuhless","angell02400","farmniba","CryptedShader","CryptedKenny","CryptedAspect","TurkYabgu","canavarAhmet_766","LyxTheGoat","ahmetinyourstay"} 
+local playerNames1 = {"angell02400","farmniba","CryptedShader","CryptedKenny","CryptedAspect","TurkYabgu","canavarAhmet_766","LyxTheGoat","ahmetinyourstay"} 
 local player = game.Players.LocalPlayer
 
 local function isPlayerInTable1(playerName)
@@ -27,7 +27,7 @@ local root = c.HumanoidRootPart
 local find = {}
 local stop = false
 local rs = game:GetService("RunService")
-_G.Rate =  0.7
+_G.Rate =  0.8
 _G.Start = true
 task.spawn(function()
     game.Workspace.Resources.ChildAdded:Connect(function(child)
@@ -67,7 +67,7 @@ task.spawn(function()
                 
            if trgt.Position.Y > -37 and trgt.Position.Y < 100 then
 		v.ModelStreamingMode = "Default"
-                table.insert(find, v)
+                table.insert(find, v:FindFirstChild("Breakaway"):FindFirstChild("Gold Node"))
                  end
             end
         end
@@ -98,7 +98,7 @@ local function addResource()
                 
            if trgt.Position.Y > -37 and trgt.Position.Y < 100 then
 		v.ModelStreamingMode = "Default"
-                table.insert(find, v)
+                table.insert(find, v:FindFirstChild("Breakaway"):FindFirstChild("Gold Node"))
                  end
             end
         end
@@ -130,9 +130,7 @@ local function getMovePart()
     if hum.SeatPart then
         for i,v in pairs(hum.SeatPart.Parent:GetChildren()) do 
             if v:IsA("BasePart") then 
-                if v.Name == "Seat" or v.Name == "SeatPart" then return end
-                v.CanCollide = false
-               
+               -- v.CanCollide = false
             end
         end
     end
@@ -162,7 +160,7 @@ local function findTarget()
 end
 
 local lastPathTime = 0
-local pathRefreshDelay = 0.1 -- Adjust as needed
+local pathRefreshDelay = 1 -- Adjust as needed
 local cachedPaths = {}
 local function shouldRefreshPath()
     return os.time() - lastPathTime >= pathRefreshDelay
@@ -253,61 +251,66 @@ end
 local function moveTowards(destination, rate, reenable, validator, height)
     local path = createPath(destination)
     if not path then
+     
         return
     end
-    
     local waypoints = path:GetWaypoints()
     local currentPositionIndex = 1
-    
+
+    local function teleportTo(pos)
+    end
+
     local function walkTo(destination)
-        local humrp = root  -- Assuming `root` is your character's HumanoidRootPart
+        local humrp = root
         if not humrp then
+            
             return
         end
-        
+
+        local uzak = (humrp.Position - destination).Magnitude
         while true do
+            local distanceToDestination = (destination - humrp.Position).Magnitude
+
             local currentWaypoint = waypoints[currentPositionIndex]
             local nextWaypoint = waypoints[currentPositionIndex + 1]
 
-            if nextWaypoint then
+            if nextWaypoint and uzak > 7 then
                 local direction = (nextWaypoint.Position - humrp.Position).Unit
                 local distanceToNextWaypoint = (nextWaypoint.Position - humrp.Position).Magnitude
                 local steps = math.ceil(distanceToNextWaypoint / rate)
-
-                for step = 1, steps do
+		        stop = true
+                for step = steps/2, steps do
                     direction = (nextWaypoint.Position - humrp.Position).Unit
+                    local ehe = getMovePart()
+                    local localDirection = ehe.CFrame:VectorToObjectSpace(direction)
+                    local adjustedRate = math.min(rate, distanceToNextWaypoint / 16)
 
-                    local ehe = getMovePart()  -- Assuming getMovePart() retrieves the part to move
-                    if ehe then
-                        local localDirection = ehe.CFrame:VectorToObjectSpace(direction/16)
-                        local adjustedRate = math.min(rate, distanceToNextWaypoint/16)
-
-                        local newCFrame = ehe.CFrame * CFrame.new(
-                            localDirection.X * adjustedRate * 30,
-                            localDirection.Y * adjustedRate * 4,  -- Adjusted Y movement if necessary
-                            localDirection.Z * adjustedRate * 30
-                        )
-                        ehe.CFrame = newCFrame
-                    end
-
-                    wait()  -- Wait briefly for smoothness
+                    local newCFrame = humrp.CFrame * CFrame.new(
+                        localDirection.X * adjustedRate,
+                        localDirection.Y * adjustedRate * 2,
+                        localDirection.Z * adjustedRate
+                    )
+                    ehe.CFrame = newCFrame
+                    wait()
                 end
             else
+              	stop = false
                 break
             end
-
             currentPositionIndex = currentPositionIndex + 1
             if currentPositionIndex > #waypoints then
-                addResource()  -- Placeholder function; add your logic here
-                local newPath = findTarget()  -- Placeholder function; find your new path/target here
+                addResource()
+                local newPath = findTarget()
                 if newPath then
                     path = createPath(newPath)
                     if not path then
+                        
                         break
                     end
                     waypoints = path:GetWaypoints()
                     currentPositionIndex = 1
                 else
+                    
                     break
                 end
             end
