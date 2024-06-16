@@ -272,7 +272,7 @@ local function moveTowards(destination, rate, reenable, validator, height)
                 local direction = (nextWaypoint.Position - humrp.Position).Unit
                 local distanceToNextWaypoint = (nextWaypoint.Position - humrp.Position).Magnitude
 
-                while distanceToNextWaypoint > 1 do
+                if distanceToNextWaypoint > 1 then
 		    stop = true
                     direction = (nextWaypoint.Position - humrp.Position).Unit
                     local ehe = getMovePart()
@@ -288,8 +288,9 @@ local function moveTowards(destination, rate, reenable, validator, height)
 
                     distanceToNextWaypoint = (nextWaypoint.Position - humrp.Position).Magnitude
                     task.wait() -- Adjust as needed for smoother movement
+		else
+			currentPositionIndex = currentPositionIndex + 1
                 end
-		  currentPositionIndex = currentPositionIndex + 1
             else
 		stop = false
                 break
