@@ -27,7 +27,7 @@ local root = c.HumanoidRootPart
 local find = {}
 local stop = false
 local rs = game:GetService("RunService")
-_G.Rate =  0.9
+_G.Rate =  0.2
 _G.Start = true
 task.spawn(function()
     game.Workspace.Resources.ChildAdded:Connect(function(child)
