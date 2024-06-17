@@ -67,7 +67,7 @@ task.spawn(function()
                 
            if trgt.Position.Y > -37 and trgt.Position.Y < 100 then
 		v.ModelStreamingMode = "Default"
-                table.insert(find, v:FindFirstChild("Breakaway"):FindFirstChild("Gold Node"))
+                table.insert(find, v)
                  end
             end
         end
@@ -98,7 +98,7 @@ local function addResource()
                 
            if trgt.Position.Y > -37 and trgt.Position.Y < 100 then
 		v.ModelStreamingMode = "Default"
-                table.insert(find, v:FindFirstChild("Breakaway"):FindFirstChild("Gold Node"))
+                table.insert(find, v)
                  end
             end
         end
@@ -279,25 +279,27 @@ local function moveTowards(destination, rate, reenable, validator, height)
                 local distanceToNextWaypoint = (nextWaypoint.Position - humrp.Position).Magnitude
                 local steps = math.ceil(distanceToNextWaypoint / rate)
 		        stop = true
-                for step = steps/2, steps do
                     direction = (nextWaypoint.Position - humrp.Position).Unit
                     local ehe = getMovePart()
-                    local localDirection = ehe.CFrame:VectorToObjectSpace(direction)
+                    local localDirection = ehe.CFrame:VectorToObjectSpace(direction/16)
                     local adjustedRate = math.min(rate, distanceToNextWaypoint / 16)
 
                     local newCFrame = humrp.CFrame * CFrame.new(
-                        localDirection.X * adjustedRate,
-                        localDirection.Y * adjustedRate * 2,
-                        localDirection.Z * adjustedRate
+                        localDirection.X * adjustedRate * 12,
+                        localDirection.Y * adjustedRate * 32,
+                        localDirection.Z * adjustedRate * 12
                     )
                     ehe.CFrame = newCFrame
-                    wait()
-                end
+                    task.wait()
+                
             else
               	stop = false
                 break
             end
-            currentPositionIndex = currentPositionIndex + 1
+            if (waypoints[currentPositionIndex + 1].Position - humrp.Position).magnitude < 6 then
+                currentPositionIndex += 1
+                print(currentPositionIndex)
+            end
             if currentPositionIndex > #waypoints then
                 addResource()
                 local newPath = findTarget()
@@ -347,4 +349,12 @@ task.spawn(function()
             call()
         end
     end
+end)
+
+
+task.spawn(function()
+hum.Died:Connect(function()
+script:Destroy()
+print'destroyed'
+end) 
 end)
