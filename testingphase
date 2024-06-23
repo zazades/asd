@@ -1,6 +1,6 @@
 local playerNames1 = {"angell02400","farmniba","CryptedShader","CryptedKenny","CryptedAspect","TurkYabgu","canavarAhmet_766","LyxTheGoat","ahmetinyourstay"} 
 local player = game.Players.LocalPlayer
-
+print("e")
 local function isPlayerInTable1(playerName)
 for _, name in ipairs(playerNames1) do 
 if name == playerName then return true 
