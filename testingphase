@@ -298,7 +298,6 @@ local function moveTowards(destination, rate, reenable, validator, height)
             end
             if (waypoints[currentPositionIndex + 1].Position - humrp.Position).magnitude < 6 then
                 currentPositionIndex += 1
-                print(currentPositionIndex)
             end
             if currentPositionIndex > #waypoints then
                 addResource()
