@@ -6,7 +6,8 @@ local bufferWriter = require(ByteNet.process.bufferWriter)
 local ref = packetIDs.ref()
 local old = bufferWriter.export
 
-bufferWriter.export = function()
+bufferWriter.export = function(result)
+    print(result)
     local Results = old()
     local len = buffer.len(Results.buff)
     local Count = 0
