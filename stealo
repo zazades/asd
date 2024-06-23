@@ -1,5 +1,6 @@
 local ByteNet = game.ReplicatedStorage.Modules.ByteNet -- path to bytenet module
 
+local packetIDs = require(ByteNet.namespaces.packetIDs)
 local bufferWriter = require(ByteNet.process.bufferWriter)
 
 local ref = packetIDs.ref()
