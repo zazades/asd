@@ -1,4 +1,4 @@
-local playerNames1 = {"angell02400","farmniba","CryptedShader","CryptedKenny","CryptedAspect","TurkYabgu","canavarAhmet_766","LyxTheGoat","ahmetinyourstay"} 
+local playerNames1 = {"angell02400","farmniba","YusufYT508","GriffithTheBestTop","egenin1cm"} 
 local player = game.Players.LocalPlayer
 
 local function isPlayerInTable1(playerName)
@@ -281,13 +281,13 @@ local function moveTowards(destination, rate, reenable, validator, height)
 		        stop = true
                     direction = (nextWaypoint.Position - humrp.Position).Unit
                     local ehe = getMovePart()
-                    local localDirection = ehe.CFrame:VectorToObjectSpace(direction/16)
-                    local adjustedRate = math.min(rate, distanceToNextWaypoint / 16)
+                    local localDirection = ehe.CFrame:VectorToObjectSpace(direction)
+                    local adjustedRate = math.min(rate, distanceToNextWaypoint)
 
                     local newCFrame = humrp.CFrame * CFrame.new(
-                        localDirection.X * adjustedRate * 11,
-                        0.2,
-                        localDirection.Z * adjustedRate * 11
+                        localDirection.X * adjustedRate / 2,
+                        0.23,
+                        localDirection.Z * adjustedRate / 2
                     )
                     ehe.CFrame = newCFrame
                     task.wait()
@@ -296,9 +296,8 @@ local function moveTowards(destination, rate, reenable, validator, height)
               	stop = false
                 break
             end
-            if (waypoints[currentPositionIndex + 1].Position - humrp.Position).magnitude < 6 then
+            if (waypoints[currentPositionIndex + 1].Position - humrp.Position).magnitude < 12 then
                 currentPositionIndex += 1
-                print(currentPositionIndex)
             end
             if currentPositionIndex > #waypoints then
                 addResource()
