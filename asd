@@ -178,7 +178,7 @@ local function createPath(destination)
         wait()
         destination = findTarget()
         if destination then
-            path = PathfindingService:CreatePath({AgentRadius = 2})
+            path = PathfindingService:CreatePath({AgentRadius = 1, AgentHeight = 3})
             local success, err = pcall(function()
                 path:ComputeAsync(humrp.Position, destination.Position)
             end)
@@ -201,7 +201,7 @@ local function createPath(destination)
                 print("Error during path computation:", err)
             end
         else
-            path = PathfindingService:CreatePath({AgentRadius = 2})
+            path = PathfindingService:CreatePath({AgentRadius = 1, AgentHeight = 3})
             local succ, err = pcall(function() 
                 path:ComputeAsync(humrp.Position, Vector3.new(-98.7, -3, 78))
             end)
@@ -285,9 +285,9 @@ local function moveTowards(destination, rate, reenable, validator, height)
                     local adjustedRate = math.min(rate, distanceToNextWaypoint)
 
                     local newCFrame = humrp.CFrame * CFrame.new(
-                        localDirection.X * adjustedRate / 1.92,
-                        localDirection.Y * adjustedRate / 1,
-                        localDirection.Z * adjustedRate / 1.92
+                        localDirection.X * adjustedRate / 1.97,
+                        localDirection.Y * adjustedRate * 1.5,
+                        localDirection.Z * adjustedRate / 1.97
                     )
                     ehe.CFrame = newCFrame
                     task.wait()
@@ -296,7 +296,7 @@ local function moveTowards(destination, rate, reenable, validator, height)
               	stop = false
                 break
             end
-            if (waypoints[currentPositionIndex + 1].Position - humrp.Position).magnitude < 12 then
+            if (waypoints[currentPositionIndex + 1].Position - humrp.Position).magnitude < 10 then
                 currentPositionIndex += 1
             end
             if currentPositionIndex > #waypoints then
