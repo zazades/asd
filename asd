@@ -76,20 +76,24 @@ end)
 
 
 local function addResource()
-    for i, v in pairs(resource:GetChildren()) do
+    for i,v:Instance in pairs(workspace.Resources:GetChildren()) do
         if v.Name == "Gold Node" and v:FindFirstChild("Reference") then
+		
             local trgt = v:FindFirstChild("Reference")
-               if trgt.Position.Y < -37 then 
-                   v:Destroy()
-               else 
+             if trgt.Position.Y < -37 then  
+                  v:Destroy() 
+                  
+                   else
+              
            if trgt.Position.Y > -37 and trgt.Position.Y < 100 then
-	        v.ModelStreamingMode = "Default"
+		v.ModelStreamingMode = "Default"
                 table.insert(find, v)
-                end
+           end
             end
         end
     end
-    for i,v:Instance in pairs(workspace.Resources:GetChildren()) do
+
+     for i,v:Instance in pairs(workspace.Resources:GetChildren()) do
         if v.Name == "Ice Chunk" and v:FindFirstChild("Breakaway") and v:FindFirstChild("Breakaway"):FindFirstChild("Gold Node") then
             local trgt =  v:FindFirstChild("Breakaway"):FindFirstChild("Gold Node"):FindFirstChild("Reference")
              if trgt.Position.Y < -37 then 
@@ -178,7 +182,7 @@ local function createPath(destination)
         wait()
         destination = findTarget()
         if destination then
-            path = PathfindingService:CreatePath({AgentRadius = 1, AgentHeight = 3})
+            path = PathfindingService:CreatePath({AgentRadius = 1 , WaypointSpacing = 1})
             local success, err = pcall(function()
                 path:ComputeAsync(humrp.Position, destination.Position)
             end)
@@ -201,7 +205,7 @@ local function createPath(destination)
                 print("Error during path computation:", err)
             end
         else
-            path = PathfindingService:CreatePath({AgentRadius = 1, AgentHeight = 3})
+            path = PathfindingService:CreatePath({AgentRadius = 1 , WaypointSpacing = 1})
             local succ, err = pcall(function() 
                 path:ComputeAsync(humrp.Position, Vector3.new(-98.7, -3, 78))
             end)
@@ -221,7 +225,7 @@ local function createPath(destination)
             end
         end
     until pathFound
-
+    pathFound = false
     lastPathTime = os.time()
     return path
 end
@@ -285,9 +289,9 @@ local function moveTowards(destination, rate, reenable, validator, height)
                     local adjustedRate = math.min(rate, distanceToNextWaypoint)
 
                     local newCFrame = humrp.CFrame * CFrame.new(
-                        localDirection.X * adjustedRate / 1.97,
-                        localDirection.Y * adjustedRate * 1.5,
-                        localDirection.Z * adjustedRate / 1.97
+                        localDirection.X * adjustedRate / 1.92,
+                        localDirection.Y,
+                        localDirection.Z * adjustedRate / 1.92
                     )
                     ehe.CFrame = newCFrame
                     task.wait()
@@ -296,7 +300,7 @@ local function moveTowards(destination, rate, reenable, validator, height)
               	stop = false
                 break
             end
-            if (waypoints[currentPositionIndex + 1].Position - humrp.Position).magnitude < 10 then
+            if (waypoints[currentPositionIndex + 1].Position - humrp.Position).magnitude < 5 then
                 currentPositionIndex += 1
             end
             if currentPositionIndex > #waypoints then
@@ -330,7 +334,7 @@ local function call()
         local validator = function() return true end -- Example validator function
         local height = 9 -- Example height parameter
         local destination = closestPart.Position
-	if (destination - humrp.Position).magnitude < 12 then  addResource() return end
+	if (destination - humrp.Position).magnitude < 7 then  addResource() return end
 	if not destination then return end
         moveTowards(destination, movementRate, reenable, validator, height)
         addResource()
