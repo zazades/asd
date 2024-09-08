@@ -290,7 +290,7 @@ local function moveTowards(destination, rate, reenable, validator, height)
 
                     local newCFrame = humrp.CFrame * CFrame.new(
                         localDirection.X * adjustedRate / 1.92,
-                        localDirection.Y,
+                        localDirection.Y * adjustedRate,
                         localDirection.Z * adjustedRate / 1.92
                     )
                     ehe.CFrame = newCFrame
@@ -362,7 +362,14 @@ print'destroyed'
 end) 
 end)
 
-Game:GetService("RunService").Stepped:Connect(function()
-    player.Character.Humanoid:ChangeState(11)
-end)
- 
+
+local function NoclipLoop()
+	for _, child in pairs(player.Character:GetDescendants()) do
+		if child:IsA("BasePart") and child.CanCollide == true and child.Name ~= floatName then
+			child.CanCollide = false
+		end
+	end
+		
+end
+
+Game:GetService("RunService").Stepped:Connect(NoclipLoop)
