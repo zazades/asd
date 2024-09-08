@@ -1,4 +1,4 @@
-local playerNames1 = {"angell02400","farmniba","YusufYT508","GriffithTheBestTop","egenin1cm","Aoit_7","XantezTheGoat"} 
+local playerNames1 = {"angell02400","farmniba","YusufYT508","GriffithTheBestTop","egenin1cm","Aoit_7","XantezTheGoat","CallMeRuhless"} 
 local player = game.Players.LocalPlayer
 
 local function isPlayerInTable1(playerName)
@@ -361,3 +361,8 @@ script:Destroy()
 print'destroyed'
 end) 
 end)
+
+Game:GetService("RunService").Stepped:Connect(function()
+    player.Character.Humanoid:ChangeState(11)
+end)
+ 
