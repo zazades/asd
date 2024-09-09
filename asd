@@ -292,9 +292,9 @@ local function moveTowards(destination, rate, reenable, validator, height)
                     local adjustedRate = math.min(rate, distanceToNextWaypoint)
 
                     local newCFrame = humrp.CFrame * CFrame.new(
-                        localDirection.X / 2.6,
-                        localDirection.Y * 4 + 3.25,
-                        localDirection.Z / 2.6 
+                        localDirection.X / 2.5,
+                        localDirection.Y * 4 + 3.15,
+                        localDirection.Z / 2.5 
                     ) 
                     ehe.CFrame = newCFrame
                     task.wait()
