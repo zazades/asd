@@ -79,7 +79,8 @@ local function addResource()
     for i,v:Instance in pairs(workspace.Resources:GetChildren()) do
         if v.Name == "Gold Node" and v:FindFirstChild("Reference") then
 		
-            local trgt = v:FindFirstChild("Reference")
+            local trgt = v:FindFirstChild("Reference")	
+		if not target then return end
              if trgt.Position.Y < -37 then  
                   v:Destroy() 
                   
@@ -88,7 +89,8 @@ local function addResource()
            if trgt.Position.Y > -37 and trgt.Position.Y < 100 then
 		v.ModelStreamingMode = "Default"
                 table.insert(find, v)
-           end
+		    end
+          	
             end
         end
     end
@@ -96,6 +98,7 @@ local function addResource()
      for i,v:Instance in pairs(workspace.Resources:GetChildren()) do
         if v.Name == "Ice Chunk" and v:FindFirstChild("Breakaway") and v:FindFirstChild("Breakaway"):FindFirstChild("Gold Node") then
             local trgt =  v:FindFirstChild("Breakaway"):FindFirstChild("Gold Node"):FindFirstChild("Reference")
+	     if not target then return end
              if trgt.Position.Y < -37 then 
                  v:Destroy()  
                  else
@@ -182,7 +185,7 @@ local function createPath(destination)
         wait()
         destination = findTarget()
         if destination then
-            path = PathfindingService:CreatePath({AgentRadius = 2.5 , WaypointSpacing = 0.5})
+            path = PathfindingService:CreatePath({AgentRadius = 1 , WaypointSpacing = 0.5})
             local success, err = pcall(function()
                 path:ComputeAsync(humrp.Position, destination.Position)
             end)
@@ -205,7 +208,7 @@ local function createPath(destination)
                 print("Error during path computation:", err)
             end
         else
-            path = PathfindingService:CreatePath({AgentRadius = 2.5 , WaypointSpacing = 0.5})
+            path = PathfindingService:CreatePath({AgentRadius = 1 , WaypointSpacing = 0.5})
             local succ, err = pcall(function() 
                 path:ComputeAsync(humrp.Position, Vector3.new(-98.7, -3, 78))
             end)
@@ -227,7 +230,7 @@ local function createPath(destination)
     until pathFound
     pathFound = false
     lastPathTime = os.time()
-    return path
+    return path 
 end
 
 local function closeResource(position)
@@ -270,15 +273,15 @@ local function moveTowards(destination, rate, reenable, validator, height)
             
             return
         end
-
+	
         local uzak = (humrp.Position - destination).Magnitude
         while true do
             local distanceToDestination = (destination - humrp.Position).Magnitude
-
+            uzak = (humrp.Position - destination).Magnitude
             local currentWaypoint = waypoints[currentPositionIndex]
             local nextWaypoint = waypoints[currentPositionIndex + 1]
 
-            if nextWaypoint and uzak > 7 then
+            if nextWaypoint and uzak > 12 then
                 local direction = (nextWaypoint.Position - humrp.Position).Unit
                 local distanceToNextWaypoint = (nextWaypoint.Position - humrp.Position).Magnitude
                 local steps = math.ceil(distanceToNextWaypoint / rate)
@@ -290,9 +293,9 @@ local function moveTowards(destination, rate, reenable, validator, height)
 
                     local newCFrame = humrp.CFrame * CFrame.new(
                         localDirection.X / 2.7,
-                        0.4,
+                        localDirection.Y * 2 + 1.25,
                         localDirection.Z / 2.7 
-                    )
+                    ) 
                     ehe.CFrame = newCFrame
                     task.wait()
                 
@@ -334,7 +337,7 @@ local function call()
         local validator = function() return true end -- Example validator function
         local height = 9 -- Example height parameter
         local destination = closestPart.Position
-	if (destination - humrp.Position).magnitude < 7 then  addResource() return end
+	if (destination - humrp.Position).magnitude < 12 then  addResource() return end
 	if not destination then return end
         moveTowards(destination, movementRate, reenable, validator, height)
         addResource()
@@ -372,4 +375,4 @@ local function NoclipLoop()
 		
 end
 
---Game:GetService("RunService").Stepped:Connect(NoclipLoop)
+Game:GetService("RunService").Stepped:Connect(NoclipLoop)
