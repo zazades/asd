@@ -293,7 +293,7 @@ local function moveTowards(destination, rate, reenable, validator, height)
 
                     local newCFrame = humrp.CFrame * CFrame.new(
                         localDirection.X / 2.3,
-                        localDirection.Y * 4 + 2.75,
+                        localDirection.Y * 4 + 2.25,
                         localDirection.Z / 2.3 
                     ) 
                     ehe.CFrame = newCFrame
@@ -375,4 +375,4 @@ local function NoclipLoop()
 		
 end
 
-Game:GetService("RunService").Stepped:Connect(NoclipLoop)
+--Game:GetService("RunService").Stepped:Connect(NoclipLoop)
