@@ -185,7 +185,7 @@ local function createPath(destination)
         wait()
         destination = findTarget()
         if destination then
-            path = PathfindingService:CreatePath({AgentRadius = 1 , WaypointSpacing = 0.5})
+            path = PathfindingService:CreatePath({AgentRadius = 1.7 , WaypointSpacing = 0.5, Costs = {Water = 0}})
             local success, err = pcall(function()
                 path:ComputeAsync(humrp.Position, destination.Position)
             end)
@@ -208,7 +208,7 @@ local function createPath(destination)
                 print("Error during path computation:", err)
             end
         else
-            path = PathfindingService:CreatePath({AgentRadius = 1 , WaypointSpacing = 0.5})
+            path = PathfindingService:CreatePath({AgentRadius = 1.7 , WaypointSpacing = 0.5})
             local succ, err = pcall(function() 
                 path:ComputeAsync(humrp.Position, Vector3.new(-98.7, -3, 78))
             end)
@@ -292,9 +292,9 @@ local function moveTowards(destination, rate, reenable, validator, height)
                     local adjustedRate = math.min(rate, distanceToNextWaypoint)
 
                     local newCFrame = humrp.CFrame * CFrame.new(
-                        localDirection.X / 2.7,
-                        localDirection.Y * 2 + 1.25,
-                        localDirection.Z / 2.7 
+                        localDirection.X / 2.6,
+                        localDirection.Y * 4 + 3.25,
+                        localDirection.Z / 2.6 
                     ) 
                     ehe.CFrame = newCFrame
                     task.wait()
