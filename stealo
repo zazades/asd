@@ -223,7 +223,7 @@ local function teleportStepToward(pos,rate,step,height)
     cposflat+=dir*math.clamp((step or rs.PreSimulation:Wait())*rate,0,dist)
     local ray = workspace:Raycast(cposflat+Vector3.new(0,getMovePart().Position.Y+25,0),Vector3.new(0,-10000,0),getMovementRaycastParams())
     if ray then
-        moveTo(ray.Position+Vector3.new(0,height or 3.5,0))
+        moveTo(ray.Position+Vector3.new(0,3.5,0))
     end
 end
 
