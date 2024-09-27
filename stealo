@@ -182,67 +182,88 @@ local function createPath(destination)
 end
 
 
-local function moveTo(pos:CFrame)
-	if not getMovePart() then return end
-	if typeof(pos)=="Vector3" then pos = CFrame.new(pos) end
-	local move=getMovePart()
-	local dif = (move.CFrame.Position-root.CFrame.Position)
-	move.CFrame = pos+dif
+local function teleportStepToward(pos,rate,step,height)
+    local posflat=Vector3.new(pos.X,pos.Y,pos.Z)
+    local cposflat=Vector3.new(root.CFrame.Position.X,root.CFrame.Position.Y,root.CFrame.Position.Z)
+    local dir = (posflat-cposflat).Unit
+    local dist = (posflat-cposflat).Magnitude
+    if dir.X~=dir.X then
+        dir=Vector3.new()
+    end
+    cposflat+=dir*math.clamp((step or rs.PreSimulation:Wait())*rate,0,dist)
+    local ray = workspace:Raycast(cposflat+Vector3.new(0,getMovePart().Position.Y+25,0),Vector3.new(0,-10000,0),getMovementRaycastParams())
+    if ray then
+        moveTo(ray.Position+Vector3.new(0,height or 3.5,0))
+    end
+end
+
+local function moveTo(pos:CFrame, rate, step, height)
+    if not getMovePart() then return end
+    if typeof(pos) == "Vector3" then pos = CFrame.new(pos) end
+
+    local move = getMovePart()
+    local dif = (move.CFrame.Position - root.CFrame.Position)
+    local newPosition = pos.Position + dif -- Adjust the position
+    
+    -- Use the teleportStepToward function
+    teleportStepToward(newPosition, rate, step, height)
 end
 
 local function moveTowards(destination, rate, reenable, validator, height)
-	local path = createPath(destination)
-	if not path then
+    local path = createPath(destination)
+    if not path then
+        return
+    end
 
-		return
-	end
-	local waypoints = path:GetWaypoints()
-	local currentPositionIndex = 1
-	local function teleportTo(pos)
-	end
-	local function walkTo(destination)
-		local humrp = root
-		if not humrp then
+    local waypoints = path:GetWaypoints()
+    local currentPositionIndex = 1
 
-			return
-		end
-		local uzak = (humrp.Position - destination).Magnitude
-		while true do
-			local distanceToDestination = (destination - humrp.Position).Magnitude
-			local currentWaypoint = waypoints[currentPositionIndex]
-			local nextWaypoint = waypoints[currentPositionIndex + 1]
-			if nextWaypoint and uzak > 7 then
-				local nextWaypointCFrame = CFrame.new(nextWaypoint.Position)
-				moveTo(nextWaypointCFrame)
-				stop = true
-			else
-				stop = false
-				break
-			end
-			if (waypoints[currentPositionIndex + 1].Position - humrp.Position).magnitude < 8 then
-				currentPositionIndex += 1
-			end
-			if currentPositionIndex > #waypoints then
-				if uzak then return end
-				addResource()
-				local newPath = findTarget()
-				if newPath then
-					path = createPath(newPath)
-					if not path then
+    local function walkTo(destination)
+        local humrp = root
+        if not humrp then
+            return
+        end
+        
+        local uzak = (humrp.Position - destination).Magnitude
+        while true do
+            wait(.1)
+            local distanceToDestination = (destination - humrp.Position).Magnitude
+            local currentWaypoint = waypoints[currentPositionIndex]
+            local nextWaypoint = waypoints[currentPositionIndex + 1]
+            
+            if nextWaypoint and uzak > 7 then
+                -- Use moveTo with teleportStepToward
+                moveTo(nextWaypoint.Position, rate, nil, height)
+                stop = true
+            else
+                stop = false
+                break
+            end
 
-						break
-					end
-					waypoints = path:GetWaypoints()
-					currentPositionIndex = 1
-				else
+            if (waypoints[currentPositionIndex + 1].Position - humrp.Position).magnitude < 8 then
+                currentPositionIndex += 1
+            end
 
-					break
-				end
-			end
-		end
-	end
-	walkTo(destination)
+            if currentPositionIndex > #waypoints then
+                if uzak then return end
+                addResource()
+                local newPath = findTarget()
+                if newPath then
+                    path = createPath(newPath)
+                    if not path then
+                        break
+                    end
+                    waypoints = path:GetWaypoints()
+                    currentPositionIndex = 1
+                else
+                    break
+                end
+            end
+        end
+    end
+    walkTo(destination)
 end
+
 local function call()
 	local closestPart = findTarget()
 	if closestPart then
