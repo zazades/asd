@@ -1,22 +1,6 @@
 print("Hoşgedliniz")
 
-local function merge(t1,...)
-	for i,t2 in pairs({...}) do
-		table.move(t2,1,#t2,#t1+1,t1)
-	end
-	return t1
-end
-local function getMovementRaycastParams()
-	local rp = RaycastParams.new()
-	rp.IgnoreWater=true
-	rp.FilterType=Enum.RaycastFilterType.Exclude
-	local filt=merge({workspace:FindFirstChild("Items"),getMovePart() and getMovePart().Parent},rainparts)
-	for i,v in pairs(game:GetService("Players"):GetPlayers()) do
-		table.insert(filt,v.Character)
-	end
-	rp.FilterDescendantsInstances=filt
-	return rp
-end
+
 
 local RunService = game:GetService('RunService')
 local PathfindingService = game:GetService('PathfindingService')
@@ -199,6 +183,34 @@ local function createPath(destination)
 	return path
 end
 
+local rainparts = {}
+for i,v in pairs(workspace:GetChildren()) do
+	if v.Name=="RainPart" then
+		table.insert(rainparts,v)
+	end
+end
+workspace.ChildAdded:Connect(function(v)
+	if v.Name=="RainPart" then
+		table.insert(rainparts,v)
+	end
+end)
+local function merge(t1,...)
+	for i,t2 in pairs({...}) do
+		table.move(t2,1,#t2,#t1+1,t1)
+	end
+	return t1
+end
+local function getMovementRaycastParams()
+	local rp = RaycastParams.new()
+	rp.IgnoreWater=true
+	rp.FilterType=Enum.RaycastFilterType.Exclude
+	local filt=merge({workspace:FindFirstChild("Items"),getMovePart() and getMovePart().Parent},rainparts)
+	for i,v in pairs(game:GetService("Players"):GetPlayers()) do
+		table.insert(filt,v.Character)
+	end
+	rp.FilterDescendantsInstances=filt
+	return rp
+end
 
 local function teleportStepToward(pos,rate,step,height)
     local posflat=Vector3.new(pos.X,pos.Y,pos.Z)
