@@ -212,7 +212,8 @@ local function moveTowards(destination, rate, reenable, validator, height)
 			local currentWaypoint = waypoints[currentPositionIndex]
 			local nextWaypoint = waypoints[currentPositionIndex + 1]
 			if nextWaypoint and uzak > 7 then
-				moveTo(nextWaypoint.CFrame)
+				local nextWaypointCFrame = CFrame.new(nextWaypoint.Position)
+				moveTo(nextWaypointCFrame)
 				stop = true
 			else
 				stop = false
