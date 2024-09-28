@@ -1,6 +1,19 @@
-print("Hoşgedliniz")
+local playerNames1 = {"angell02400","farmniba","YusufYT508","GriffithTheBestTop","egenin1cm","Aoit_7","XantezTheGoat","CallMeRuhless"} 
+local player = game.Players.LocalPlayer
 
-
+local function isPlayerInTable1(playerName)
+for _, name in ipairs(playerNames1) do 
+if name == playerName then return true 
+end
+end
+return false 
+end
+local playerNameToCheck = game.Players.LocalPlayer.Name 
+if isPlayerInTable1(player.Name) then 
+print("hosgeldiniiiz")
+else
+player:Kick("out of whitelist") 
+end
 
 local RunService = game:GetService('RunService')
 local PathfindingService = game:GetService('PathfindingService')
@@ -17,312 +30,321 @@ local rs = game:GetService("RunService")
 _G.Rate =  0.8
 _G.Start = true
 task.spawn(function()
-	game.Workspace.Resources.ChildAdded:Connect(function(child)
-		if child.Name == "Gold Node" then
-			local trgt = child:FindFirstChild("Reference")
-			if trgt.Position.Y < -37 then child:Destroy() else
-				if trgt.Position.Y > -37 and trgt.Position.Y < 100 then
-					child.ModelStreamingMode = "Default"
-					table.insert(find, child) 
-				end
-			end
-		end
-	end)
-	for i,v:Instance in pairs(workspace.Resources:GetChildren()) do
-		if v.Name == "Gold Node" and v:FindFirstChild("Reference") then
-
-			local trgt = v:FindFirstChild("Reference")
-			if trgt.Position.Y < -37 then  
-				v:Destroy() 
-
-			else
-
-				if trgt.Position.Y > -37 and trgt.Position.Y < 100 then
-					v.ModelStreamingMode = "Default"
-					table.insert(find, v)
-				end
-			end
-		end
-	end
-	for i,v:Instance in pairs(workspace.Resources:GetChildren()) do
-		if v.Name == "Ice Chunk" and v:FindFirstChild("Breakaway") and v:FindFirstChild("Breakaway"):FindFirstChild("Gold Node") then
-			local trgt =  v:FindFirstChild("Breakaway"):FindFirstChild("Gold Node"):FindFirstChild("Reference")
-			if trgt.Position.Y < -37 then 
-				v:Destroy()  
-			else
-
-				if trgt.Position.Y > -37 and trgt.Position.Y < 100 then
-					v.ModelStreamingMode = "Default"
-					table.insert(find, v)
-				end
-			end
-		end
-	end
+    game.Workspace.Resources.ChildAdded:Connect(function(child)
+	local name = child.Name
+        if string.find(name, "Tree") then
+            local trgt = child:FindFirstChild("Reference")
+              if trgt.Position.Y < -37 then child:Destroy() else
+           if trgt.Position.Y > -37 and trgt.Position.Y < 100 then
+		    child.ModelStreamingMode = "Default"
+            table.insert(find, child) 
+           end
+           end
+        end
+    end)
+    for i,v:Instance in pairs(workspace.Resources:GetChildren()) do
+       local name = v.Name
+        if string.find(name, "Tree") and  v:FindFirstChild("Reference")  then
+		
+            local trgt = v:FindFirstChild("Reference")
+             if trgt.Position.Y < -37 then  
+                  v:Destroy() 
+                  
+                   else
+              
+           if trgt.Position.Y > -37 and trgt.Position.Y < 100 then
+		v.ModelStreamingMode = "Default"
+                table.insert(find, v)
+           end
+            end
+        end
+    end
 end)
+
+
 local function addResource()
-	for i,v:Instance in pairs(workspace.Resources:GetChildren()) do
-		if v.Name == "Gold Node" and v:FindFirstChild("Reference") then
+    for i,v:Instance in pairs(workspace.Resources:GetChildren()) do
+        local name = v.Name
+        if string.find(name, "Tree") and  v:FindFirstChild("Reference")  then
+            local trgt = v:FindFirstChild("Reference")	
+		if not target then return end
+             if trgt.Position.Y < -37 then  
+                  v:Destroy() 
+                  
+                   else
+              
+           if trgt.Position.Y > -37 and trgt.Position.Y < 100 then
+		v.ModelStreamingMode = "Default"
+                table.insert(find, v)
+		    end
+          	
+            end
+        end
+    end
+end
 
-			local trgt = v:FindFirstChild("Reference")
-			if trgt.Position.Y < -37 then  
-				v:Destroy() 
 
-			else
-
-				if trgt.Position.Y > -37 and trgt.Position.Y < 100 then
-					v.ModelStreamingMode = "Default"
-					table.insert(find, v)
-				end
-			end
-		end
-	end
-	for i,v:Instance in pairs(workspace.Resources:GetChildren()) do
-		if v.Name == "Ice Chunk" and v:FindFirstChild("Breakaway") and v:FindFirstChild("Breakaway"):FindFirstChild("Gold Node") then
-			local trgt =  v:FindFirstChild("Breakaway"):FindFirstChild("Gold Node"):FindFirstChild("Reference")
-			if trgt.Position.Y < -37 then 
-				v:Destroy()  
-			else
-
-				if trgt.Position.Y > -37 and trgt.Position.Y < 100 then
-					v.ModelStreamingMode = "Default"
-					table.insert(find, v)
-				end
-			end
-		end
-	end
+local function getMover(part)
+    for _, descendant in pairs(part:GetDescendants()) do
+        if not descendant:IsA("BasePart") then
+            continue
+        end
+        local originalCFrame = descendant.CFrame
+        descendant.CFrame = CFrame.new()
+        if descendant.CFrame == CFrame.new() then
+            descendant.CFrame = originalCFrame
+            return descendant
+        end
+    end
 end
 
 local function getMovePart()
-	if not root then
-		return nil
-	end
-	if not (hum and root and hum.SeatPart and hum.SeatPart.Parent) then
-		return root
-	end
-	if hum.SeatPart then
-		for i,v in pairs(hum.SeatPart.Parent:GetChildren()) do 
-			if v:IsA("BasePart") then 
-				-- v.CanCollide = false
-			end
-		end
-	end
-	return hum.SeatPart or root
+    if not root then
+        return nil
+    end
+    if not (hum and root and hum.SeatPart and hum.SeatPart.Parent) then
+        return root
+    end
+    if hum.SeatPart then
+        for i,v in pairs(hum.SeatPart.Parent:GetChildren()) do 
+            if v:IsA("BasePart") then 
+               -- v.CanCollide = false
+            end
+        end
+    end
+    return hum.SeatPart or root
 end
+ 
 
 local function findTarget()
-	local resource = game.Workspace.Resources:GetChildren()
-	local MaxDistance = math.huge
-	local nearestTarget
-	local golds = find
-	for _, goldNode in ipairs(golds) do
-		if goldNode and goldNode:FindFirstChild("Reference") then
-			local target = goldNode:FindFirstChild("Reference")
-			local distance = (humrp.Position - target.Position).Magnitude
-			if target.Position.Y < -37 then goldNode:Destroy() else
-				if distance < MaxDistance then
-					nearestTarget = target
-					MaxDistance = distance
-				end
-			end
-		end
-	end
-	return nearestTarget 
+    local resource = game.Workspace.Resources:GetChildren()
+    local MaxDistance = math.huge
+    local nearestTarget
+    local golds = find
+    for _, goldNode in ipairs(golds) do
+        if goldNode and goldNode:FindFirstChild("Reference") then
+            local target = goldNode:FindFirstChild("Reference")
+            local distance = (humrp.Position - target.Position).Magnitude
+            if target.Position.Y < -37 then goldNode:Destroy() else
+            if distance < MaxDistance then
+                nearestTarget = target
+                MaxDistance = distance
+            end
+            end
+        end
+    end
+
+    return nearestTarget 
 end
 
+local lastPathTime = 0
+local pathRefreshDelay = 1 -- Adjust as needed
+local cachedPaths = {}
+local function shouldRefreshPath()
+    return os.time() - lastPathTime >= pathRefreshDelay
+end
 
 local function createPath(destination)
-	local pathFound = false
-	local path
-	repeat
-		wait()
-		destination = findTarget()
-		if destination then
-			path = PathfindingService:CreatePath({AgentRadius = 2 , WaypointSpacing = 1})
-			local success, err = pcall(function()
-				path:ComputeAsync(humrp.Position, destination.Position)
-			end)
-			if success then
-				if path.Status == Enum.PathStatus.Success then
-					pathFound = true
-					
-					addResource()
-				else
-					for i, v in ipairs(find) do
-						if v == destination.Parent then
-							table.remove(find, i)
-							if #find == 0 then
-								addResource()
-							end
-						end
-					end
-				end
-			else
-				print("Error during path computation:", err)
-			end
-		else
-			path = PathfindingService:CreatePath({AgentRadius = 2 , WaypointSpacing = 1})
-			local succ, err = pcall(function() 
-				path:ComputeAsync(humrp.Position, Vector3.new(-98.7, -3, 78))
-			end)
-			if succ then
-				if path.Status == Enum.PathStatus.Success then
-					pathFound = true
-					
+    if not shouldRefreshPath() then
+        return cachedPaths[destination] or cachedPaths.default
+    end
 
-					addResource()
-				else
-					path:ComputeAsync(humrp.Position, Vector3.new(1276,-15.5,607))
-					pathFound = true
+    local pathFound = false
+    local path
 
-					addResource()
-				end
-			end
+    repeat
+        wait()
+        destination = findTarget()
+        if destination then
+            path = PathfindingService:CreatePath({AgentRadius = 1.7 , WaypointSpacing = 0.5, Costs = {Water = 0}})
+            local success, err = pcall(function()
+                path:ComputeAsync(humrp.Position, destination.Position)
+            end)
+            if success then
+                if path.Status == Enum.PathStatus.Success then
+                    pathFound = true
+                    cachedPaths[destination] = path
+                    addResource()
+                else
+                    for i, v in ipairs(find) do
+                        if v == destination.Parent then
+                            table.remove(find, i)
+                            if #find == 0 then
+                                addResource()
+                            end
+                        end
+                    end
+                end
+            else
+                print("Error during path computation:", err)
+            end
+        else
+            path = PathfindingService:CreatePath({AgentRadius = 1.7 , WaypointSpacing = 0.5})
+            local succ, err = pcall(function() 
+                path:ComputeAsync(humrp.Position, Vector3.new(-98.7, -3, 78))
+            end)
+            if succ then
+	    if path.Status == Enum.PathStatus.Success then
+            pathFound = true
+            cachedPaths.default = path
+		    
+            addResource()
+        else
+	    path:ComputeAsync(humrp.Position, Vector3.new(1276,-15.5,607))
+	    pathFound = true
+            cachedPaths.default = path
+		    
+            addResource()
 		end
-	until pathFound
-	pathFound = false
-	return path
+            end
+        end
+    until pathFound
+    pathFound = false
+    lastPathTime = os.time()
+    return path 
 end
 
-local rainparts = {}
-for i,v in pairs(workspace:GetChildren()) do
-	if v.Name=="RainPart" then
-		table.insert(rainparts,v)
-	end
-end
-workspace.ChildAdded:Connect(function(v)
-	if v.Name=="RainPart" then
-		table.insert(rainparts,v)
-	end
-end)
-local function merge(t1,...)
-	for i,t2 in pairs({...}) do
-		table.move(t2,1,#t2,#t1+1,t1)
-	end
-	return t1
-end
-local function getMovementRaycastParams()
-	local rp = RaycastParams.new()
-	rp.IgnoreWater=true
-	rp.FilterType=Enum.RaycastFilterType.Exclude
-	local filt=merge({workspace:FindFirstChild("Items"),getMovePart() and getMovePart().Parent},rainparts)
-	for i,v in pairs(game:GetService("Players"):GetPlayers()) do
-		table.insert(filt,v.Character)
-	end
-	rp.FilterDescendantsInstances=filt
-	return rp
-end
-
-local function teleportStepToward(pos,rate,step,height)
-    local posflat=Vector3.new(pos.X,pos.Y,pos.Z)
-    local cposflat=Vector3.new(root.CFrame.Position.X,root.CFrame.Position.Y,root.CFrame.Position.Z)
-    local dir = (posflat-cposflat).Unit
-    local dist = (posflat-cposflat).Magnitude
-    if dir.X~=dir.X then
-        dir=Vector3.new()
+local function closeResource(position)
+    for _, resource in ipairs(game.Workspace.Resources:GetChildren()) do
+       local name = v.Name
+        if string.find(name, "Tree") and  v:FindFirstChild("Reference")  then
+            local tar = resource:FindFirstChild("Reference")
+            if (tar.Position - position).Magnitude < 12 then
+                return true
+            end
+        end
     end
-    cposflat+=dir*math.clamp((step or rs.PreSimulation:Wait())*rate,0,dist)
-    local ray = workspace:Raycast(cposflat+Vector3.new(0,getMovePart().Position.Y+25,0),Vector3.new(0,-10000,0),getMovementRaycastParams())
-    if ray then
-        moveTo(ray.Position+Vector3.new(0,3.5,0))
-    end
+
+    return false
 end
 
-local function moveTo(pos:CFrame, rate, step, height)
-    if not getMovePart() then return end
-    if typeof(pos) == "Vector3" then pos = CFrame.new(pos) end
 
-    local move = getMovePart()
-    local dif = (move.CFrame.Position - root.CFrame.Position)
-    local newPosition = pos.Position + dif -- Adjust the position
-    
-    -- Use the teleportStepToward function
-    teleportStepToward(newPosition, rate, step, height)
+local function moveTo(pos:CFrame)
+	if not getMovePart() then return end
+	if typeof(pos)=="Vector3" then pos = CFrame.new(pos) end
+	local move=getMovePart()
+	local dif = (move.CFrame.Position-root.CFrame.Position)
+	move.CFrame = pos+dif
 end
 
 local function moveTowards(destination, rate, reenable, validator, height)
     local path = createPath(destination)
     if not path then
+     
         return
     end
-
     local waypoints = path:GetWaypoints()
     local currentPositionIndex = 1
+
+    local function teleportTo(pos)
+    end
 
     local function walkTo(destination)
         local humrp = root
         if not humrp then
+            
             return
         end
-        
+	
         local uzak = (humrp.Position - destination).Magnitude
         while true do
-            wait(.1)
             local distanceToDestination = (destination - humrp.Position).Magnitude
+            uzak = (humrp.Position - destination).Magnitude
             local currentWaypoint = waypoints[currentPositionIndex]
             local nextWaypoint = waypoints[currentPositionIndex + 1]
-            
-            if nextWaypoint and uzak > 7 then
-                -- Use moveTo with teleportStepToward
-                moveTo(nextWaypoint.Position, rate, nil, height)
-                stop = true
+
+            if nextWaypoint and uzak > 12 then
+                local direction = (nextWaypoint.Position - humrp.Position).Unit
+                local distanceToNextWaypoint = (nextWaypoint.Position - humrp.Position).Magnitude
+                local steps = math.ceil(distanceToNextWaypoint / rate)
+		        stop = true
+                    direction = (nextWaypoint.Position - humrp.Position).Unit
+                    local ehe = getMovePart()
+                    local localDirection = ehe.CFrame:VectorToObjectSpace(direction)
+                    local adjustedRate = math.min(rate, distanceToNextWaypoint)
+
+                    local newCFrame = humrp.CFrame * CFrame.new(
+                        localDirection.X / 2.5,
+                        localDirection.Y * 4 + 3.15,
+                        localDirection.Z / 2.5 
+                    ) 
+                    ehe.CFrame = newCFrame
+                    task.wait()
+                
             else
-                stop = false
+              	stop = false
                 break
             end
-
-            if (waypoints[currentPositionIndex + 1].Position - humrp.Position).magnitude < 8 then
+            if (waypoints[currentPositionIndex + 1].Position - humrp.Position).magnitude < 7 then
                 currentPositionIndex += 1
             end
-
             if currentPositionIndex > #waypoints then
-                if uzak then return end
                 addResource()
                 local newPath = findTarget()
                 if newPath then
                     path = createPath(newPath)
                     if not path then
+                        
                         break
                     end
                     waypoints = path:GetWaypoints()
                     currentPositionIndex = 1
                 else
+                    
                     break
                 end
             end
         end
     end
+
     walkTo(destination)
 end
 
-local function call()
-	local closestPart = findTarget()
-	if closestPart then
-		local movementRate = _G.Rate -- Example movement rate
-		local reenable = true -- Example reenable parameter
-		local validator = function() return true end -- Example validator function
-		local height = 9 -- Example height parameter
-		local destination = closestPart.Position
-		if (destination - humrp.Position).magnitude < 7 then  addResource() return end
-		if not destination then return end
-		moveTowards(destination, movementRate, reenable, validator, height)
-		addResource()
-	else
 
-	end
+local function call()
+    local closestPart = findTarget()
+    if closestPart then
+        local movementRate = _G.Rate -- Example movement rate
+        local reenable = true -- Example reenable parameter
+        local validator = function() return true end -- Example validator function
+        local height = 9 -- Example height parameter
+        local destination = closestPart.Position
+	if (destination - humrp.Position).magnitude < 12 then  addResource() return end
+	if not destination then return end
+        moveTowards(destination, movementRate, reenable, validator, height)
+        addResource()
+    else
+       
+    end
 end
+
 task.spawn(function()
-	while _G.Start do
-		wait()
-		if stop then 
-			wait()
-		else
-			call()
+    while _G.Start do
+        wait()
+        if stop then 
+            wait()
+        else
+            call()
+        end
+    end
+end)
+
+
+task.spawn(function()
+hum.Died:Connect(function()
+script:Destroy()
+print'destroyed'
+end) 
+end)
+
+
+local function NoclipLoop()
+	for _, child in pairs(player.Character:GetDescendants()) do
+		if child:IsA("BasePart") and child.CanCollide == true and child.Name ~= floatName then
+			child.CanCollide = false
 		end
 	end
-end)
-task.spawn(function()
-	hum.Died:Connect(function()
-		script:Destroy()
-		print'destroyed'
-	end) 
-end)
+		
+end
+
+--Game:GetService("RunService").Stepped:Connect(NoclipLoop)
